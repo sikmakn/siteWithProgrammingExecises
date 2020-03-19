@@ -1,0 +1,54 @@
+.selectContainer {
+    font-family: 'Squada One', cursive;
+    margin: 30px auto;
+    width: 50%;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 32px;
+    color: white;
+}
+
+.selectContainer > a, .selectContainer > div {
+    text-decoration: none;
+    width: 210px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #dfdfdf;
+    color: #a6a6a6;
+}
+
+.selectContainer > div.isJs {
+    background: black;
+    color: white;
+}
+
+.selectContainer > div.isJs img {
+    margin-right: 5px;
+    width: 30px;
+    height: 30px;
+}
+
+.selectContainer > div.isPython {
+    background: black;
+    color: white;
+}
+
+.selectContainer > div.isPython img {
+    margin-right: 15px;
+    width: 40px;
+    height: 40px;
+}
+
+.selectContainer > div.isNet {
+    background: black;
+    color: white;
+}
+
+.selectContainer > div.isNet img {
+    margin-right: 15px;
+    width: 40px;
+    height: 40px;
+}

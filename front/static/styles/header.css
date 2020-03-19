@@ -1,0 +1,45 @@
+header {
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Alegreya Sans SC', sans-serif;
+}
+
+header nav {
+    display: flex;
+    margin-left: 20px;
+}
+
+header nav > div {
+    padding: 15px 10px 10px;
+}
+
+.logoName {
+    text-decoration: none;
+    color: #000;
+    font-family: 'Righteous', cursive;
+    font-weight: bold;
+    font-size: 28px;
+    align-self: center;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+.headerContacts {
+    display: flex;
+    align-self: center;
+    margin-right: 40px;
+}
+
+.headerContacts div {
+    align-self: center;
+    margin-right: 30px;
+}
+
+.headerContacts > img {
+    width: 28px;
+    height: 28px;
+    margin-right: 10px;
+    align-self: center;
+}
