@@ -29,4 +29,15 @@ app.get('/python', (req, res) => {
     res.render('empty.hbs', {layout: 'themeSelectMain.hbs', isPython: true})
 });
 
+app.get('/:lang/:id/:difficult', (req, res) => {
+    res.render('exercises.hbs', {
+        layout: 'themeSelectMain.hbs', isJs: true, theme: {
+            number: 1,
+            title: "bla bla bla bla",
+            lang: 'js',
+            id: 1,
+        }
+    })
+});
+
 app.listen(3001);

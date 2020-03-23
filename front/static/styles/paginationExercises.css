@@ -1,0 +1,31 @@
+.prev, .next {
+    position: fixed;
+    top: 50%;
+    text-decoration: none;
+    color: #000;
+    font-size: 60px;
+    font-weight: bold;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: lightgrey;
+    height: 150px;
+    width: 80px;
+
+    opacity: .15;
+}
+
+.prev {
+    left: 0;
+}
+
+.next {
+    right: 0;
+}
+
+.prev:hover, .next:hover {
+    box-shadow: 0 0 10px #dfdfdf;
+    opacity: 1;
+}
