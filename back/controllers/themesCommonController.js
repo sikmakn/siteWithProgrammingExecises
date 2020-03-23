@@ -117,20 +117,28 @@ module.exports = function themeCommonController(lang) {
     const router = express.Router();
 
     router.get('/', (req, res) => {
-        const flagName = `is${lang[0].toUpperCase() + lang.slice(1)}`;
-        const resObj = {
-            layout: 'themeSelectMain.hbs',
-            themesList,
-            lang,
-        };
-        resObj[flagName] = true;
+        try {
+            const flagName = `is${lang[0].toUpperCase() + lang.slice(1)}`;
+            const resObj = {
+                layout: 'themeSelectMain.hbs',
+                themesList,
+                lang,
+            };
+            resObj[flagName] = true;
 
-        res.render('themesList.hbs', resObj);
+            res.render('themesList.hbs', resObj);
+        } catch (err) {
+            console.error(err);
+        }
     });
 
     router.get('/:id/:difficulty', (req, res) => {
-        console.log(req.params);
-        res.render('empty.hbs');
+        try {
+            console.log(req.params);
+            res.render('empty.hbs');
+        } catch (err) {
+            console.error(err);
+        }
     });
 
     return router;
