@@ -7,8 +7,8 @@ module.exports = function themeCommonController(lang) {
 
     router.get('/', async (req, res) => {
         try {
+            console.log(lang);
             const themes = await themeService.findThemes({language: lang});
-            console.log(themes);
             const resObj = {
                 layout: 'themeSelectMain.hbs',
                 themesList: themes,
@@ -25,8 +25,15 @@ module.exports = function themeCommonController(lang) {
 
     router.get('/:themeId/:difficulty', async (req, res) => {
         try {
-            const exercises = await exerciseService.findByThemeId(req.params.themeId, req.params.difficulty);
-            res.render('empty.hbs');
+            // const exercises = await exerciseService.findByThemeId(req.params.themeId, req.params.difficulty);
+            res.render('exercises.hbs', {
+                layout: 'themeSelectMain.hbs', isJs: true, theme: {
+                    number: 1,
+                    title: "bla bla bla bla",
+                    lang: 'js',
+                    id: 1,
+                }
+            })
         } catch (err) {
             console.error(err);
         }
