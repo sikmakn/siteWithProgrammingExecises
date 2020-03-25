@@ -9,12 +9,16 @@ const themeScheme = new mongoose.Schema({
     number: {
         type: Number,
         min: 1,
+        required: true,
     },
     name: {
         type: String,
         required: true,
     },
 });
-themeScheme.plugin(autoIncrement.plugin, {model: 'theme', field: 'number'});
+themeScheme.plugin(autoIncrement.plugin, {model: 'Theme', field: 'number',});
 
-module.exports = mongoose.model("theme", themeScheme);
+module.exports = {
+    model: mongoose.model("Theme", themeScheme),
+    scheme: themeScheme,
+};

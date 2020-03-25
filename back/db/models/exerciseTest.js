@@ -10,4 +10,7 @@ const exerciseTestScheme = new mongoose.Schema({
         required: true,
     },
 });
-module.exports = mongoose.model("exerciseTest", exerciseTestScheme);
+module.exports = {
+    model: mongoose.model("ExerciseTest", exerciseTestScheme),
+    scheme: exerciseTestScheme
+};

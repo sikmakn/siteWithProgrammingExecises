@@ -1,32 +1,46 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
-const jsRouter = require('./back/controllers/jsController');
+const mongoose = require('mongoose');
+const autoIncrement = require('mongoose-auto-increment');
+const formidable = require('express-formidable');
+
 
 const app = express();
-
-const hbs = exphbs.create({
-    // defaultLayout: 'main',
-    extname: 'hbs',
+let c = mongoose.connect("mongodb://localhost:27017/test1db", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
 });
+
+autoIncrement.initialize(mongoose.connection);
+
+const themeCommonController = require("./back/controllers/themesCommonController.js");
+
+const hbs = exphbs.create({extname: 'hbs',});
 
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 app.set('views', './front/views');
 
 app.use(express.static(__dirname + '/front/static'));
+app.use(formidable());
 
-app.use("/js", jsRouter);
+app.use("/js", themeCommonController('js'));
+app.use("/net", themeCommonController('net'));
+app.use("/python", themeCommonController('python'));
+
 app.get('/', (req, res) => {
     res.render('layouts/main.hbs')
 });
 
-
-app.get('/net', (req, res) => {
-    res.render('empty.hbs', {layout: 'themeSelectMain.hbs', isNet: true})
-});
-
-app.get('/python', (req, res) => {
-    res.render('empty.hbs', {layout: 'themeSelectMain.hbs', isPython: true})
+app.get('/addTheme', async (req, res) => {
+    res.render('addTheme.hbs', {layout: 'themeSelectMain.hbs',})
 });
 
 app.listen(3001);
+
+process.on("SIGINT", () => {
+    mongoose.disconnect();
+    process.exit();
+});

@@ -8,11 +8,11 @@ const exerciseScheme = new mongoose.Schema({
         required: true,
     },
     themeId: {
-        type: ObjectId,
+        type: mongoose.ObjectId,
         required: true,
     },
     number: {
-        type: Number,
+        type: mongoose.Number,
         min: 1,
         required: true,
     },
@@ -21,7 +21,10 @@ const exerciseScheme = new mongoose.Schema({
         required: true,
     },
     tests: {
-        type: [exerciseTest],
+        type: [exerciseTest.scheme],
     }
 });
-module.exports = mongoose.model("exercise", exerciseScheme);
+module.exports = {
+    model: mongoose.model("Exercise", exerciseScheme),
+    scheme: exerciseScheme
+};

@@ -3,13 +3,13 @@
     {{#each themesList}}
         <div class="themeCard">
             <div class="number">{{number}}</div>
-            <div class="name">{{title}}</div>
+            <div class="name">{{name}}</div>
             <div class="interactiveButtonsContainer">
-                <div class="theory"><a href="{{../lang}}/{{id}}/theory">Теория</a></div>
+                <div class="theory"><a href="{{lang}}/{{_id}}/theory">Теория</a></div>
                 <div class="semaphore">
-                    <a href="{{../lang}}/{{id}}/easy">Легкие</a>
-                    <a href="{{../lang}}/{{id}}/middle">Средние</a>
-                    <a href="{{../lang}}/{{id}}/hard">Сложные</a>
+                    <a href="{{language}}/{{_id}}/easy">Легкие</a>
+                    <a href="{{language}}/{{_id}}/middle">Средние</a>
+                    <a href="{{language}}/{{_id}}/hard">Сложные</a>
                 </div>
             </div>
         </div>
