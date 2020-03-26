@@ -1,5 +1,5 @@
-<a href="" class="prev"><</a>
-<a href="" class="next">></a>
+<a href="" class="prev"><span class="material-icons arrows">keyboard_arrow_left</span></a>
+<a href="" class="next"><span class="material-icons arrows">keyboard_arrow_right</span></a>
 
 <div class="exercisesPageContainer">
     {{#with theme}}
@@ -10,4 +10,16 @@
         </div>
     {{/with}}
 
+    <div class="exercises">
+        {{#each exercises}}
+            <div class="exercise" id="{{_id}}">
+                <button type="button" class="collapsible">{{number}}. {{task}}</button>
+                <div class="editor">
+                    <p>Lorem ipsum...</p>
+                </div>
+            </div>
+        {{/each}}
+    </div>
 </div>
+
+<script async src="/scripts/exercises.js"></script>

@@ -15,7 +15,8 @@ mongoose.connect("mongodb://localhost:27017/test1db", {
 
 autoIncrement.initialize(mongoose.connection);
 
-const themeCommonController = require("./back/controllers/themesCommonController.js");
+const themeCommonController = require("./back/controllers/themesCommonController");
+const exerciseController = require("./back/controllers/exerciseController");
 
 const hbs = exphbs.create({extname: 'hbs',});
 
@@ -27,6 +28,7 @@ app.use(express.static(__dirname + '/front/static'));
 app.use(formidable());
 
 app.use("/js", themeCommonController('js'));
+app.use("/js/exercises/", exerciseController('js'));
 app.use("/net", themeCommonController('net'));
 app.use("/python", themeCommonController('python'));
 

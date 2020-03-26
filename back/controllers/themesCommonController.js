@@ -1,6 +1,5 @@
 const express = require("express");
 const themeService = require('../services/themeService');
-const exerciseService = require('../services/exerciseService');
 
 module.exports = function themeCommonController(lang) {
     const router = express.Router();
@@ -18,22 +17,6 @@ module.exports = function themeCommonController(lang) {
             resObj[flagName] = true;
 
             res.render('themesList.hbs', resObj);
-        } catch (err) {
-            console.error(err);
-        }
-    });
-
-    router.get('/:themeId/:difficulty', async (req, res) => {
-        try {
-            // const exercises = await exerciseService.findByThemeId(req.params.themeId, req.params.difficulty);
-            res.render('exercises.hbs', {
-                layout: 'themeSelectMain.hbs', isJs: true, theme: {
-                    number: 1,
-                    title: "bla bla bla bla",
-                    lang: 'js',
-                    id: 1,
-                }
-            })
         } catch (err) {
             console.error(err);
         }

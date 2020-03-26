@@ -8,7 +8,7 @@ async function findByThemeId(themeId, difficulty) {
     const res = difficulty !== undefined ?
         exercise.find({themeId, difficulty}) :
         exercise.find({themeId});
-    return await res.select('+tests').exec();
+    return await res.select('+tests').select('+theme').exec();
 }
 
 async function findById(id) {

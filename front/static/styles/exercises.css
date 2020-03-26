@@ -16,3 +16,33 @@
     font-size: 28px;
     margin-bottom: 15px;
 }
+
+.exercises {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.exercise {
+    width: 100%;
+}
+
+.collapsible {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+}
+
+.editor {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}

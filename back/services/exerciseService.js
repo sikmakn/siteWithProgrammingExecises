@@ -15,6 +15,11 @@ async function findById(id) {
     return theme._doc;
 }
 
+async function findByThemeId(themeId, difficulty) {
+    const theme = await exerciseRepository.findByThemeId(themeId, difficulty);
+    return theme._doc;
+}
+
 async function findByIdAndUpdate(id, updateTheme) {
     const res = await exerciseRepository.findByIdAndUpdate(id, updateTheme);
     return res._doc;
@@ -25,4 +30,5 @@ module.exports = {
     findThemes,
     findById,
     findByIdAndUpdate,
+    findByThemeId,
 };
