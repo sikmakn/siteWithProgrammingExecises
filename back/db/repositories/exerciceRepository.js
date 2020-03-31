@@ -1,14 +1,15 @@
 const exercise = require('../models/exercise').model;
 
 async function create(newExercise) {
-    return await exercise.create(newExercise);
+    let newExerciseModel = new exercise(newExercise);
+    return await newExerciseModel.save();
 }
 
 async function findByThemeId(themeId, difficulty) {
-    const res = difficulty !== undefined ?
-        exercise.find({themeId, difficulty}) :
-        exercise.find({themeId});
-    return await res.select('+tests').select('+theme').exec();
+    const res = difficulty === undefined ?
+        exercise.find({themeId}) :
+        exercise.find({themeId, difficulty});
+    return await res;
 }
 
 async function findById(id) {

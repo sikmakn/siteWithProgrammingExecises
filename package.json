@@ -12,6 +12,8 @@
     "nodemon": "^2.0.2"
   },
   "dependencies": {
+    "axios": "^0.19.2",
+    "body-parser": "latest",
     "express": "^4.17.1",
     "express-formidable": "^1.2.0",
     "express-handlebars": "^3.1.0",

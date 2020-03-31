@@ -1,13 +1,38 @@
 const exerciseRepository = require('../db/repositories/exerciceRepository');
+const axios = require('axios');
 
-async function create(newTheme) {
-    let newThemeModel = await exerciseRepository.create(newTheme);
-    return newThemeModel._doc;
+const langOptions = {
+    'js': {
+        readLine: `fs=require('fs');
+            let params = fs.readFileSync('/dev/stdin')
+                .toString().split("\\n");
+             let count = 0;
+            const readLine = ()=> params[count++];`,
+        languageId: 63,
+    },
+};
+
+async function makeTests(id, sourceCode, lang) {
+    sourceCode = langOptions[lang].readLine + sourceCode;
+    const exercise = await exerciseRepository.findById(id);
+    const results = {};
+    for (let test of exercise.tests) {
+        const stdIn = test.input.join('\n');
+        let result = await axios.post('http://localhost:3000/submissions/', {
+            language_id: langOptions[lang].languageId,
+            wait: "true",
+            source_code: sourceCode,
+            stdin: stdIn,
+            expected_output: test.output,
+        });
+        results[stdIn] = result.data.status;
+    }
+    return results;
 }
 
-async function findThemes(themeForFind, sort = {number: 1}, skip = 0, count) {
-    const themes = await exerciseRepository.findThemes(themeForFind, sort, skip, count);
-    return themes.map(el => el._doc);
+async function create(newExercise) {
+    let newThemeModel = await exerciseRepository.create(newExercise);
+    return newThemeModel._doc;
 }
 
 async function findById(id) {
@@ -17,7 +42,7 @@ async function findById(id) {
 
 async function findByThemeId(themeId, difficulty) {
     const theme = await exerciseRepository.findByThemeId(themeId, difficulty);
-    return theme._doc;
+    return theme.map(th => th._doc);
 }
 
 async function findByIdAndUpdate(id, updateTheme) {
@@ -27,8 +52,8 @@ async function findByIdAndUpdate(id, updateTheme) {
 
 module.exports = {
     create,
-    findThemes,
     findById,
     findByIdAndUpdate,
     findByThemeId,
+    makeTests,
 };

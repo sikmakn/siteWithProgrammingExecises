@@ -1,37 +1,48 @@
 const express = require("express");
 const exerciseService = require('../services/exerciseService');
+const themeService = require('../services/themeService');
+const themeMapper = require('../Mappers/themeMapper');
+const exerciseMapper = require('../Mappers/exerciseMapper');
 
 module.exports = function exerciseController(lang) {
     const router = express.Router();
 
+    router.post('/:themeId/:exerciseId/test', async (req, res) => {
+        try {
+            console.log(req.body.sourceCode);
+            const results = await exerciseService.makeTests(req.params.exerciseId, req.body.sourceCode, lang);
+            res.send(results);
+        } catch (e) {
+            console.error(e);
+        }
+    });
+
+    router.post('/:themeId/:difficulty', async (req, res) => {
+        try {
+            let newExercise = exerciseMapper.fromObjToExerciseObj(req.body);
+            newExercise.difficulty = req.params.difficulty;
+            newExercise.themeId = req.params.themeId;
+
+            const result = await exerciseService.create(newExercise);
+            res.send(result);
+        } catch (e) {
+            console.error(e);
+        }
+    });
+
     router.get('/:themeId/:difficulty', async (req, res) => {
         try {
+            const theme = await themeService.findById(req.params.themeId);
             const exercises = await exerciseService.findByThemeId(req.params.themeId, req.params.difficulty);
             res.render('exercises.hbs', {
-                layout: 'themeSelectMain.hbs', isJs: true, theme: {
-                    number: 1,
-                    title: "bla bla bla bla",
-                    lang: 'js',
-                    id: '5e7bc2c9676a3b212869e106',
-                },
-                exercises: [
-                    {
-                        _id: 1,
-                        number: 1,
-                        task: "Найти ответ на смысл жизни, вселенной и вообще всего",
-                    },
-                    {
-                        _id: 2,
-                        number: 2,
-                        task: "Ищи ещё",
-                    },
-                ],
+                layout: 'themeSelectMain.hbs',
+                isJs: true,
+                theme: themeMapper.fromThemeToOutObj(theme),
+                exercises: exercises.map(ex => exerciseMapper.fromExerciseToOutObj(ex)),
             });
-
         } catch (err) {
             console.error(err);
         }
     });
-
     return router;
 };

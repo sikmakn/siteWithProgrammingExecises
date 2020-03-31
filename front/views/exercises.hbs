@@ -6,7 +6,7 @@
         <div class="title">
             <div class="themeName">{{number}}. {{title}}</div>
             <a href="" class="theoryLink">Сначала изучите теорию</a>
-            {{>semaphore lang=lang id=id}}
+            {{>semaphore language=language _id=_id}}
         </div>
     {{/with}}
 
@@ -14,12 +14,16 @@
         {{#each exercises}}
             <div class="exercise" id="{{_id}}">
                 <button type="button" class="collapsible">{{number}}. {{task}}</button>
-                <div class="editor">
-                    <p>Lorem ipsum...</p>
+                <div class="editorContainer">
+                    <div class="editor" id="editor{{_id}}"></div>
+                    <div class="control">
+                        <div class="output"></div>
+                        <button class="start" onclick="test(event)">Запустить тесты</button>
+                    </div>
                 </div>
             </div>
         {{/each}}
     </div>
 </div>
-
-<script async src="/scripts/exercises.js"></script>
+<script src="/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="/scripts/exercises.js"></script>

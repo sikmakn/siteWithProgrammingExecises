@@ -2,7 +2,7 @@ const express = require('express');
 const exphbs = require('express-handlebars');
 const mongoose = require('mongoose');
 const autoIncrement = require('mongoose-auto-increment');
-const formidable = require('express-formidable');
+const bodyParser = require('body-parser');
 
 
 const app = express();
@@ -25,7 +25,7 @@ app.set('view engine', 'hbs');
 app.set('views', './front/views');
 
 app.use(express.static(__dirname + '/front/static'));
-app.use(formidable());
+app.use(bodyParser.json());
 
 app.use("/js", themeCommonController('js'));
 app.use("/js/exercises/", exerciseController('js'));
