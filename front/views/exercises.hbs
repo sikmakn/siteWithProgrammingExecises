@@ -1,0 +1,29 @@
+<a href="" class="prev"><span class="material-icons arrows">keyboard_arrow_left</span></a>
+<a href="" class="next"><span class="material-icons arrows">keyboard_arrow_right</span></a>
+
+<div class="exercisesPageContainer">
+    {{#with theme}}
+        <div class="title">
+            <div class="themeName">{{number}}. {{title}}</div>
+            <a href="" class="theoryLink">Сначала изучите теорию</a>
+            {{>semaphore language=language _id=_id}}
+        </div>
+    {{/with}}
+
+    <div class="exercises">
+        {{#each exercises}}
+            <div class="exercise" id="{{_id}}">
+                <button type="button" class="collapsible">{{number}}. {{task}}</button>
+                <div class="editorContainer">
+                    <div class="editor" id="editor{{_id}}"></div>
+                    <div class="control">
+                        <div class="output"></div>
+                        <button class="start" onclick="test(event)">Запустить тесты</button>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</div>
+<script src="/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="/scripts/exercises.js"></script>

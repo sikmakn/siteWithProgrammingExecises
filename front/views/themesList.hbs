@@ -5,12 +5,8 @@
             <div class="number">{{number}}</div>
             <div class="name">{{name}}</div>
             <div class="interactiveButtonsContainer">
-                <div class="theory"><a href="{{lang}}/{{_id}}/theory">Теория</a></div>
-                <div class="semaphore">
-                    <a href="{{language}}/{{_id}}/easy">Легкие</a>
-                    <a href="{{language}}/{{_id}}/middle">Средние</a>
-                    <a href="{{language}}/{{_id}}/hard">Сложные</a>
-                </div>
+                <div class="theory"><a href="#">Теория</a></div>
+                {{>semaphore language=language _id=_id}}
             </div>
         </div>
     {{/each}}
