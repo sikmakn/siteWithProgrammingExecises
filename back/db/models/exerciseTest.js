@@ -5,6 +5,9 @@ const exerciseTestScheme = new mongoose.Schema({
         type: [String],
         required: true,
     },
+    additionalCode: {
+        type: String,
+    },
     output: {
         type: String,
         required: true,

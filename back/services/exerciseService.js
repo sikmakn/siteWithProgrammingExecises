@@ -17,11 +17,14 @@ async function makeTests(id, sourceCode, lang) {
     const exercise = await exerciseRepository.findById(id);
     const results = {};
     for (let test of exercise.tests) {
+
+        let fullSourceCode = sourceCode;
+        if (test.additionalCode) fullSourceCode += test.additionalCode;
         const stdIn = test.input.join('\n');
         let result = await axios.post('http://localhost:3000/submissions/', {
             language_id: langOptions[lang].languageId,
             wait: "true",
-            source_code: sourceCode,
+            source_code: fullSourceCode,
             stdin: stdIn,
             expected_output: test.output,
         });
