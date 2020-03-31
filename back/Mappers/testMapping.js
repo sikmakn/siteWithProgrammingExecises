@@ -3,6 +3,7 @@ function arrToTests(arrObjs) {
         return {
             input: obj.input,
             output: obj.output,
+            additionalCode: obj.additionalCode,
         }
     });
 }
