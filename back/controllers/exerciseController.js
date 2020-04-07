@@ -9,7 +9,6 @@ module.exports = function exerciseController(lang) {
 
     router.post('/:themeId/:exerciseId/test', async (req, res) => {
         try {
-            console.log(req.body.sourceCode);
             const results = await exerciseService.makeTests(req.params.exerciseId, req.body.sourceCode, lang);
             res.send(results);
         } catch (e) {
@@ -37,12 +36,72 @@ module.exports = function exerciseController(lang) {
             res.render('exercises.hbs', {
                 layout: 'themeSelectMain.hbs',
                 isJs: true,
+                difficulty: req.params.difficulty,
                 theme: themeMapper.fromThemeToOutObj(theme),
                 exercises: exercises.map(ex => exerciseMapper.fromExerciseToOutObj(ex)),
             });
-        } catch (err) {
-            console.error(err);
+        } catch (e) {
+            console.error(e);
         }
     });
+
+    router.get('/:themeId/:difficulty/next', async (req, res) => {
+        try {
+            let difficulty;
+            switch (req.params.difficulty) {
+                case 'easy':
+                    difficulty = 'middle';
+                    res.redirect(`../../${req.params.themeId}/${difficulty}`);
+                    break;
+                case 'middle':
+                    difficulty = 'hard';
+                    res.redirect(`../../${req.params.themeId}/${difficulty}`);
+                    break;
+                case 'hard':
+                    difficulty = 'easy';
+                    let theme = await themeService.findById(req.params.themeId);
+                    let newTheme = await themeService.findByNumber(theme.number + 1);
+                    if (newTheme === null) {
+                        res.redirect(`/${lang}`);
+                    } else {
+                        res.redirect(`../../${newTheme._id}/${difficulty}`);
+                    }
+                    break;
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    });
+
+    router.get('/:themeId/:difficulty/prev', async (req, res) => {
+        try {
+
+            let difficulty;
+            switch (req.params.difficulty) {
+                case 'easy':
+                    let theme = await themeService.findById(req.params.themeId);
+                    let newTheme = await themeService.findByNumber(theme.number - 1);
+                    if (newTheme === null) {
+                        res.redirect(`/${lang}`);
+                    } else {
+                        difficulty = 'hard';
+                        res.redirect(`../../${newTheme.themeId}/${difficulty}`);
+                    }
+                    break;
+                case 'hard':
+                    difficulty = 'middle';
+                    res.redirect(`../../${req.params.themeId}/${difficulty}`);
+                    break;
+                case 'middle':
+                    difficulty = 'easy';
+                    res.redirect(`../../${req.params.themeId}/${difficulty}`);
+                    break;
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    });
+
+
     return router;
 };
