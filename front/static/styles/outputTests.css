@@ -1,0 +1,55 @@
+.testOut {
+    height: 30px;
+    display: flex;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.successTest {
+    color: #2ecc71;
+}
+
+.wrongTest {
+    color: #e74c3c;
+}
+
+.errorTest {
+    color: #e0b620;
+}
+
+.testStatistic {
+    width: 20%;
+    min-width: 50px;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.iconTestResult {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 23px;
+    width: 20%;
+    min-width: 50px;
+    height: 100%;
+    /*border: 1px solid #000000;*/
+}
+
+.textTestResult {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    height: 100%;
+    /*border: 1px solid #000000;*/
+}
+
+.inputTestResult {
+    border-right: 1px solid #000000;
+}
+
+.headerTestResults {
+    border-bottom: 1px solid #c9c9c9;
+}

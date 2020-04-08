@@ -41,7 +41,7 @@
 
 .editorContainer {
     padding: 10px 0 0 18px;
-    background-color: lightgrey;
+    background-color: #e2e2e2;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.2s ease-out;
@@ -68,8 +68,9 @@
 .output {
     width: 80%;
     height: 300px;
-    border: 1px solid black;
-    background: #dfdfdf;
+    /*border: 1px solid black;*/
+    background: #f7f7f7;
+    overflow: auto;
 }
 
 .start {
