@@ -15,20 +15,25 @@ const langOptions = {
 async function makeTests(id, sourceCode, lang) {
     sourceCode = langOptions[lang].readLine + sourceCode;
     const exercise = await exerciseRepository.findById(id);
-    const results = {};
+    const results = [];
     for (let test of exercise.tests) {
 
         let fullSourceCode = sourceCode;
         if (test.additionalCode) fullSourceCode += test.additionalCode;
-        const stdIn = test.input.join('\n');
+        const stdin = test.input.join('\n');
         let result = await axios.post('http://localhost:3000/submissions/', {
             language_id: langOptions[lang].languageId,
             wait: "true",
             source_code: fullSourceCode,
-            stdin: stdIn,
+            stdin,
             expected_output: test.output,
         });
-        results[stdIn] = result.data.status;
+        results.push({
+            resultId: result.data.status.id,
+            stdin,
+            description: result.data.status.description,
+            stdout: result.data.stdout,
+        });
     }
     return results;
 }

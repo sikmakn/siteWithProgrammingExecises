@@ -3,11 +3,6 @@ const answers = {
     successId: 3,
     wrongId: 4,
 };
-const messageColors = {
-    success: "green",
-    wrong: "red",
-    error: "yellow",
-};
 
 const coll = document.getElementsByClassName("collapsible");
 for (let i = 0; i < coll.length; i++) {
@@ -32,6 +27,7 @@ async function test(event) {
     const editorName = event.target.parentNode.previousElementSibling.id;
     const sourceCode = editors.get(editorName).getValue();
     const outputDiv = event.target.previousElementSibling;
+    outputDiv.innerHTML = null;
     const response = await fetch(`./${exerciseId}/test`,
         {
             method: 'post',
@@ -44,22 +40,96 @@ async function test(event) {
 }
 
 function outResults(results, outputDiv) {
-    for (let resultKey in results) {
-        const outDiv = document.createElement('div');
-        const result = results[resultKey];
-        switch (result.id) {
+    let successCount = 0;
+    let wrongCount = 0;
+    let errorCount = 0;
+    for (let result of results) {
+        switch (result.resultId) {
             case answers.successId:
-                outDiv.style.color = messageColors.success;
+                successCount++;
                 break;
             case answers.wrongId:
-                outDiv.style.color = messageColors.wrong;
+                wrongCount++;
                 break;
             default:
-                outDiv.style.color = messageColors.error;
+                errorCount++;
+                break;
         }
-        outDiv.innerHTML = `${resultKey} : ${results[resultKey].description}`;
-        outputDiv.append(outDiv);
+        outResultOfTest(result, outputDiv);
     }
+    outResultStatistic(successCount, wrongCount, errorCount, outputDiv);
+}
+
+function outResultStatistic(successCount, wrongCount, errorCount, outputDiv) {
+    const statisticResultDiv = document.createElement('div');
+    statisticResultDiv.classList.add('testOut');
+    statisticResultDiv.classList.add('headerTestResults');
+
+    createStatisticIconDiv(successCount, wrongCount, errorCount, statisticResultDiv);
+
+    const stdinDiv = creatTextTestDiv();
+    stdinDiv.innerHTML = "INPUT";
+    statisticResultDiv.append(stdinDiv);
+
+    const stdoutDiv = creatTextTestDiv();
+    stdoutDiv.innerHTML = "OUTPUT";
+    statisticResultDiv.append(stdoutDiv);
+
+    outputDiv.insertBefore(statisticResultDiv, outputDiv.firstChild);
+}
+
+function createStatisticIconDiv(successCount, wrongCount, errorCount, outDiv) {
+    const iconDiv = document.createElement('div');
+    iconDiv.classList.add('testStatistic');
+    iconDiv.innerHTML = `<span class="successTest">${successCount}</span>`;
+    iconDiv.innerHTML += `<span class="wrongTest">${wrongCount}</span>`;
+    iconDiv.innerHTML += `<span class="errorTest">${errorCount}</span>`;
+    outDiv.append(iconDiv);
+}
+
+function creatTextTestDiv() {
+    const stdinDiv = document.createElement('div');
+    stdinDiv.classList.add('textTestResult');
+    return stdinDiv;
+}
+
+function outResultOfTest(result, outputDiv) {
+    const outDiv = document.createElement('div');
+    outDiv.classList.add('testOut');
+
+    addIconResult(result, outDiv);
+    const inputDiv = addTextTestResultDiv(result.stdin || '-', outDiv);
+    inputDiv.classList.add('inputTestResult');
+    outDiv.append(inputDiv);
+
+    const outTestDiv = addTextTestResultDiv(result.stdout || '-', outDiv);
+    outDiv.append(outTestDiv);
+
+    outputDiv.append(outDiv);
+}
+
+function addIconResult(result, outDiv) {
+    const iconDiv = document.createElement('div');
+    iconDiv.classList.add('iconTestResult');
+
+    switch (result.resultId) {
+        case answers.successId:
+            iconDiv.innerHTML = '<i class="fas fa-check successTest"></i>';
+            break;
+        case answers.wrongId:
+            iconDiv.innerHTML = '<i class="fas fa-times wrongTest"></i>';
+            break;
+        default:
+            iconDiv.innerHTML = '<i class="fas fa-question errorTest"></i>';
+            break;
+    }
+    outDiv.append(iconDiv);
+}
+
+function addTextTestResultDiv(result, outDiv) {
+    const inputDiv = creatTextTestDiv();
+    inputDiv.innerHTML = result;
+    return inputDiv;
 }
 
 //  gruvbox katzelmitch kurior sqlserver tomorrow tomorrow_night_eighties twilight

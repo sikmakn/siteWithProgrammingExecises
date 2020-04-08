@@ -20,9 +20,14 @@ async function findByIdAndUpdate(id, updateTheme) {
     return await theme.findByIdAndUpdate(id, updateTheme);
 }
 
+async function findByNumber(number) {
+    return theme.findOne({number});
+}
+
 module.exports = {
     create,
     findThemes,
     findById,
     findByIdAndUpdate,
+    findByNumber,
 };

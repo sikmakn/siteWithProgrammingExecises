@@ -12,11 +12,22 @@ async function findThemes(themeForFind, sort = {number: 1}, skip = 0, count) {
 
 async function findById(id) {
     const theme = await themeRepo.findById(id);
+    if (theme === null)
+        return theme;
+    return theme._doc;
+}
+
+async function findByNumber(number) {
+    const theme = await themeRepo.findByNumber(number);
+    if (theme === null)
+        return theme;
     return theme._doc;
 }
 
 async function findByIdAndUpdate(id, updateTheme) {
     const res = await themeRepo.findByIdAndUpdate(id, updateTheme);
+    if (res === null)
+        return res;
     return res._doc;
 }
 
@@ -25,4 +36,5 @@ module.exports = {
     findThemes,
     findById,
     findByIdAndUpdate,
+    findByNumber,
 };
