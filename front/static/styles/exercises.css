@@ -10,6 +10,11 @@
     justify-content: space-between;
 }
 
+.title .themeName {
+    text-decoration: none;
+    color: #000000;
+}
+
 .title .theoryLink {
     text-decoration: none;
     color: grey;
