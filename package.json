@@ -15,10 +15,14 @@
     "axios": "^0.19.2",
     "body-parser": "latest",
     "express": "^4.17.1",
+    "express-async-handler": "^1.1.4",
     "express-formidable": "^1.2.0",
     "express-handlebars": "^3.1.0",
+    "express-winston": "^4.0.3",
     "mongodb": "^3.5.5",
     "mongoose": "^5.9.5",
-    "mongoose-auto-increment": "^5.0.1"
+    "mongoose-auto-increment": "^5.0.1",
+    "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^4.4.2"
   }
 }

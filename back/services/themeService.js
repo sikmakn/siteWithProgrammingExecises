@@ -6,8 +6,7 @@ async function create(newTheme) {
 }
 
 async function findThemes(themeForFind, sort = {number: 1}, skip = 0, count) {
-    const themes = await themeRepo.findThemes(themeForFind, sort, skip, count);
-    return themes.map(el => el._doc);
+    return await themeRepo.findThemes(themeForFind, sort, skip, count);
 }
 
 async function findById(id) {

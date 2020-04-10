@@ -30,7 +30,10 @@ app.use(bodyParser.json());
 app.use("/js", themeCommonController('js'));
 app.use("/js/exercises/", exerciseController('js'));
 app.use("/net", themeCommonController('net'));
+app.use("/net/exercises/", exerciseController('net'));
 app.use("/python", themeCommonController('python'));
+app.use("/python/exercises/", exerciseController('python'));
+
 
 app.get('/', (req, res) => {
     res.render('layouts/main.hbs')
@@ -38,6 +41,14 @@ app.get('/', (req, res) => {
 
 app.get('/addTheme', async (req, res) => {
     res.render('addTheme.hbs', {layout: 'themeSelectMain.hbs',})
+});
+
+const errorLogger = require('./back/Handlers/logger').errorLogger;
+app.use(errorLogger);
+
+app.use((error, req, res, next) => {
+    res.status(500);
+    res.send("Internal Server Error");
 });
 
 app.listen(3001);
