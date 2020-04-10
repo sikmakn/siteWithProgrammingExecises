@@ -7,8 +7,8 @@
 {{#with theme}}
     <div class="exercisesPageContainer">
         <div class="title">
-            <div class="themeName">{{number}}. {{name}}</div>
-            <a href="" class="theoryLink">Сначала изучите теорию</a>
+            <a href="/{{language}}" class="themeName">{{number}}. {{name}}</a>
+            <a href="{{theoryLink}}" class="theoryLink" target="_blank">Сначала изучите теорию</a>
             {{>semaphore language=language _id=_id}}
         </div>
 {{/with}}

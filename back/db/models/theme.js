@@ -15,6 +15,9 @@ const themeScheme = new mongoose.Schema({
         type: String,
         required: true,
     },
+    theoryLink: {
+        type: String,
+    }
 });
 themeScheme.plugin(autoIncrement.plugin, {model: 'Theme', field: 'number',});
 
