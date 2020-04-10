@@ -34,12 +34,12 @@ header nav > div {
 
 .headerContacts div {
     align-self: center;
-    margin-right: 30px;
+    margin-right: 15px;
 }
 
-.headerContacts > img {
-    width: 28px;
-    height: 28px;
+.headerContacts img {
+    width: 24px;
+    height: 24px;
     margin-right: 10px;
     align-self: center;
 }
