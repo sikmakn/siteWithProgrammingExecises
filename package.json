@@ -9,7 +9,7 @@
   "author": "sikmak",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.3"
   },
   "dependencies": {
     "axios": "^0.19.2",
