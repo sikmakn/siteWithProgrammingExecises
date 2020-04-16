@@ -47,8 +47,10 @@ const errorLogger = require('./back/Handlers/logger').errorLogger;
 app.use(errorLogger);
 
 app.use((error, req, res, next) => {
-    res.status(500);
-    res.send("Internal Server Error");
+    if (req.status !== 401) {
+        res.status(500);
+        res.send("Internal Server Error");
+    }
 });
 
 app.listen(3001);

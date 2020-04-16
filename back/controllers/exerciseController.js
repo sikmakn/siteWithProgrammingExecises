@@ -4,6 +4,7 @@ const themeService = require('../services/themeService');
 const themeMapper = require('../Mappers/themeMapper');
 const exerciseMapper = require('../Mappers/exerciseMapper');
 const asyncHandler = require('express-async-handler');
+const mustAuthenticated = require('../Handlers/adminAuth');
 
 module.exports = function exerciseController(lang) {
     const router = express.Router();
@@ -13,13 +14,12 @@ module.exports = function exerciseController(lang) {
         res.send(results);
     }));
 
-    router.post('/:themeId/:difficulty', asyncHandler(async (req, res) => {
+    router.post('/:themeId/:difficulty', mustAuthenticated, asyncHandler(async (req, res) => {
         let newExercise = exerciseMapper.fromObjToExerciseObj(req.body);
         newExercise.difficulty = req.params.difficulty;
         newExercise.themeId = req.params.themeId;
-
         const result = await exerciseService.create(newExercise);
-        res.send(result);
+        res.json(result);
     }));
 
     router.get('/:themeId/:difficulty', asyncHandler(async (req, res) => {

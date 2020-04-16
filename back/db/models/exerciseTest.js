@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
-
+const autoIncrement = require('mongoose-auto-increment');
 const exerciseTestScheme = new mongoose.Schema({
     input: {
         type: [String],
-        required: true,
     },
     additionalCode: {
         type: String,

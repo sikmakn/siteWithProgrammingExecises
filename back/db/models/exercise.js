@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const exerciseTest = require('./exerciseTest');
+const autoIncrement = require('mongoose-auto-increment');
 
 const exerciseScheme = new mongoose.Schema({
     difficulty: {
@@ -24,6 +25,7 @@ const exerciseScheme = new mongoose.Schema({
         type: [exerciseTest.scheme],
     }
 });
+exerciseScheme.plugin(autoIncrement.plugin, {model: 'Exercise', field: 'number',});
 module.exports = {
     model: mongoose.model("Exercise", exerciseScheme),
     scheme: exerciseScheme
