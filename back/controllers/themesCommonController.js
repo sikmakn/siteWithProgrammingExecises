@@ -2,6 +2,7 @@ const express = require("express");
 const themeService = require('../services/themeService');
 const themeMapper = require('../Mappers/themeMapper');
 const asyncHandler = require('express-async-handler');
+const mustAuthenticated = require('../Handlers/adminAuth');
 
 module.exports = function themeCommonController(lang) {
     const router = express.Router();
@@ -19,10 +20,10 @@ module.exports = function themeCommonController(lang) {
         res.render('themesList.hbs', resObj);
     }));
 
-    router.post('/', asyncHandler(async (req, res) => {
+    router.post('/', mustAuthenticated, asyncHandler(async (req, res) => {
         const newTheme = themeMapper.fromObjToThemeObj(req.body);
-        await themeService.create(newTheme);
-        res.render('empty.hbs');
+        const createdTheme = await themeService.create(newTheme);
+        res.json(createdTheme);
     }));
 
     return router;
