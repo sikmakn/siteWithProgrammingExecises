@@ -25,8 +25,13 @@ const exerciseScheme = new mongoose.Schema({
         type: [exerciseTest.scheme],
     }
 });
-exerciseScheme.plugin(autoIncrement.plugin, {model: 'Exercise', field: 'number',});
+exerciseScheme.plugin(autoIncrement.plugin, {
+    model: 'Exercise',
+    field: 'number',
+    startAt: 1,
+    incrementBy: 1,
+});
 module.exports = {
-    model: mongoose.model("Exercise", exerciseScheme),
+    exercise: mongoose.model("Exercise", exerciseScheme),
     scheme: exerciseScheme
 };

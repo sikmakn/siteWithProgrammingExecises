@@ -1,4 +1,4 @@
-const theme = require('../models/theme.js').model;
+const {theme} = require('../models/theme');
 
 async function create(newTheme) {
     let newThemeModel = new theme(newTheme);
