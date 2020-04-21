@@ -1,8 +1,11 @@
 <link rel="stylesheet" href="/styles/outputTests.css">
 {{#with theme}}
-    <a href="/{{language}}/exercises/{{_id}}/{{../difficulty}}/prev" class="prev" onclick=""><span
-            class="material-icons arrows">keyboard_arrow_left</span></a>
-    <a href="/{{language}}/exercises/{{_id}}/{{../difficulty}}/next" class="next"><span class="material-icons arrows">keyboard_arrow_right</span></a>
+    <a href="/{{language}}/exercises/{{_id}}/{{../difficulty}}/prev" class="prev" onclick="">
+        <span class="material-icons arrows">keyboard_arrow_left</span>
+    </a>
+    <a href="/{{language}}/exercises/{{_id}}/{{../difficulty}}/next" class="next">
+        <span class="material-icons arrows">keyboard_arrow_right</span>
+    </a>
 {{/with}}
 {{#with theme}}
     <div class="exercisesPageContainer">
@@ -31,4 +34,5 @@
 </div>
 <script src="https://kit.fontawesome.com/a81368914c.js"></script>
 <script src="/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="/options/aceOptions.js"></script>
 <script src="/scripts/exercises.js"></script>
