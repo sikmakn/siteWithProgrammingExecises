@@ -32,8 +32,15 @@ app.get('/', (req, res) => {
     res.render('layouts/main.hbs')
 });
 
+app.use((req, res) => {
+    res.status(404).render('404.hbs', {
+        layout: 'themeSelectMain.hbs',
+    })
+});
+
 app.use(errorLogger);
 app.use((error, req, res, next) => {
+    console.log(req.status);
     if (req.status === 401) return;
 
     res.status(500);
