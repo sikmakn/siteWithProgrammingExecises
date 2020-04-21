@@ -1,0 +1,16 @@
+.aboutContainer {
+    font-family: 'Roboto', sans-serif;
+    margin: 100px auto 0;
+    width: 65%;
+}
+
+.aboutContainer h1 {
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.aboutContainer p {
+    margin-top: 10px;
+    color: #444444;
+}
