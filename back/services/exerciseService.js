@@ -1,5 +1,6 @@
 const exerciseRepository = require('../db/repositories/exerciceRepository');
 const axios = require('axios');
+const {COMPILER_URI} = require('../../config/config');
 
 const langOptions = {
     'js': {
@@ -21,7 +22,7 @@ async function makeTests(id, sourceCode, lang) {
         let fullSourceCode = sourceCode;
         if (test.additionalCode) fullSourceCode += test.additionalCode;
         const stdin = test.input.join('\n');
-        let result = await axios.post('http://localhost:3000/submissions/', {
+        let result = await axios.post(COMPILER_URI, {
             language_id: langOptions[lang].languageId,
             wait: "true",
             source_code: fullSourceCode,

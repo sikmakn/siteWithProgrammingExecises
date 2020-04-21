@@ -98,11 +98,11 @@ function outResultOfTest(result, outputDiv) {
     outDiv.classList.add('testOut');
 
     addIconResult(result, outDiv);
-    const inputDiv = addTextTestResultDiv(result.stdin || '-', outDiv);
+    const inputDiv = addTextTestResultDiv(result.stdin || '-');
     inputDiv.classList.add('inputTestResult');
     outDiv.append(inputDiv);
 
-    const outTestDiv = addTextTestResultDiv(result.stdout || '-', outDiv);
+    const outTestDiv = addTextTestResultDiv(result.stdout || '-');
     outDiv.append(outTestDiv);
 
     outputDiv.append(outDiv);
@@ -126,10 +126,8 @@ function addIconResult(result, outDiv) {
     outDiv.append(iconDiv);
 }
 
-function addTextTestResultDiv(result, outDiv) {
+function addTextTestResultDiv(result) {
     const inputDiv = creatTextTestDiv();
     inputDiv.innerHTML = result;
     return inputDiv;
 }
-
-//  gruvbox katzelmitch kurior sqlserver tomorrow tomorrow_night_eighties twilight

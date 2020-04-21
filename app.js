@@ -3,10 +3,11 @@ const exphbs = require('express-handlebars');
 const mongoose = require('mongoose');
 const autoIncrement = require('mongoose-auto-increment');
 const bodyParser = require('body-parser');
+const config = require('./config/config');
 
-
+const PORT = process.env.PORT || 3001;
 const app = express();
-mongoose.connect("mongodb://localhost:27017/test1db", {
+mongoose.connect(config.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
@@ -53,7 +54,7 @@ app.use((error, req, res, next) => {
     }
 });
 
-app.listen(3001);
+app.listen(PORT);
 
 process.on("SIGINT", () => {
     mongoose.disconnect();
