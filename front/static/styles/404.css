@@ -1,0 +1,24 @@
+.errorUrlContainer {
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 1 0 auto;
+}
+
+.errorUrlContainer h1 {
+    font-size: 16rem;
+}
+
+.errorUrlContainer h2 {
+    font-size: 3rem;
+}
+
+.errorUrlContainer p {
+    color: #a6a6a6;
+}
+
+.errorUrlContainer a {
+    color: #444444;
+}

@@ -22,9 +22,12 @@ module.exports = function exerciseController(lang) {
         res.json(result);
     }));
 
-    router.get('/:themeId/:difficulty', asyncHandler(async (req, res) => {
+    router.get('/:themeId/:difficulty', asyncHandler(async (req, res, next) => {
         const theme = await themeService.findById(req.params.themeId);
         const exercises = await exerciseService.findByThemeId(req.params.themeId, req.params.difficulty);
+
+        if (theme.length === 0 || exercises.length === 0) return next();
+
         res.render('exercises.hbs', {
             layout: 'themeSelectMain.hbs',
             isJs: true,
@@ -34,7 +37,7 @@ module.exports = function exerciseController(lang) {
         });
     }));
 
-    router.get('/:themeId/:difficulty/next', asyncHandler(async (req, res) => {
+    router.get('/:themeId/:difficulty/next', asyncHandler(async (req, res, next) => {
         let difficulty;
         switch (req.params.difficulty) {
             case 'easy':
@@ -55,10 +58,13 @@ module.exports = function exerciseController(lang) {
                     res.redirect(`../../${newTheme._id}/${difficulty}`);
                 }
                 break;
+            default:
+                next();
+                break;
         }
     }));
 
-    router.get('/:themeId/:difficulty/prev', asyncHandler(async (req, res) => {
+    router.get('/:themeId/:difficulty/prev', asyncHandler(async (req, res, next) => {
         let difficulty;
         switch (req.params.difficulty) {
             case 'easy':
@@ -78,6 +84,9 @@ module.exports = function exerciseController(lang) {
             case 'middle':
                 difficulty = 'easy';
                 res.redirect(`../../${req.params.themeId}/${difficulty}`);
+                break;
+            default:
+                next();
                 break;
         }
     }));
