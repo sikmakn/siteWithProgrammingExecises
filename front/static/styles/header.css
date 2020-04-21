@@ -10,8 +10,14 @@ header nav {
     margin-left: 20px;
 }
 
-header nav > div {
-    padding: 15px 10px 10px;
+header nav > a {
+    padding: 15px 10px 10px 5px;
+    text-decoration: none;
+    color: #000000;
+}
+
+header nav > a:hover {
+    text-decoration: underline;
 }
 
 .logoName {

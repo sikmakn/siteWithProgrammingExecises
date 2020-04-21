@@ -31,6 +31,11 @@ setUpControllers(app);
 app.get('/', (req, res) => {
     res.render('layouts/main.hbs')
 });
+app.get('/about', (req, res) => {
+    res.render('about.hbs', {
+        layout: 'themeSelectMain.hbs',
+    })
+});
 
 app.use((req, res) => {
     res.status(404).render('404.hbs', {
