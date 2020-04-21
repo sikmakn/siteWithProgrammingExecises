@@ -19,6 +19,7 @@
     "express-formidable": "^1.2.0",
     "express-handlebars": "^3.1.0",
     "express-winston": "^4.0.3",
+    "helmet": "^3.22.0",
     "mongodb": "^3.5.5",
     "mongoose": "^5.9.5",
     "mongoose-auto-increment": "^5.0.1",

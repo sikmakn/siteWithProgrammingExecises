@@ -1,5 +1,6 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
+const helmet = require('helmet');
 const mongoose = require('mongoose');
 const autoIncrement = require('mongoose-auto-increment');
 const bodyParser = require('body-parser');
@@ -27,6 +28,7 @@ app.set('views', './front/views');
 
 app.use(express.static(__dirname + '/front/static'));
 app.use(bodyParser.json());
+app.use(helmet());
 
 app.use("/js", themeCommonController('js'));
 app.use("/js/exercises/", exerciseController('js'));
