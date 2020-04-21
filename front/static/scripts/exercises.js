@@ -1,8 +1,5 @@
 const editors = new Map();
-const answers = {
-    successId: 3,
-    wrongId: 4,
-};
+const lang = window.location.pathname.split('/')[1];
 
 const coll = document.getElementsByClassName("collapsible");
 for (let i = 0; i < coll.length; i++) {
@@ -15,8 +12,8 @@ for (let i = 0; i < coll.length; i++) {
             content.style.maxHeight = content.scrollHeight + "px";
             const editorName = content.children[0].id;
             const editor = ace.edit(editorName);
-            editor.setTheme("ace/theme/gruvbox");
-            editor.session.setMode("ace/mode/javascript");
+            editor.setTheme(aceOptions.theme);
+            editor.session.setMode(aceOptions.mods[lang]);
             editors.set(editorName, editor);
         }
     });
@@ -45,10 +42,10 @@ function outResults(results, outputDiv) {
     let errorCount = 0;
     for (let result of results) {
         switch (result.resultId) {
-            case answers.successId:
+            case aceOptions.answers.successId:
                 successCount++;
                 break;
-            case answers.wrongId:
+            case aceOptions.answers.wrongId:
                 wrongCount++;
                 break;
             default:
@@ -113,10 +110,10 @@ function addIconResult(result, outDiv) {
     iconDiv.classList.add('iconTestResult');
 
     switch (result.resultId) {
-        case answers.successId:
+        case aceOptions.answers.successId:
             iconDiv.innerHTML = '<i class="fas fa-check successTest"></i>';
             break;
-        case answers.wrongId:
+        case aceOptions.answers.wrongId:
             iconDiv.innerHTML = '<i class="fas fa-times wrongTest"></i>';
             break;
         default:
