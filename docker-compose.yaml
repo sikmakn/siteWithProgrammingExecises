@@ -15,7 +15,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - MONGODB_URI=mongodb://mongodb:27017/test1db
+      - MONGODB_URI=mongodb://mongoadmin:secret@mongodb:27017/test2db?authSource=admin
       - ADMIN_BEARER=2y18QRWjt0gx8s/VL3eZL/A3IuslIrn8RRsU6VeAw86.LYML6Ylp7SLQ.
       - COMPILER_URI=http://api:3000/submissions/
 
@@ -23,6 +23,10 @@ services:
     image: mongo:latest
     volumes:
       - mongodb_volume:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongoadmin
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+      - MONGO_INITDB_DATABASE=test2db
     restart: always
 
   api:
