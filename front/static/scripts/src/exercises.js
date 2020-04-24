@@ -19,21 +19,20 @@ for (let i = 0; i < coll.length; i++) {
     });
 }
 
-async function test(event) {
+function test(event) {
     const exerciseId = event.target.parentNode.parentNode.parentNode.id;
     const editorName = event.target.parentNode.previousElementSibling.id;
     const sourceCode = editors.get(editorName).getValue();
     const outputDiv = event.target.previousElementSibling;
     outputDiv.innerHTML = null;
-    const response = await fetch(`./${exerciseId}/test`,
+    fetch(`./${exerciseId}/test`,
         {
             method: 'post',
             headers: {'Content-Type': 'application/json;charset=utf-8'},
             body: JSON.stringify({sourceCode}),
-        });
-
-    let results = await response.json();
-    outResults(results, outputDiv);
+        })
+        .then(res => res.json())
+        .then(res => outResults(res, outputDiv));
 }
 
 function outResults(results, outputDiv) {
