@@ -15,7 +15,7 @@ module.exports = function exerciseController(lang) {
     }));
 
     router.post('/:themeId/:difficulty', mustAuthenticated, asyncHandler(async (req, res) => {
-        let newExercise = exerciseMapper.fromObjToExerciseObj(req.body);
+        let newExercise = exerciseMapper.fromObjToExerciseObj(req.body);//todo check difficulty
         newExercise.difficulty = req.params.difficulty;
         newExercise.themeId = req.params.themeId;
         const result = await exerciseService.create(newExercise);

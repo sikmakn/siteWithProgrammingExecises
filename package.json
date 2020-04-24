@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npx babel ./front/static/scripts/src --out-dir ./front/static/scripts/dist && nodemon app",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prod": "npm install && npx babel ./front/static/scripts/src --out-dir ./front/static/scripts/dist && npm app"
   },
   "author": "sikmak",
   "license": "ISC",
