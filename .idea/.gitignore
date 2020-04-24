@@ -1,5 +1,6 @@
 # Default ignored files
 /node_modules
 /log
+.conf
 # Default ignored files
 /workspace.xml
