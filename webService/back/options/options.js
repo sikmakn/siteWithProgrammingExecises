@@ -13,8 +13,8 @@ const langOptions = {
         readLine: `fs=require('fs');
             let params = fs.readFileSync('/dev/stdin')
                 .toString().split("\\n");
-             let count = 0;
-            const readLine = ()=> params[count++];`,
+             let countForPrompt = 0;
+            const prompt = ()=> params[countForPrompt++];`,
         languageId: 63,
     },
 };

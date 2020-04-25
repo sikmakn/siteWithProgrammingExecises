@@ -7,13 +7,13 @@ volumes:
 
 services:
   web_service:
-    build: .
+    build: ./webService
     volumes:
-      - ./log:/usr/src/web_site/log
+      - ./webService/log:/usr/src/web_site/log
     restart: always
     ports:
       - "3000:3000"
-    env_file: ./docker_conf/prod.conf
+    env_file: docker_conf/web_service.conf
 
   mongodb:
     image: mongo:latest

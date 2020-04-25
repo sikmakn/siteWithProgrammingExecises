@@ -4,7 +4,7 @@
   "description": "Site with tasks by js and(maybe) another languages",
   "main": "index.js",
   "scripts": {
-    "start": "npx babel ./front/static/scripts/src --out-dir ./front/static/scripts/dist && nodemon app",
+    "start": "npx babel ./front/static/scripts/src --out-dir ./front/static/scripts/dist && ../node_modules/.bin/nodemon app",
     "prod": "npm install && npx babel ./front/static/scripts/src --out-dir ./front/static/scripts/dist && npm app"
   },
   "author": "sikmak",
