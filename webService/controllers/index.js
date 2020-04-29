@@ -1,6 +1,6 @@
 const themeCommonController = require("./themesCommonController");
 const exerciseController = require("./exerciseController");
-const {languages} = require('../options/options');
+const {languages} = require('../options');
 
 function setUpLang(app, lang) {
     app.use(`/${lang}`, themeCommonController(lang));

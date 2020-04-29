@@ -1,7 +1,7 @@
 const winston = require('winston');
 const expressWinston = require('express-winston');
 require('winston-daily-rotate-file');
-const {loggerOptions} = require('../options/options');
+const {loggerOptions} = require('../options');
 
 const transport = new (winston.transports.DailyRotateFile)(loggerOptions);
 

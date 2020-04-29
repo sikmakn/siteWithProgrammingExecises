@@ -1,7 +1,7 @@
 const exerciseRepository = require('../db/repositories/exerciceRepository');
 const axios = require('axios');
-const {COMPILER_URI} = require('../../config/config');
-const {langOptions} = require('../options/options');
+const {COMPILER_URI} = require('../config');
+const {langOptions} = require('../options');
 
 async function makeTests(id, sourceCode, lang) {
     sourceCode = langOptions[lang].readLine + sourceCode;

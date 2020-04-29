@@ -1,13 +1,10 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const exphbs = require('express-handlebars');
 const helmet = require('helmet');
 const compression = require('compression');
-const mongoose = require('mongoose');
-const autoIncrement = require('mongoose-auto-increment');
-const bodyParser = require('body-parser');
-const config = require('./config');
-const {mongoOptions, PORT} = require('./options');
-const {errorLogger} = require('./Handlers/logger');
+const {PORT} = require('./options');
+const setUpControllers = require('./controllers');
 
 const app = express();
 
@@ -21,11 +18,6 @@ app.use(express.static(__dirname + '/front/static'));
 app.use(bodyParser.json());
 app.use(helmet());
 
-mongoose.connect(config.MONGODB_URI, mongoOptions);
-autoIncrement.initialize(mongoose.connection);
-
-
-const setUpControllers = require('./controllers');
 setUpControllers(app);
 
 app.get('/', (req, res) => {
@@ -43,7 +35,6 @@ app.use((req, res) => {
     })
 });
 
-app.use(errorLogger);
 app.use((error, req, res, next) => {
     console.log(req.status);
     if (req.status === 401) return;
@@ -53,8 +44,3 @@ app.use((error, req, res, next) => {
 });
 
 app.listen(PORT);
-
-process.on("SIGINT", () => {
-    mongoose.disconnect();
-    process.exit();
-});

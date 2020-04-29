@@ -2,10 +2,10 @@
   "name": "sitewithprogrammingexecises",
   "version": "1.0.0",
   "description": "Site with tasks by js and(maybe) another languages",
-  "main": "index.js",
+  "main": "app.js",
+  "private": true,
   "scripts": {
-    "start": "npx babel ./front/static/scripts/src --out-dir ./front/static/scripts/dist && ../node_modules/.bin/nodemon app",
-    "prod": "npm install && npx babel ./front/static/scripts/src --out-dir ./front/static/scripts/dist && npm app"
+    "start": "npx babel ../gateway/front/static/scripts/src --out-dir ./front/static/scripts/dist && ../node_modules/.bin/nodemon app"
   },
   "author": "sikmak",
   "license": "ISC",

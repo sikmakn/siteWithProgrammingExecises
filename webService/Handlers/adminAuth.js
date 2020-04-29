@@ -1,4 +1,4 @@
-const {ADMIN_BEARER} = require('../../config/config');
+const {ADMIN_BEARER} = require('../config');
 
 module.exports = function mustAuthenticated(req, res, next) {
     if (req.header('Authorization') !== `Bearer ${ADMIN_BEARER}`) {
