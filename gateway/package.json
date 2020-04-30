@@ -19,11 +19,15 @@
     "nodemon": "^2.0.3"
   },
   "dependencies": {
+    "amqp-connection-manager": "^3.2.0",
+    "amqplib": "^0.5.5",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
     "express-handlebars": "^4.0.4",
-    "helmet": "^3.22.0"
+    "express-formidable": "^1.2.0",
+    "helmet": "^3.22.0",
+    "uuid": "^8.0.0"
   }
 }

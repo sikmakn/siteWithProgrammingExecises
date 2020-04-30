@@ -4,34 +4,18 @@
   "description": "Site with tasks by js and(maybe) another languages",
   "main": "app.js",
   "private": true,
-  "scripts": {
-    "start": "npx babel ../gateway/front/static/scripts/src --out-dir ./front/static/scripts/dist && ../node_modules/.bin/nodemon app"
-  },
+  "scripts": {},
   "author": "sikmak",
   "license": "ISC",
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.0",
-    "@babel/node": "^7.8.7",
-    "@babel/preset-env": "^7.9.5",
-    "babel-minify": "^0.5.1",
-    "babel-preset-minify": "^0.5.1",
     "nodemon": "^2.0.3"
   },
   "dependencies": {
+    "amqp-connection-manager": "^3.2.0",
+    "amqplib": "^0.5.5",
     "axios": "^0.19.2",
-    "body-parser": "latest",
-    "compression": "^1.7.4",
-    "express": "^4.17.1",
-    "express-async-handler": "^1.1.4",
-    "express-formidable": "^1.2.0",
-    "express-handlebars": "^3.1.0",
-    "express-winston": "^4.0.3",
-    "helmet": "^3.22.0",
     "mongodb": "^3.5.5",
     "mongoose": "^5.9.5",
-    "mongoose-auto-increment": "^5.0.1",
-    "winston": "^3.2.1",
-    "winston-daily-rotate-file": "^4.4.2"
+    "mongoose-auto-increment": "^5.0.1"
   }
 }

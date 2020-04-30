@@ -1,7 +1,7 @@
-const themeCommonController = require("./themesCommonController");
+const themeCommonController = require("./themeController");
 const exerciseController = require("./exerciseController");
 
 module.exports = function (app) {
-    app.use(`/theme`, themeCommonController());
-    app.use(`/exercises`, exerciseController());
+    app.use('/theme', themeCommonController());
+    app.use('/exercises', exerciseController());
 };

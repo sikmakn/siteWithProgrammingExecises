@@ -1,10 +1,16 @@
 const express = require("express");
 const asyncHandler = require('express-async-handler');
+const {rpcServices} = require('../options');
+const {rpcQueues} = require('../amqpHandler');
+const webServiceRPC = rpcQueues[rpcServices.WEB_SERVICE.serviceName];
+const webServiceControllers = rpcServices.WEB_SERVICE.controllers;
 
 module.exports = function exerciseController() {
     const router = express.Router();
 
     router.post('/:themeId/:exerciseId/test', asyncHandler(async (req, res, next) => {
+
+        //webServiceRPC[webServiceControllers.theme]()
         next();
     }));
 

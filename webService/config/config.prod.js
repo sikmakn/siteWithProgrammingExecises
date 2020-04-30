@@ -8,6 +8,5 @@ const {
 
 module.exports = {
     MONGODB_URI: `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}:${MONGO_PORT}/${MONGO_DB_NAME}?authSource=admin`,
-    ADMIN_BEARER: process.env.ADMIN_BEARER,
     COMPILER_URI: process.env.COMPILER_URI,
 };

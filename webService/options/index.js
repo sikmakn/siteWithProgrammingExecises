@@ -1,11 +1,3 @@
-const loggerOptions = {
-    filename: './log/application-%DATE%.log',
-    datePattern: 'YYYY-MM-DD',
-    zippedArchive: true,
-    maxSize: '20m',
-    maxFiles: '14d'
-};
-
 const languages = ['js', 'python', 'net'];
 
 const langOptions = {
@@ -27,9 +19,8 @@ const mongoOptions = {
 };
 
 module.exports = {
-    loggerOptions,
     languages,
     langOptions,
     mongoOptions,
-    PORT: process.env.PORT || 3000,
+    rpcServiceName: 'webServiceTestQ',
 };

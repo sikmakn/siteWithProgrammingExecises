@@ -3,8 +3,8 @@ const bodyParser = require('body-parser');
 const exphbs = require('express-handlebars');
 const helmet = require('helmet');
 const compression = require('compression');
-const {PORT} = require('./options');
-const setUpControllers = require('./controllers');
+const {PORT} = require('./config');
+const controllers = require('./controllers');
 
 const app = express();
 
@@ -18,11 +18,12 @@ app.use(express.static(__dirname + '/front/static'));
 app.use(bodyParser.json());
 app.use(helmet());
 
-setUpControllers(app);
+controllers(app);
 
 app.get('/', (req, res) => {
     res.render('layouts/main.hbs')
 });
+
 app.get('/about', (req, res) => {
     res.render('about.hbs', {
         layout: 'themeSelectMain.hbs',
