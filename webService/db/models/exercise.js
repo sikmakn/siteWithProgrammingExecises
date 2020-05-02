@@ -17,6 +17,10 @@ const exerciseScheme = new mongoose.Schema({
         min: 1,
         required: true,
     },
+    language: {
+        type: String,
+        required: true,
+    },
     task: {
         type: String,
         required: true,

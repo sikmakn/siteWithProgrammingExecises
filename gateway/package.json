@@ -5,7 +5,7 @@
   "main": "app.js",
   "private": true,
   "scripts": {
-    "start": "npx babel ./front/static/scripts/src --out-dir ./front/static/scripts/dist && ../node_modules/.bin/nodemon app"
+    "start": "npx babel ./front/static/scripts/src --out-dir ./front/static/scripts/dist && node app"
   },
   "author": "sikmak",
   "license": "ISC",

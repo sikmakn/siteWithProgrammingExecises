@@ -5,11 +5,29 @@ module.exports = {
     name: 'theme',
     methods: [
         {
-            name: 'getByLang',
+            name: 'getAllByLang',
             method: async (msg, res) => {
                 const themes = await themeService.findThemes({language: msg.lang});
                 const themesOut = themes.map(th => themeMapper.fromThemeToOutObj(th));
                 res(themesOut);
+            }
+        },
+        {
+            name: 'getById',
+            method: async (msg, res) => {
+                const theme = await themeService.findById(msg.id);
+                if (!theme) return res(theme);
+                const themeOut = themeMapper.fromThemeToOutObj(theme);
+                res(themeOut);
+            }
+        },
+        {
+            name: 'getByNumber',
+            method: async (msg, res) => {
+                const theme = await themeService.findByNumber(msg.number);
+                if (!theme) return res(theme);
+                const themeOut = themeMapper.fromThemeToOutObj(theme);
+                res(themeOut);
             }
         },
         {

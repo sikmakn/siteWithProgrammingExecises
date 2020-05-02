@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get('/:lang', asyncHandler(async (req, res) => {
     const {lang} = req.params;
-    const themesList = await webServiceRPC[webServiceControllers.theme]('getByLang', {lang});
+    const themesList = await webServiceRPC[webServiceControllers.theme]('getAllByLang', {lang});
     const resObj = {
         layout: 'themeSelectMain.hbs',
         themesList,
@@ -27,11 +27,11 @@ router.post('/', asyncHandler(async (req, res) => {//todo auth isAdmin
 }));
 
 router.patch('/:id', asyncHandler(async (req, res) => {//todo auth isAdmin
-    const createdTheme = await webServiceRPC[webServiceControllers.theme]('updateById', {
+    const updatedTheme = await webServiceRPC[webServiceControllers.theme]('updateById', {
         id: req.params.id,
         theme: req.body,
     });
-    res.json(createdTheme);
+    res.json(updatedTheme);
 }));
 
 module.exports = router;

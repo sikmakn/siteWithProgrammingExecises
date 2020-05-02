@@ -1,22 +1,22 @@
 const editors = new Map();
-const lang = window.location.pathname.split('/')[1];
 
-const coll = document.getElementsByClassName("collapsible");
-for (let i = 0; i < coll.length; i++) {
-    coll[i].addEventListener("click", function () {
-        this.classList.toggle("active");
-        const content = this.nextElementSibling;
-        if (content.style.maxHeight) {
-            content.style.maxHeight = null;
-        } else {
-            content.style.maxHeight = content.scrollHeight + "px";
-            const editorName = content.children[0].id;
-            const editor = ace.edit(editorName);
-            editor.setTheme(aceOptions.theme);
-            editor.session.setMode(aceOptions.mods[lang]);
-            editors.set(editorName, editor);
-        }
-    });
+function collapsibleClick(event, lang) {
+    event.target.classList.toggle("active");
+    const content = event.target.nextElementSibling;
+    if (content.style.maxHeight) {
+        content.style.maxHeight = null;
+    } else {
+        content.style.maxHeight = content.scrollHeight + "px";
+        const editorName = content.children[0].id;
+        createAceEditor(editorName, lang);
+    }
+}
+
+function createAceEditor(editorName, lang) {
+    const editor = ace.edit(editorName);
+    editor.setTheme(aceOptions.theme);
+    editor.session.setMode(aceOptions.mods[lang]);
+    editors.set(editorName, editor);
 }
 
 function test(event) {
@@ -25,7 +25,7 @@ function test(event) {
     const sourceCode = editors.get(editorName).getValue();
     const outputDiv = event.target.previousElementSibling;
     outputDiv.innerHTML = null;
-    fetch(`./${exerciseId}/test`,
+    fetch(`/exercises/${exerciseId}/test`,
         {
             method: 'post',
             headers: {'Content-Type': 'application/json;charset=utf-8'},

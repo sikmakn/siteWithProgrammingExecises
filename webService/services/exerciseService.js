@@ -1,16 +1,17 @@
 const exerciseRepository = require('../db/repositories/exerciceRepository');
+const themeRepository = require('../db/repositories/themeRepository');
 const axios = require('axios');
 const {COMPILER_URI} = require('../config');
 const {langOptions} = require('../options');
 
 async function makeTests(id, sourceCode, lang) {
-    sourceCode = langOptions[lang].readLine + sourceCode;
-    const exercise = await exerciseRepository.findById(id);
+    const exercise = await themeRepository.findById(id);
+    sourceCode = langOptions[exercise.language].readLine + sourceCode;
     const results = [];
     for (let test of exercise.tests) {
-
         let fullSourceCode = sourceCode;
         if (test.additionalCode) fullSourceCode += test.additionalCode;
+
         const stdin = test.input.join('\n');
         let result = await axios.post(COMPILER_URI, {
             language_id: langOptions[lang].languageId,
@@ -30,8 +31,11 @@ async function makeTests(id, sourceCode, lang) {
 }
 
 async function create(newExercise) {
-    let newThemeModel = await exerciseRepository.create(newExercise);
-    return newThemeModel._doc;
+    const theme = await themeRepository.findById(newExercise.themeId);
+    if (!theme) throw new Error('Theme is not exist');
+    newExercise.language = theme.language;
+    let newExerciseModel = await exerciseRepository.create(newExercise);
+    return newExerciseModel._doc;
 }
 
 async function findById(id) {
