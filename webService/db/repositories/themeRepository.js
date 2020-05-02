@@ -1,4 +1,5 @@
 const {theme} = require('../models/theme');
+const {mongooseUpdateParams} = require('../../options');
 
 async function create(newTheme) {
     let newThemeModel = new theme(newTheme);
@@ -17,7 +18,7 @@ async function findById(id) {
 }
 
 async function findByIdAndUpdate(id, updateTheme) {
-    return await theme.findByIdAndUpdate(id, updateTheme);
+    return await theme.findByIdAndUpdate(id, updateTheme, mongooseUpdateParams);
 }
 
 async function findByNumber(number) {

@@ -6,8 +6,8 @@ const {mongoOptions} = require('./options');
 mongoose.connect(MONGODB_URI, mongoOptions);
 autoIncrement.initialize(mongoose.connection);
 
-const createConnection = require('./amqpHandler');
-createConnection();
+const {reconnect} = require('./amqpHandler');
+reconnect();
 
 process.on("SIGINT", () => {
     mongoose.disconnect();

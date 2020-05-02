@@ -13,43 +13,21 @@ module.exports = {
             }
         },
         {
-            name: 'add',
-            method: (msg, res) => {
-
-                res('answer');
+            name: 'create',
+            method: async (msg, res) => {
+                const newTheme = themeMapper.fromObjToThemeObj(msg);
+                const createdTheme = await themeService.create(newTheme);
+                res(createdTheme);
             }
         },
         {
-            name: 'update',
-            method: (msg, res) => {
-
-                res('answer');
+            name: 'updateById',
+            method: async (msg, res) => {
+                const {id, theme} = msg;
+                const themeObj = themeMapper.fromObjToThemeObj(theme);
+                const resultTheme = await themeService.findByIdAndUpdate(id, themeObj);
+                res(resultTheme);
             }
         },
     ]
 };
-
-// module.exports = function themeCommonController(lang) {
-//     const router = express.Router();
-//
-//     router.get('/', asyncHandler(async (req, res) => {
-//         const themes = await themeService.findThemes({language: lang});
-//         const resObj = {
-//             layout: 'themeSelectMain.hbs',
-//             themesList: themes.map(th => themeMapper.fromThemeToOutObj(th)),
-//             lang,
-//         };
-//         const flagName = `is${lang[0].toUpperCase() + lang.slice(1)}`;
-//         resObj[flagName] = true;
-//
-//         res.render('themesList.hbs', resObj);
-//     }));
-//
-//     router.post('/', asyncHandler(async (req, res) => {
-//         const newTheme = themeMapper.fromObjToThemeObj(req.body);
-//         const createdTheme = await themeService.create(newTheme);
-//         res.json(createdTheme);
-//     }));
-//
-//     return router;
-// };

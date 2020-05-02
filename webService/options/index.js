@@ -18,9 +18,12 @@ const mongoOptions = {
     useCreateIndex: true,
 };
 
+const mongooseUpdateParams = {new: true, omitUndefined: true};
+
 module.exports = {
     languages,
     langOptions,
     mongoOptions,
     rpcServiceName: 'webServiceTestQ',
+    mongooseUpdateParams,
 };

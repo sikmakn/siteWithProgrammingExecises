@@ -1,4 +1,5 @@
 const {exercise} = require('../models/exercise');
+const {mongooseUpdateParams} = require('../../options');
 
 async function create(newExercise) {
     let newExerciseModel = new exercise(newExercise);
@@ -17,7 +18,7 @@ async function findById(id) {
 }
 
 async function findByIdAndUpdate(id, updateExercise) {
-    return await exercise.findByIdAndUpdate(id, updateExercise).select('+tests');
+    return await exercise.findByIdAndUpdate(id, updateExercise, mongooseUpdateParams).select('+tests');
 }
 
 module.exports = {

@@ -6,15 +6,14 @@ let producingChannel;
 let connection;
 
 async function reconnect() {
-    connection = createConnection();
-    producingChannel = await connection.createConfirmChannel();
-    await setupChannel(producingChannel);
+    await createConnection();
+    await createChannel();
 }
 
 function makeConnectionReconnect() {
     connection.on("close", function () {
         console.error("[AMQP] reconnecting"); //todo to logs
-        return setTimeout(() => reconnect(setupChannel), 1000);
+        return setTimeout(reconnect, 1000);
     });
 }
 
@@ -30,13 +29,12 @@ async function createConnection() {
 
 async function createChannel() {
     producingChannel = await connection.createConfirmChannel();
-    await setupChannel(producingChannel);
+    setupChannel(producingChannel);
 }
 
 async function getChannel() {
     if (!connection) {
-        await createConnection();
-        await createChannel();
+        await reconnect();
     }
     return producingChannel;
 }

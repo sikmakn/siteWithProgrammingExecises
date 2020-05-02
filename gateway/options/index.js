@@ -1,4 +1,4 @@
-const loggerOptions = {
+const loggerOptions = {//todo
     filename: './log/application-%DATE%.log',
     datePattern: 'YYYY-MM-DD',
     zippedArchive: true,
@@ -18,5 +18,5 @@ const rpcServices = {
 };
 
 module.exports = {
-    rpcServices
+    rpcServices,
 };
