@@ -8,7 +8,6 @@ module.exports = {
             name: 'testById',
             method: async (msg, res) => {
                 const {id, sourceCode} = msg;
-                console.log(msg);
                 const results = await exerciseService.makeTests(id, sourceCode);
                 res(results);
             }
@@ -31,7 +30,7 @@ module.exports = {
             }
         },
         {
-            name: 'update',
+            name: 'updateById',
             method: async (msg, res) => {
                 const {id, exercise} = msg;
                 const exerciseObj = exerciseMapper.fromObjToExerciseObj(exercise);

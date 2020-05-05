@@ -17,6 +17,11 @@ const rpcServices = {
     }
 };
 
+const pubSubExchanges = {
+    exerciseTests: 'exerciseTests',
+};
+
 module.exports = {
     rpcServices,
+    pubSubExchanges,
 };

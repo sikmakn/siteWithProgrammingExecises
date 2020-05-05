@@ -5,9 +5,9 @@ function fromObjToExerciseObj(obj) {
         difficulty: obj.difficulty,
         themeId: obj.themeId,
         task: obj.task,
-        tests: testMapper.arrToTests(obj.tests),
         language: obj.language,
     };
+    if (obj.tests) exercise.tests = testMapper.arrToTests(obj.tests);
     if (obj.number) exercise.number = obj.number;
     return exercise;
 }

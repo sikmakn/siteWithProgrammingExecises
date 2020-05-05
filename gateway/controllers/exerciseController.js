@@ -1,16 +1,24 @@
 const express = require("express");
 const asyncHandler = require('express-async-handler');
-const {rpcServices} = require('../options');
-const {rpcQueues} = require('../amqpHandler');
+const {rpcServices, pubSubExchanges} = require('../options');
+const {rpcQueues, publish} = require('../amqpHandler');
 const webServiceRPC = rpcQueues[rpcServices.WEB_SERVICE.serviceName];
 const webServiceControllers = rpcServices.WEB_SERVICE.controllers;
 
 const router = express.Router();
 
 router.post('/:exerciseId/test', asyncHandler(async (req, res) => {
+    const {sourceCode, themeId} = req.body;
     const results = await webServiceRPC[webServiceControllers.exercise]('testById', {
+        sourceCode,
         id: req.params.exerciseId,
-        sourceCode: req.body.sourceCode,
+    });
+    //todo if username from auth
+    await publish(pubSubExchanges.exerciseTests, {
+        username: 'user',
+        exerciseId: req.params.exerciseId,
+        sourceCode,
+        themeId,
     });
     res.json(results);
 }));

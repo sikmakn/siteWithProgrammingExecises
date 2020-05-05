@@ -19,7 +19,7 @@
     <div class="exercises">
         {{#each exercises}}
             <div class="exercise" id="{{_id}}">
-                <button type="button" class="collapsible" onclick="collapsibleClick(event,{{language}})">{{number}}
+                <button type="button" class="collapsible" onclick="collapsibleClick(event,'{{language}}')">{{number}}
                     . {{task}}</button>
                 <div class="editorContainer">
                     <div class="editor" id="editor{{_id}}"></div>

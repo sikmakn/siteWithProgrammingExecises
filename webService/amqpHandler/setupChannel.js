@@ -3,12 +3,7 @@ const controllers = require('../controllers');
 const {rpcServiceName} = require('../options');
 
 function setupChannel(channel) {
-    assertQueues(channel);
     consumeQueues(channel);
-}
-
-function assertQueues(channel) {
-
 }
 
 function consumeQueues(channel) {

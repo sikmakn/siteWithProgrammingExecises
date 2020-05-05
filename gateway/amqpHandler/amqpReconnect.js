@@ -1,5 +1,5 @@
-const {AMQP_HOST} = require("../config");
-const amqp = require("amqplib");
+const {AMQP_HOST} = require('../config');
+const amqp = require('amqplib');
 const setupChannel = require('./setupChannel');
 
 let producingChannel;
@@ -33,12 +33,12 @@ async function createChannel() {
 }
 
 async function getChannel() {
-    if (!connection) {
-        await reconnect();
-    }
+    if (!connection) await reconnect();
+
     return producingChannel;
 }
 
 module.exports = {
+    reconnect,
     getChannel,
 };

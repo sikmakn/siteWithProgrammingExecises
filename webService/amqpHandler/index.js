@@ -33,9 +33,8 @@ async function createChannel() {
 }
 
 async function getChannel() {
-    if (!connection) {
-        await reconnect();
-    }
+    if (!connection) await reconnect();
+
     return producingChannel;
 }
 

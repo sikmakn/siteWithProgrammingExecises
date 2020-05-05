@@ -20,6 +20,8 @@ function createAceEditor(editorName, lang) {
 }
 
 function test(event) {
+    const paths = window.location.toString().split('/');
+    const themeId = paths[paths.length - 2];
     const exerciseId = event.target.parentNode.parentNode.parentNode.id;
     const editorName = event.target.parentNode.previousElementSibling.id;
     const sourceCode = editors.get(editorName).getValue();
@@ -29,7 +31,7 @@ function test(event) {
         {
             method: 'post',
             headers: {'Content-Type': 'application/json;charset=utf-8'},
-            body: JSON.stringify({sourceCode}),
+            body: JSON.stringify({sourceCode, themeId}),
         })
         .then(res => res.json())
         .then(res => outResults(res, outputDiv));

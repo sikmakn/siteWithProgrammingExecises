@@ -4,31 +4,35 @@ const axios = require('axios');
 const {COMPILER_URI} = require('../config');
 const {langOptions} = require('../options');
 
-async function makeTests(id, sourceCode, lang) {
-    const exercise = await themeRepository.findById(id);
-    sourceCode = langOptions[exercise.language].readLine + sourceCode;
+async function makeTests(id, sourceCode) {
+    const {tests, language} = await exerciseRepository.findById(id);
+    sourceCode = langOptions[language].readLine + sourceCode;
     const results = [];
-    for (let test of exercise.tests) {
-        let fullSourceCode = sourceCode;
-        if (test.additionalCode) fullSourceCode += test.additionalCode;
+    for (let test of tests)
+        results.push(makeTest(sourceCode, language, test));
 
-        const stdin = test.input.join('\n');
-        let result = await axios.post(COMPILER_URI, {
-            language_id: langOptions[lang].languageId,
-            wait: "true",
-            source_code: fullSourceCode,
-            stdin,
-            expected_output: test.output,
-        });
-        results.push({
-            resultId: result.data.status.id,
-            stdin,
-            description: result.data.status.description,
-            stdout: result.data.stdout,
-        });
-    }
     return results;
 }
+
+async function makeTest(sourceCode, language, test) {
+    if (test.additionalCode) sourceCode += test.additionalCode;
+
+    const stdin = test.input.join('\n');
+    let result = await axios.post(COMPILER_URI, {
+        language_id: langOptions[language].languageId,
+        expected_output: test.output,
+        source_code: sourceCode,
+        wait: "true",
+        stdin,
+    });
+    return {
+        description: result.data.status.description,
+        resultId: result.data.status.id,
+        stdout: result.data.stdout,
+        stdin,
+    };
+}
+
 
 async function create(newExercise) {
     const theme = await themeRepository.findById(newExercise.themeId);
