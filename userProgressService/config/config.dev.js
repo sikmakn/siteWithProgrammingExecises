@@ -1,4 +1,4 @@
 module.exports = {
     AMQP_HOST: 'amqp://localhost:5672?heartbeat=60',
-    PORT: 3001,
+    MONGODB_URI: 'mongodb://localhost:27017/test1db',
 };

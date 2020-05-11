@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const exerciseTest = require('./exerciseTest');
 const autoIncrement = require('mongoose-auto-increment');
 
@@ -36,6 +36,6 @@ exerciseScheme.plugin(autoIncrement.plugin, {
     incrementBy: 1,
 });
 module.exports = {
-    exercise: mongoose.model("Exercise", exerciseScheme),
+    exercise: mongoose.model('Exercise', exerciseScheme),
     scheme: exerciseScheme
 };

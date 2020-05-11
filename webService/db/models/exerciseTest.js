@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const exerciseTestScheme = new mongoose.Schema({
     input: {
         type: [String],
@@ -12,6 +12,6 @@ const exerciseTestScheme = new mongoose.Schema({
     },
 });
 module.exports = {
-    exerciseTest: mongoose.model("ExerciseTest", exerciseTestScheme),
+    exerciseTest: mongoose.model('ExerciseTest', exerciseTestScheme),
     scheme: exerciseTestScheme
 };

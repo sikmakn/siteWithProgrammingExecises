@@ -14,14 +14,21 @@ const rpcServices = {
             theme: 'theme',
             exercise: 'exercise',
         },
+    },
+    PROGRESS_SERVICE: {
+        serviceName: 'userProgressServiceTestQ',
+        controllers: {
+            achievement: 'achievement',
+            exerciseResult: 'exerciseResult',
+        },
     }
 };
 
-const pubSubExchanges = {
+const pubExchanges = {
     exerciseTests: 'exerciseTests',
 };
 
 module.exports = {
     rpcServices,
-    pubSubExchanges,
+    pubExchanges,
 };

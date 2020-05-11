@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const autoIncrement = require('mongoose-auto-increment');
 
 const themeScheme = new mongoose.Schema({
@@ -27,6 +27,6 @@ themeScheme.plugin(autoIncrement.plugin, {
 });
 
 module.exports = {
-    theme: mongoose.model("Theme", themeScheme),
+    theme: mongoose.model('Theme', themeScheme),
     scheme: themeScheme,
 };

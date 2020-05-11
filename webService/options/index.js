@@ -20,10 +20,23 @@ const mongoOptions = {
 
 const mongooseUpdateParams = {new: true, omitUndefined: true};
 
+const compilerOptions = {
+    answers: {
+        success: 3,
+        wrong: 4,
+    },
+    values: {
+        success: 'correct',
+        wrong: 'incorrect',
+        error: 'error'
+    }
+};
+
 module.exports = {
     languages,
     langOptions,
     mongoOptions,
     rpcServiceName: 'webServiceTestQ',
     mongooseUpdateParams,
+    compilerOptions,
 };
