@@ -20,7 +20,7 @@ router.post('/', upload.single('achievementImg'), asyncHandler(async (req, res) 
     res.json(achievement);
 }));
 
-router.update('/:id', asyncHandler(async (req, res) => {
+router.put('/:id', asyncHandler(async (req, res) => {
     const achievement = await progressServiceRPC[progressControllers.achievement]('updateAchievementFile', {
         id: req.params.id,
         name: req.body.name,
@@ -38,7 +38,7 @@ router.get('/file/:id', asyncHandler(async (req, res) => {
     bufferStream.pipe(res);
 }));
 
-router.update('/file/:id', upload.single('achievementIng'), asyncHandler(async (req, res) => {
+router.put('/file/:id', upload.single('achievementIng'), asyncHandler(async (req, res) => {
     const achievementFile = await progressServiceRPC[progressControllers.achievement]('updateAchievementFile', {
         conditions: JSON.parse(req.body.conditions),
         file: req.file,

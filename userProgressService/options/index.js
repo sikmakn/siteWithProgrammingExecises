@@ -11,9 +11,15 @@ const subExchanges = {
     exerciseTests: 'exerciseTests',
 };
 
+const fileDb = {
+    bucketName: 'achievements',
+    fileColl: 'achievements.files',
+};
+
 module.exports = {
     rpcServiceName: 'userProgressServiceTestQ',
     subExchanges,
     mongoOptions,
     mongooseUpdateParams,
+    fileDb,
 };

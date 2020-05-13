@@ -16,9 +16,9 @@ async function findOneAndUpdate({findParams, updatedExercise}) {
     });
 }
 
-async function findByConditions(conditions) {
+async function groupByUsername(matchConditions) {
     return exerciseResult.aggregate([
-        {$match: {$or: conditions}},
+        {$match: {$or: matchConditions}},
         {
             $group: {
                 _id: "username",
@@ -37,5 +37,5 @@ module.exports = {
     find,
     findOneAndUpdate,
     findByIdAndUpdate,
-    findByConditions,
+    groupByUsername,
 };

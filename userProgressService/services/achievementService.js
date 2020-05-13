@@ -12,29 +12,29 @@ async function findById(id) {
     return achievement._doc;
 }
 
-async function findAchievementFile(fileImg) {
-    return await achievementRepository.findAchievementFile(fileImg);
+async function findFile(fileImg) {
+    return await achievementRepository.findFile(fileImg);
 }
 
-async function findAchievements({achievementFotFind, count, sort = {number: 1}, skip = 0}) {
-    return await achievementRepository.findAchievements({achievementFotFind, count, sort, skip});
+async function findMany({achievementFotFind, count, sort = {number: 1}, skip = 0}) {
+    return await achievementRepository.findMany({achievementFotFind, count, sort, skip});
 }
 
-async function updateById({id, conditions, descriptions, name}) {
-    const updatedAchievement = await achievementRepository.updateAchievement({id, conditions, descriptions, name});
+async function updateById({id, conditions, description, name}) {
+    const updatedAchievement = await achievementRepository.updateAchievement({id, conditions, description, name});
     await userAchievementService.addByConditions(conditions);
     return updatedAchievement._doc;
 }
 
-async function updateAchievementFile({fileId, file}) {
-    return await achievementRepository.updateAchievementFile({fileId, file});
+async function updateFile({fileId, file}) {
+    return await achievementRepository.updateFile({fileId, file});
 }
 
 module.exports = {
     create,
     findById,
     updateById,
-    findAchievements,
-    findAchievementFile,
-    updateAchievementFile,
+    findMany,
+    findFile,
+    updateFile,
 };

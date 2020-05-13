@@ -4,17 +4,28 @@ module.exports = {
     name: 'exerciseResult',
     methods: [
         {
-            name: 'getByUsernameAndThemeId',
+            name: 'get',
             method: async (msg, res) => {
-                const results = await resultService.findByThemeId(msg);
-                res(results);
-            }
-        },
-        {
-            name: 'getByUsernameAndExerciseId',
-            method: async (msg, res) => {
-                const result = await resultService.findByExerciseId(msg);
-                res(result);
+                try {
+                    const findingResults = await resultService.find(msg);
+                    const results = findingResults.map(r => {
+                        const fullResult = {
+                            themeId: r.themeId,
+                            exerciseId: r.exerciseId,
+                            difficulty: r.difficulty,
+                            username: r.username,
+                            sourceCode: r.sourceCode,
+                            result: r.result,
+                            _id: r._id,
+                        };
+                        const result = {};
+                        Object.assign(result, fullResult);
+                        return result;
+                    });
+                    res(results);
+                } catch (e) {
+                    res(e);
+                }
             }
         },
     ]

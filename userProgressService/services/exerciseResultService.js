@@ -7,30 +7,17 @@ async function findOneAndUpdate({findParams, updatedExercise, results}) {
 }
 
 function findCommonResult(results) {
-    if (results.find(r => r.result === 'error')) return 'error';
-    if (results.find(r => r.result === 'incorrect')) return 'incorrect';
+    if (results.some(r => r.result === 'error')) return 'error';
+    if (results.some(r => r.result === 'incorrect')) return 'incorrect';
     return 'correct';
 }
 
-async function findByThemeId({username, themeId, difficulty}) {
-    const findParams = {username, themeId};
-    if (difficulty) findParams.difficulty = difficulty;
+async function find(findParams) {
     return await exerciseResultRepository.find(findParams);
 }
 
-async function findByExerciseId({username, exerciseId, difficulty}) {
-    const findParams = {username, exerciseId};
-    if (difficulty) findParams.difficulty = difficulty;
-    return await exerciseResultRepository.find(findParams);
-}
-
-async function findByIdAndUpdate(id, updateExercise) {
-    const result = await exerciseResultRepository.findByIdAndUpdate(id, updateExercise);
-    return result._doc;
-}
-
-async function findByConditions(conditions) {
-    return await exerciseResultRepository.findByConditions(conditions);
+async function groupByUsername(matchConditions = []) {
+    return await exerciseResultRepository.groupByUsername(matchConditions);
 }
 
 async function findByUsername(username) {
@@ -38,10 +25,8 @@ async function findByUsername(username) {
 }
 
 module.exports = {
-    findByThemeId,
-    findByExerciseId,
+    find,
     findOneAndUpdate,
-    findByIdAndUpdate,
-    findByConditions,
+    groupByUsername,
     findByUsername,
 };

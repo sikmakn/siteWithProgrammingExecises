@@ -16,6 +16,7 @@
     "mongoose": "^5.9.12"
   },
   "devDependencies": {
+    "@shelf/jest-mongodb": "^1.1.5",
     "jest": "^26.0.1"
   }
 }

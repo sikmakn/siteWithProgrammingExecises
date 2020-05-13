@@ -9,7 +9,6 @@ const achievementCondition = new mongoose.Schema({
     },
     result: {
         type: String,
-        enum: ['correct', 'incorrect', 'error'],
     },
     difficulty: {
         type: String,

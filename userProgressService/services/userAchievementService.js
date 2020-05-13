@@ -20,7 +20,7 @@ async function findByUsername(username) {
 
 async function addByUsername(username) {
     const userResults = await exerciseResultService.findByUsername(username);
-    const allAchievements = await achievementService.findAchievements({achievementFotFind: {}});
+    const allAchievements = await achievementService.findMany({achievementFotFind: {}});
     const promises = [];
 
     for (let achievement of allAchievements) {
@@ -56,7 +56,7 @@ function isExerciseConditions({exerciseConditions, userResults}) {
 
 async function addByConditions(conditions, achievementId) {//todo check
     const exerciseConditions = conditions.filter(c => c.exerciseId);
-    const exerciseResults = await exerciseResultService.findByConditions(exerciseConditions);
+    const exerciseResults = await exerciseResultService.groupByUsername(exerciseConditions);
     const usernames = exerciseResults.filter(r => r.count >= conditions.length).map(r => r.username);
     const themeConditions = conditions.filter(c => c.themeId);
     const promises = [];
