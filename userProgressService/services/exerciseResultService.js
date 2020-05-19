@@ -16,8 +16,8 @@ async function find(findParams) {
     return await exerciseResultRepository.find(findParams);
 }
 
-async function groupByUsername(matchConditions = []) {
-    return await exerciseResultRepository.groupByUsername(matchConditions);
+async function aggregate(aggregateConditions = []) {
+    return await exerciseResultRepository.aggregate(aggregateConditions);
 }
 
 async function findByUsername(username) {
@@ -27,6 +27,6 @@ async function findByUsername(username) {
 module.exports = {
     find,
     findOneAndUpdate,
-    groupByUsername,
+    aggregate,
     findByUsername,
 };
