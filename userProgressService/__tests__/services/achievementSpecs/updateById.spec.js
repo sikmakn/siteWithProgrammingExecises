@@ -4,7 +4,7 @@ const userAchievementService = require('../../../services/userAchievementService
 jest.mock('../../../services/userAchievementService');
 const achievementService = require('../../../services/achievementService');
 
-module.exports = describe('updateById function', () => {
+describe('updateById function', () => {
     let msg;
     let updateAchievementResult;
 
@@ -23,13 +23,13 @@ module.exports = describe('updateById function', () => {
     test('achievementRepository throw error', () => {
         const error = new Error('not updated');
         achievementRepository.updateAchievement.mockImplementation(() => Promise.reject(error));
-        expect(achievementService.updateById(msg)).rejects.toBeCalled();
+        expect(achievementService.updateById(msg)).rejects.toThrowError();
     });
 
     test('achievementRepository throw error', () => {
         const error = new Error('not updated');
         userAchievementService.addByConditions.mockImplementation(() => Promise.reject(error));
-        expect(achievementService.updateById(msg)).rejects.toBeCalled();
+        expect(achievementService.updateById(msg)).rejects.toThrowError();
     });
 
     test('return Truthy', async () => {

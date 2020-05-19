@@ -1,7 +1,7 @@
 const {userAchievements} = require('../models/userAchievements');
 const {mongooseUpdateParams} = require('../../options');
 
-async function addAchievement({username, achievementIds}) {
+async function addAchievements({username, achievementIds}) {
     return await userAchievements.findOneAndUpdate({username},
         {$push: {'achievements': achievementIds}},
         {
@@ -10,7 +10,7 @@ async function addAchievement({username, achievementIds}) {
         });
 }
 
-async function deleteAchievement({username, achievementIds}) {
+async function deleteAchievements({username, achievementIds}) {
     return await userAchievements.findOneAndUpdate({username},
         {$pull: {'achievements': achievementIds}},
         mongooseUpdateParams);
@@ -22,6 +22,6 @@ async function findByUsername(username) {
 
 module.exports = {
     findByUsername,
-    addAchievement,
-    deleteAchievement,
+    addAchievements,
+    deleteAchievements,
 };
