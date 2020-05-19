@@ -17,9 +17,10 @@ const fileDb = {
 };
 
 module.exports = {
+    achievementFields: ["themeId", "result", "difficulty"],
     rpcServiceName: 'userProgressServiceTestQ',
+    mongooseUpdateParams,
     subExchanges,
     mongoOptions,
-    mongooseUpdateParams,
     fileDb,
 };
