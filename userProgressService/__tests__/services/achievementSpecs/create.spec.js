@@ -4,7 +4,7 @@ const userAchievementService = require('../../../services/userAchievementService
 jest.mock('../../../services/userAchievementService');
 const achievementService = require('../../../services/achievementService');
 
-module.exports = describe('create function', () => {
+describe('create function', () => {
     let msg;
     let achievementCreateResult;
 
@@ -28,13 +28,13 @@ module.exports = describe('create function', () => {
     test('achievementRepository throw error', () => {
         const error = new Error('not created');
         achievementRepository.create.mockImplementation(() => Promise.reject(error));
-        expect(achievementService.create(msg)).rejects.toBeCalled();
+        expect(achievementService.create(msg)).rejects.toThrowError();
     });
 
     test('achievementRepository throw error', () => {
         const error = new Error('not created');
         userAchievementService.addByConditions.mockImplementation(() => Promise.reject(error));
-        expect(achievementService.create(msg)).rejects.toBeCalled();
+        expect(achievementService.create(msg)).rejects.toThrowError();
     });
 
     test('return Truthy', async () => {

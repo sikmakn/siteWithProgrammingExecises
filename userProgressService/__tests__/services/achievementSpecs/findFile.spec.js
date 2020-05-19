@@ -2,7 +2,7 @@ const achievementRepository = require('../../../db/repositories/achievementRepos
 jest.mock('../../../db/repositories/achievementRepository');
 const achievementService = require('../../../services/achievementService');
 
-module.exports = describe('findFile function', () => {
+describe('findFile function', () => {
     let msg;
     let achievementCreateResult;
 
@@ -20,7 +20,7 @@ module.exports = describe('findFile function', () => {
     test('achievementRepository throw error', () => {
         const error = new Error('not created');
         achievementRepository.findFile.mockImplementation(() => Promise.reject(error));
-        expect(achievementService.findFile(msg)).rejects.toBeCalled();
+        expect(achievementService.findFile(msg)).rejects.toThrowError();
     });
 
     test('return Truthy', async () => {

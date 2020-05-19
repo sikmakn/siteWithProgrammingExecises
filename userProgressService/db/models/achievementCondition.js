@@ -22,8 +22,3 @@ module.exports = {
     exercise: mongoose.model('AchievementCondition', achievementCondition),
     scheme: achievementCondition,
 };
-
-/*
-themeId (+ count (+result + difficulty))
-exerciseId  (+ result + difficulty)
-*/

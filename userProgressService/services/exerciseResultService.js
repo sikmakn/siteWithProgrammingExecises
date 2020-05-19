@@ -7,8 +7,8 @@ async function findOneAndUpdate({findParams, updatedExercise, results}) {
 }
 
 function findCommonResult(results) {
-    if (results.some(r => r.result === 'error')) return 'error';
-    if (results.some(r => r.result === 'incorrect')) return 'incorrect';
+    if (results.some(r => r.resultName === 'error')) return 'error';
+    if (results.some(r => r.resultName === 'incorrect')) return 'incorrect';
     return 'correct';
 }
 

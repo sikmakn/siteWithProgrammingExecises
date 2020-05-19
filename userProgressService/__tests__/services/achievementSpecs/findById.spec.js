@@ -2,7 +2,7 @@ const achievementRepository = require('../../../db/repositories/achievementRepos
 jest.mock('../../../db/repositories/achievementRepository');
 const achievementService = require('../../../services/achievementService');
 
-module.exports = describe('findById function', () => {
+describe('findById function', () => {
     let msg;
     let achievementCreateResult;
 
@@ -20,7 +20,7 @@ module.exports = describe('findById function', () => {
     test('achievementRepository throw error', () => {
         const error = new Error('not created');
         achievementRepository.findById.mockImplementation(() => Promise.reject(error));
-        expect(achievementService.findById(msg)).rejects.toBeCalled();
+        expect(achievementService.findById(msg)).rejects.toThrowError();
     });
 
     test('return Truthy', async () => {

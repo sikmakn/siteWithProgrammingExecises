@@ -2,7 +2,7 @@ const exerciseResultRepository = require('../../../db/repositories/exerciseResul
 jest.mock('../../../db/repositories/exerciseResultRepository');
 const exerciseResultService = require('../../../services/exerciseResultService');
 
-module.exports = describe('find function', () => {
+describe('find function', () => {
     let msg;
     let achievementFindResult;
 
@@ -20,7 +20,7 @@ module.exports = describe('find function', () => {
     test('achievementRepository throw error', () => {
         const error = new Error('not created');
         exerciseResultRepository.find.mockImplementation(() => Promise.reject(error));
-        expect(exerciseResultService.find(msg)).rejects.toBeCalled();
+        expect(exerciseResultService.find(msg)).rejects.toThrowError();
     });
 
     test('return Truthy', async () => {

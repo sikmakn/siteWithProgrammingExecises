@@ -2,7 +2,7 @@ const achievementRepository = require('../../../db/repositories/achievementRepos
 jest.mock('../../../db/repositories/achievementRepository');
 const achievementService = require('../../../services/achievementService');
 
-module.exports = describe('updateFile function', () => {
+describe('updateFile function', () => {
     let msg;
 
     beforeEach(() => {
@@ -18,7 +18,7 @@ module.exports = describe('updateFile function', () => {
     test('achievementRepository throw error', () => {
         const error = new Error('not updated');
         achievementRepository.updateFile.mockImplementation(() => Promise.reject(error));
-        expect(achievementService.updateFile(msg)).rejects.toBeCalled();
+        expect(achievementService.updateFile(msg)).rejects.toThrowError();
     });
 
     test('return Truthy', async () => {

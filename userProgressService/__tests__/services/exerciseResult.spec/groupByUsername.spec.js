@@ -2,7 +2,7 @@ const exerciseResultRepository = require('../../../db/repositories/exerciseResul
 jest.mock('../../../db/repositories/exerciseResultRepository');
 const exerciseResultService = require('../../../services/exerciseResultService');
 
-module.exports = describe('groupByUsername function', () => {
+describe('groupByUsername function', () => {
     let msg;
     let achievementFindResult;
 
@@ -20,7 +20,7 @@ module.exports = describe('groupByUsername function', () => {
     test('achievementRepository throw error', () => {
         const error = new Error('not created');
         exerciseResultRepository.groupByUsername.mockImplementation(() => Promise.reject(error));
-        expect(exerciseResultService.groupByUsername(msg)).rejects.toBeCalled();
+        expect(exerciseResultService.groupByUsername(msg)).rejects.toThrowError();
     });
 
     test('return Truthy', async () => {
