@@ -5,8 +5,8 @@ async function create(newTheme) {
     return newThemeModel._doc;
 }
 
-async function findThemes(themeForFind, sort = {number: 1}, skip = 0, count) {
-    return await themeRepo.findThemes(themeForFind, sort, skip, count);
+async function findThemes(themeForFind, sort = {number: 1}, count, skip = 0) {
+    return await themeRepo.findThemes(themeForFind, sort, count, skip);
 }
 
 async function findById(id) {

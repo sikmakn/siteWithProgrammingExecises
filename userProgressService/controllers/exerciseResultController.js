@@ -24,6 +24,7 @@ module.exports = {
                     });
                     res(results);
                 } catch (e) {
+                    console.log(e);
                     res(e);
                 }
             }

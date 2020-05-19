@@ -44,8 +44,9 @@ router.get('/:themeId/:difficulty', asyncHandler(async (req, res) => {
     const {themeId, difficulty} = req.params;
     const theme = await webServiceRPC[webServiceControllers.theme]('getById', {id: themeId});
     const exercises = await webServiceRPC[webServiceControllers.exercise]('getByThemeId', {themeId, difficulty});
+
     //todo if username from auth
-    const results = await progressServiceRPC[progressServiceControllers.exerciseResult]('getByUsernameAndThemeId', {
+    const results = await progressServiceRPC[progressServiceControllers.exerciseResult]('get', {
         username: 'user',
         themeId,
         difficulty,
