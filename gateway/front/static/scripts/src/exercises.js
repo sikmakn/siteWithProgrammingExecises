@@ -31,7 +31,7 @@ function test(event) {
         {
             method: 'post',
             headers: {'Content-Type': 'application/json;charset=utf-8'},
-            body: JSON.stringify({sourceCode, themeId}),
+            body: JSON.stringify({sourceCode, themeId, difficulty: paths[paths.length - 1]}),
         })
         .then(res => res.json())
         .then(res => outResults(res, outputDiv));
@@ -42,11 +42,11 @@ function outResults(results, outputDiv) {
     let wrongCount = 0;
     let errorCount = 0;
     for (let result of results) {
-        switch (result.resultId) {
-            case aceOptions.answers.successId:
+        switch (result.resultName) {
+            case aceOptions.answers.success:
                 successCount++;
                 break;
-            case aceOptions.answers.wrongId:
+            case aceOptions.answers.wrong:
                 wrongCount++;
                 break;
             default:
@@ -110,11 +110,11 @@ function addIconResult(result, outDiv) {
     const iconDiv = document.createElement('div');
     iconDiv.classList.add('iconTestResult');
 
-    switch (result.resultId) {
-        case aceOptions.answers.successId:
+    switch (result.result) {
+        case aceOptions.answers.success:
             iconDiv.innerHTML = '<i class="fas fa-check successTest"></i>';
             break;
-        case aceOptions.answers.wrongId:
+        case aceOptions.answers.wrong:
             iconDiv.innerHTML = '<i class="fas fa-times wrongTest"></i>';
             break;
         default:

@@ -1,5 +1,5 @@
 const EventEmitter = require('events');
-const {rpcServices, pubSubExchanges} = require('../options');
+const {rpcServices, pubExchanges} = require('../options');
 
 function setupChannel(channel) {
     channel.responseEmitter = new EventEmitter();
@@ -9,8 +9,8 @@ function setupChannel(channel) {
 }
 
 function assertQueues(channel) {
-    for (let exchange in pubSubExchanges) {
-        channel.assertExchange(pubSubExchanges[exchange], 'fanout', {durable: false});
+    for (let exchange in pubExchanges) {
+        channel.assertExchange(pubExchanges[exchange], 'fanout', {durable: false});
     }
 
     for (let service in rpcServices) {

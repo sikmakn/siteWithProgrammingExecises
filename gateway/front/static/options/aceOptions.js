@@ -6,7 +6,8 @@ const aceOptions = {
         net: 'ace/mode/csharp',
     },
     answers: {
-        successId: 3,
-        wrongId: 4,
+        success: 'correct',
+        wrong: 'incorrect',
+        error: 'error'
     }
 };
