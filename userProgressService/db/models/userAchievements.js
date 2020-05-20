@@ -12,6 +12,6 @@ const userAchievements = new mongoose.Schema({
 });
 
 module.exports = {
-    exercise: mongoose.model('UserAchievements', userAchievements),
+    userAchievements: mongoose.model('UserAchievements', userAchievements),
     scheme: userAchievements,
 };

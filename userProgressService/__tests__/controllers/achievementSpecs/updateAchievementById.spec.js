@@ -1,8 +1,12 @@
 const achievementService = require('../../../services/achievementService');
 jest.mock('../../../services/achievementService');
+
+require('../../../services/userAchievementService');
+jest.mock('../../../services/userAchievementService');
+
 const achievementController = require('../../../controllers/achievementController');
 
-module.exports = describe('updateAchievementById function', () => {
+describe('updateAchievementById function', () => {
     let updateAchievementById;
     let msg;
     let fn;

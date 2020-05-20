@@ -2,7 +2,7 @@ const achievementService = require('../../../services/achievementService');
 jest.mock('../../../services/achievementService');
 const achievementController = require('../../../controllers/achievementController');
 
-module.exports = describe('getAchievement function', () => {
+describe('getAchievement function', () => {
     let getAchievement;
     let msg;
     let fn;

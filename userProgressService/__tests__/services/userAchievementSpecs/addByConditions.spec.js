@@ -31,7 +31,7 @@ describe('addByConditions function', () => {
             {difficulty: 'easy', count: 2},
             {exerciseId: exercise1Id, difficulty: 'easy'},
             {exerciseId: exercise2Id, difficulty: 'easy'}
-        ];
+        ].map(c => ({_doc: c}));
 
         exerciseResultService.aggregate.mockReturnValue(aggregateReturnValue);
 
@@ -93,7 +93,7 @@ describe('addByConditions function', () => {
 
     test('exerciseAchievements not add empty combination conditions', async () => {
         conditions = [
-            {difficulty: 'easy', count: 2},
+            {_doc: {difficulty: 'easy', count: 2}},
         ];
 
         let aggregateParams = [];
