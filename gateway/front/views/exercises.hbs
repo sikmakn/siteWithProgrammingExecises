@@ -19,13 +19,25 @@
     <div class="exercises">
         {{#each exercises}}
             <div class="exercise" id="{{_id}}">
-                <button type="button" class="collapsible" onclick="collapsibleClick(event,'{{language}}')">{{number}}
-                    . {{task}}</button>
+                <button type="button" class="collapsible"
+                        onclick="collapsibleClick(event,'{{_id}}','{{language}}',`{{oldResult.sourceCode}}`)">
+                    <span>{{number}}. {{task}}</span>
+                    <span id="resultIcon{{_id}}">
+                        {{#if oldResult.correct}}
+                            <i class="fas fa-check successTest"></i>
+                        {{/if}}
+                        {{#if oldResult.incorrect}}
+                            <i class="fas fa-times wrongTest"></i>
+                        {{/if}}
+                        {{#if oldResult.error}}
+                            <i class="fas fa-question errorTest"></i>
+                        {{/if}}
+                    </span>
+                </button>
                 <div class="editorContainer">
                     <div class="editor" id="editor{{_id}}"></div>
                     <div class="control">
-                        <div class="output testsOut">
-                        </div>
+                        <div class="output testsOut"></div>
                         <button class="start" onclick="test(event)">Запустить тесты</button>
                     </div>
                 </div>

@@ -6,7 +6,7 @@ async function create(newTheme) {
     return await newThemeModel.save();
 }
 
-async function findThemes(themeForFind, count, sort = {number: 1}, skip = 0) {
+async function findThemes(themeForFind, sort, count, skip) {
     const find = theme.find(themeForFind).sort(sort);
     if (count !== undefined)
         find.limit(skip + count);

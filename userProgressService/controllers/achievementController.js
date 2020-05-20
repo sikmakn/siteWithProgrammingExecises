@@ -1,4 +1,5 @@
 const achievementService = require('../services/achievementService');
+const userAchievementService = require('../services/userAchievementService');
 
 module.exports = {
     name: 'achievement',
@@ -8,6 +9,7 @@ module.exports = {
             method: async (msg, res) => {
                 try {
                     const achievement = await achievementService.create(msg);
+                    await userAchievementService.addByConditions(achievement.conditions, achievement._id);
                     res(achievement);
                 } catch (e) {
                     res(e);
@@ -60,6 +62,7 @@ module.exports = {
             method: async (msg, res) => {
                 try {
                     const updatedAchievement = await achievementService.updateById(msg);
+                    await userAchievementService.addByConditions(updatedAchievement.conditions, updatedAchievement._id);
                     res(updatedAchievement);
                 } catch (e) {
                     res(e);

@@ -27,11 +27,15 @@ function consume(channel) {
         const controller = controllers.find(cr => cr.name === controllerName);
         if (!controller) return;
 
-        const route = controller.methods.find(m => m.name === routeName).method;
-        if (!route) return;
+        const fullMethod = controller.methods.find(m => m.name === routeName);
+        if (!fullMethod) return;
 
-        route(message, makeAnswer);
-        channel.ack(msg);
+        const result = fullMethod.method(message, makeAnswer);
+        if (result instanceof Promise) {
+            result.then(() => channel.ack(msg));
+        } else {
+            channel.ack(msg);
+        }
     });
 }
 

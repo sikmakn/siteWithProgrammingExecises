@@ -2,7 +2,7 @@ const exerciseResultService = require('../../../services/exerciseResultService')
 jest.mock('../../../services/exerciseResultService');
 const exerciseResultController = require('../../../controllers/exerciseResultController');
 
-module.exports = describe('find function', () => {
+describe('find function', () => {
     let msg;
     let get;
     let fn;

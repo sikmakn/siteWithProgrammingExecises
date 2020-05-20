@@ -1,6 +1,9 @@
 function isArrsEquals(firstArr, secondArr) {
-    return firstArr.every((el) => secondArr.includes(el))
-        && secondArr.every((el) => firstArr.includes(el));
+    return isSubArr(firstArr, secondArr) && isSubArr(secondArr, firstArr);
+}
+
+function isSubArr(fullArr, subArr) {
+    return subArr.every((el) => fullArr.includes(el));
 }
 
 function containArr(fullArr, arr) {
@@ -8,6 +11,7 @@ function containArr(fullArr, arr) {
 }
 
 module.exports = {
+    isSubArr,
     containArr,
     isArrsEquals,
 };

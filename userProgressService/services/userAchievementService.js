@@ -13,7 +13,7 @@ async function addAchievements({username, achievementIds}) {
 }
 
 async function addAchievementsToManyUsers({usernames, achievementIds}) {
-    const usersAchievements = await userAchievementRepository.addAchievementsToManyUsers(usernames, achievementIds);
+    const usersAchievements = await userAchievementRepository.addAchievementsToManyUsers({usernames, achievementIds});
     //todo push
     return usersAchievements;
 }
@@ -31,10 +31,10 @@ async function findByUsername(username) {
 async function addByUsername(username) {
     const userResults = await exerciseResultService.findByUsername(username);
     const allAchievements = await achievementService.findMany({achievementForFind: {}});
-
     const achievementIds = [];
     for (let achievement of allAchievements) {
         const conditions = achievement.conditions;
+
         const exerciseConditions = conditions.filter(c => c.exerciseId);
         if (!containAllExerciseConditions({exerciseConditions, userResults})) continue;
 
@@ -50,30 +50,20 @@ async function addByUsername(username) {
 }
 
 async function addByConditions(conditions, achievementId) {
-    const combinations = getCombinations(achievementFields, achievementFields.length);
+    const commonConditions = conditions.filter(f => !f.exerciseId).map(m => m._doc);
+    const facetArr = makeFacetObjToCommonConditions(commonConditions);
 
-    const exerciseConditions = conditions.filter(f => f.exerciseId);
-    conditions = conditions.filter(f => !f.exerciseId);
-
-    const facetArr = {};
-    for (let comb of combinations) {
-
-        const matchConditions = getMatchAggregateConditions(comb, conditions);
-        if (!matchConditions.length) continue;
-
-        const idFields = getGroupIdObj(comb);
-
-        const facetName = uuidv4().toString();
-        facetArr[facetName] = getCommonAggregateArr(idFields, matchConditions);
-    }
-    if (exerciseConditions.length) facetArr['exercise'] = getExerciseAggregateArr(exerciseConditions);
+    const exerciseConditions = conditions.filter(f => f.exerciseId).map(m => m._doc);
+    addExerciseAggregateArr(exerciseConditions, facetArr);
 
     const results = await exerciseResultService.aggregate([
         {$facet: facetArr},
         {$project: {usernames: {$setIntersection: Object.keys(facetArr).map(m => `$${m}`)}}}
     ]);
+
     const usernames = results[0].usernames.map(obj => obj._id);
-    return await addAchievementsToManyUsers({usernames, achievementIds: [achievementId]});
+    if (usernames.length)
+        return await addAchievementsToManyUsers({usernames, achievementIds: [achievementId]});
 }
 
 module.exports = {
@@ -88,7 +78,7 @@ module.exports = {
 function findUserResults({themeId, difficulty, result, userResults}) {
     return userResults.filter(r => {
         let res = true;
-        if (themeId) res = themeId === r.themeId;
+        if (themeId) res = themeId.toString() === r.themeId.toString();
         if (difficulty) res = res && r.difficulty === difficulty;
         if (result) res = res && r.result === result;
         return res;
@@ -105,7 +95,6 @@ function checkCommonConditions({conditions, userResults}) {
             difficulty,
             result,
         });
-
         if (userResultsByCondition.length < count) break;
 
         countOfTruth++;
@@ -115,7 +104,7 @@ function checkCommonConditions({conditions, userResults}) {
 
 function containAllExerciseConditions({exerciseConditions, userResults}) {
     return exerciseConditions.every(c => userResults.find(r => {
-        let res = c.exerciseId === r.exerciseId;
+        let res = c.exerciseId.toString() === r.exerciseId.toString();
         if (c.difficulty) res = res && r.difficulty === c.difficulty;
         if (c.result) res = res && r.result === c.result;
         return res;
@@ -130,8 +119,11 @@ function getGroupIdObj(combination) {
 
 function getMatchAggregateConditions(combination, conditions) {
     const combWithCount = [...combination, 'count'];
-
     return conditions
+        .map(el => {
+            let {_id, ...rest} = el;
+            return rest;
+        })
         .filter(el => isArrsEquals(Object.keys(el), combWithCount))
         .map(c => {
             const matchCond = {};
@@ -153,11 +145,25 @@ function getCommonAggregateArr(idFields, commonConditions) {
     ];
 }
 
-function getExerciseAggregateArr(exerciseConditions) {
-    return [
+function addExerciseAggregateArr(exerciseConditions, facetArr) {
+    if (exerciseConditions.length) facetArr['exercise'] = [
         {$match: {$or: exerciseConditions}},
         {$group: {_id: {username: '$username'}, count: {$sum: 1}}},
         {$match: {count: {$gte: exerciseConditions.length}}},
         {$group: {_id: "$_id.username"}}
-    ]
+    ];
+}
+
+function makeFacetObjToCommonConditions(conditions) {
+    const combinations = getCombinations(achievementFields, achievementFields.length);
+    const facetArr = {};
+    for (let comb of combinations) {
+        const matchConditions = getMatchAggregateConditions(comb, conditions);
+        if (!matchConditions.length) continue;
+
+        const idFields = getGroupIdObj(comb);
+        const facetName = uuidv4().toString();
+        facetArr[facetName] = getCommonAggregateArr(idFields, matchConditions);
+    }
+    return facetArr;
 }
