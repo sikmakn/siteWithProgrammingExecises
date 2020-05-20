@@ -52,10 +52,15 @@ router.get('/:themeId/:difficulty', asyncHandler(async (req, res) => {
         difficulty,
     });
     exercises.forEach(ex => {
-        const oldResult = ({result, sourceCode}) => ({result, sourceCode});
+        const oldResult = ({result, sourceCode}) => {
+            const exerciseResult = {sourceCode};
+            exerciseResult[result] = true;
+            return exerciseResult
+        };
         const result = results.find(r => r.exerciseId === ex._id);
         if (result) ex.oldResult = oldResult(result);
     });
+
     res.render('exercises.hbs', {
         layout: 'themeSelectMain.hbs',
         isJs: true,

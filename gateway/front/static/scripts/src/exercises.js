@@ -1,21 +1,23 @@
 const editors = new Map();
 
-function collapsibleClick(event, lang) {
+function collapsibleClick(event, id, lang, oldCode) {
     event.target.classList.toggle("active");
     const content = event.target.nextElementSibling;
     if (content.style.maxHeight) {
         content.style.maxHeight = null;
     } else {
+        createAceEditor(id, lang, oldCode);
         content.style.maxHeight = content.scrollHeight + "px";
-        const editorName = content.children[0].id;
-        createAceEditor(editorName, lang);
     }
 }
 
-function createAceEditor(editorName, lang) {
+function createAceEditor(id, lang, oldCode) {
+    const editorName = 'editor' + id;
+    if (editors.get(editorName)) return;
     const editor = ace.edit(editorName);
     editor.setTheme(aceOptions.theme);
     editor.session.setMode(aceOptions.mods[lang]);
+    if (oldCode) editor.setValue(oldCode, 1);
     editors.set(editorName, editor);
 }
 
@@ -34,7 +36,25 @@ function test(event) {
             body: JSON.stringify({sourceCode, themeId, difficulty: paths[paths.length - 1]}),
         })
         .then(res => res.json())
-        .then(res => outResults(res, outputDiv));
+        .then(res => {
+            outResultIcon(editorName, res);
+            outResults(res, outputDiv);
+        });
+}
+
+function outResultIcon(editorId, results) {
+    const id = editorId.split('editor')[1];
+    const resultIcon = document.getElementById(`resultIcon${id}`);
+
+    if (results.some(r => r.resultName === aceOptions.answers.error)) {
+        resultIcon.innerHTML = '<i class="fas fa-question errorTest"></i>';
+        return;
+    }
+    if (results.some(r => r.resultName === aceOptions.answers.wrong)) {
+        resultIcon.innerHTML = '<i class="fas fa-times wrongTest"></i>';
+        return;
+    }
+    resultIcon.innerHTML = '<i class="fas fa-check successTest"></i>';
 }
 
 function outResults(results, outputDiv) {
@@ -110,7 +130,7 @@ function addIconResult(result, outDiv) {
     const iconDiv = document.createElement('div');
     iconDiv.classList.add('iconTestResult');
 
-    switch (result.result) {
+    switch (result.resultName) {
         case aceOptions.answers.success:
             iconDiv.innerHTML = '<i class="fas fa-check successTest"></i>';
             break;
