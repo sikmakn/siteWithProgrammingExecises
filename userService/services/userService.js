@@ -24,7 +24,7 @@ async function validate({username, password}) {
 }
 
 async function findByUsername(username) {
-    return (await userRepository.findByUsername(username))._doc;
+    return await userRepository.findByUsername(username);
 }
 
 async function updateEmail({username, email}) {

@@ -8,20 +8,17 @@ module.exports = {
             name: 'create',
             method: async (msg, res) => {
                 try {
-                    const {error, value: userData} = await userSchema.validateAsync(msg);
-                    if (error) {
-                        res(error);
-                        return;
-                    }
+                    const userData = await userSchema.validateAsync(msg);
                     if (await userService.findByUsername(userData.username)) {
                         res({error: 'user exist'});
                         return;
                     }
                     await userService.create(userData);
-                    res(true);
+                    res({result: true});
                 } catch (e) {
                     //todo logs
-                    res(e);
+                    console.error(e);
+                    res({error: e});
                 }
             }
         },
@@ -29,10 +26,11 @@ module.exports = {
             name: 'validate',
             method: async (msg, res) => {
                 try {
-                    res(await userService.validate(msg));
+                    res({result: await userService.validate(msg)});
                 } catch (e) {
+                    console.error(e);
                     //todo logs
-                    res(e);
+                    res({error:e});
                 }
             }
         },
@@ -40,16 +38,13 @@ module.exports = {
             name: 'updatePassword',
             method: async (msg, res) => {
                 try {
-                    const {error, value} = await passwordSchema.validateAsync(msg.password);
-                    if (error) {
-                        res(error);
-                        return;
-                    }
-                    await userService.updatePassword({username: msg.username, password: value});
-                    res(true);
+                    const password = await passwordSchema.validateAsync(msg.password);
+                    await userService.updatePassword({username: msg.username, password});
+                    res({result: true});
                 } catch (e) {
+                    console.error(e);
                     //todo logs
-                    res(e);
+                    res({error:e});
                 }
             }
         },
@@ -57,16 +52,12 @@ module.exports = {
             name: 'updatePersonalInfo',
             method: async (msg, res) => {
                 try {
-                    const {error, value} = await emailSchema.validateAsync(msg.email);
-                    if (error) {
-                        res(error);
-                        return;
-                    }
-                    await userService.updateEmail({username: msg.username, email: value});
-                    res(true);
+                    const email = await emailSchema.validateAsync(msg.email);
+                    await userService.updateEmail({username: msg.username, email});
+                    res({result:true});
                 } catch (e) {
                     //todo logs
-                    res(e);
+                    res({error:e});
                 }
             }
         },
@@ -78,7 +69,7 @@ module.exports = {
                     res({email});
                 } catch (e) {
                     //todo logs
-                    res(e);
+                    res({error:e});
                 }
             }
         },
@@ -86,19 +77,15 @@ module.exports = {
             name: 'updateStatus',
             method: async (msg, res) => {
                 try {
-                    const {error, value: newStatus} = await statusSchema.validateAsync(msg.status);
-                    if (error) {
-                        res(error);
-                        return;
-                    }
+                    const status = await statusSchema.validateAsync(msg.status);
                     await userService.updateStatus({
                         username: msg.username,
-                        status: newStatus
+                        status
                     });
-                    res(true);
+                    res({result:true});
                 } catch (e) {
                     //todo logs
-                    res(e);
+                    res({error:e});
                 }
             }
         },
@@ -107,10 +94,10 @@ module.exports = {
             method: async (msg, res) => {
                 try {
                     await userService.updateBlocking(msg);
-                    res(true);
+                    res({result:true});
                 } catch (e) {
                     //todo logs
-                    res(e);
+                    res({error:e});
                 }
             }
         },

@@ -7,13 +7,8 @@ const mongoOptions = {
 
 const mongooseUpdateParams = {new: true, omitUndefined: true};
 
-const subExchanges = {
-    exerciseTests: 'exerciseTests',
-};
-
 module.exports = {
     rpcServiceName: 'userServiceTestQ',
     mongooseUpdateParams,
-    subExchanges,
     mongoOptions,
 };
