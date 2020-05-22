@@ -21,6 +21,12 @@ const rpcServices = {
             achievement: 'achievement',
             exerciseResult: 'exerciseResult',
         },
+    },
+    USER_SERVICE: {
+        serviceName: 'userServiceTestQ',
+        controllers: {
+            user: 'user',
+        }
     }
 };
 
