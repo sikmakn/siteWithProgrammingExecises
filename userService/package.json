@@ -1,0 +1,24 @@
+{
+  "name": "userservice",
+  "version": "1.0.0",
+  "description": "service for users data",
+  "main": "app.js",
+  "private": true,
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "sikmakn",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "amqp-connection-manager": "^3.2.0",
+    "amqplib": "^0.5.5",
+    "argon2": "^0.26.2",
+    "mongodb": "^3.5.7",
+    "mongoose": "^5.9.12"
+  },
+  "devDependencies": {
+    "@shelf/jest-mongodb": "^1.1.5",
+    "jest": "^26.0.1"
+  }
+}
