@@ -23,14 +23,14 @@ module.exports = {
             }
         },
         {
-            name: 'validate',
+            name: 'isValidNonBlocked',
             method: async (msg, res) => {
                 try {
-                    res({result: await userService.validate(msg)});
+                    res({result: await userService.isValidNonBLocked(msg)});
                 } catch (e) {
                     console.error(e);
                     //todo logs
-                    res({error:e});
+                    res({error: e});
                 }
             }
         },
@@ -44,7 +44,7 @@ module.exports = {
                 } catch (e) {
                     console.error(e);
                     //todo logs
-                    res({error:e});
+                    res({error: e});
                 }
             }
         },
@@ -54,10 +54,10 @@ module.exports = {
                 try {
                     const email = await emailSchema.validateAsync(msg.email);
                     await userService.updateEmail({username: msg.username, email});
-                    res({result:true});
+                    res({result: true});
                 } catch (e) {
                     //todo logs
-                    res({error:e});
+                    res({error: e});
                 }
             }
         },
@@ -69,7 +69,7 @@ module.exports = {
                     res({email});
                 } catch (e) {
                     //todo logs
-                    res({error:e});
+                    res({error: e});
                 }
             }
         },
@@ -82,10 +82,10 @@ module.exports = {
                         username: msg.username,
                         status
                     });
-                    res({result:true});
+                    res({result: true});
                 } catch (e) {
                     //todo logs
-                    res({error:e});
+                    res({error: e});
                 }
             }
         },
@@ -94,10 +94,10 @@ module.exports = {
             method: async (msg, res) => {
                 try {
                     await userService.updateBlocking(msg);
-                    res({result:true});
+                    res({result: true});
                 } catch (e) {
                     //todo logs
-                    res({error:e});
+                    res({error: e});
                 }
             }
         },

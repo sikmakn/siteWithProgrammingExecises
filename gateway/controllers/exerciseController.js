@@ -70,14 +70,14 @@ router.get('/:themeId/:difficulty', asyncHandler(async (req, res) => {
     });
 }));
 
-router.get('/sourceCode/:exerciseId', asyncHandler(async (req, res) => {
-    //todo if username from auth
-    const {sourceCode} = progressServiceRPC[progressServiceControllers.exerciseResult]('getByUsernameAndExerciseId', {
-        exerciseId: req.params.exerciseId,
-        username: 'user',
-    });
-    res.json(sourceCode || '');
-}));
+// router.get('/sourceCode/:exerciseId', asyncHandler(async (req, res) => {
+//     //todo if username from auth
+//     const {sourceCode} = progressServiceRPC[progressServiceControllers.exerciseResult]('getByUsernameAndExerciseId', {
+//         exerciseId: req.params.exerciseId,
+//         username: 'user',
+//     });
+//     res.json(sourceCode || '');
+// }));
 
 router.get('/:themeId/:difficulty/next', asyncHandler(async (req, res, next) => {
     const {themeId} = req.params;

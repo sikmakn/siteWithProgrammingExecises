@@ -22,7 +22,7 @@ module.exports = {
             }
         },
         {
-            name: 'isAuthorized',
+            name: 'isAuthenticated',
             method: async (msg, res) => {
                 try {
                     let {token, fingerPrint} = msg;
