@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="/styles/auth.css">
+<form method="post" id="authForm" action="/user/auth" class="authForm">
+    <h1>Регистрация</h1>
+    <label>
+        <span>Имя пользователя</span>
+        <input type="text" id="username" name="username" placeholder="Имя пользователя" pattern="[0-9A-Za-z]{6,12}" required>
+    </label>
+    <label>
+        <span>Пароль</span>
+        <input type="password" id="password" name="password" placeholder="Пароль" pattern="[0-9A-Za-z]{6,12}" required>
+    </label>
+    <label>
+        <span>Повторите пароль</span>
+        <input type="password" id="repeatPassword" name="repeatPassword" placeholder="Повторите пароль" pattern="[0-9A-Za-z]{6,12}"
+               required>
+    </label>
+    <label>
+        <span>Адресс электронной почты</span>
+        <input type="email" id="email" name="email" placeholder="Адресс электронной почты"
+               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2, 4}$" required>
+    </label>
+    <input type="submit" value="Зарегестрироваться">
+    <a href="/user/login">У меня уже есть аккаунт</a>
+</form>
+<script src="/scripts/dist/auth.js"></script>

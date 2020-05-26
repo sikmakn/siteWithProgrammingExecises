@@ -5,7 +5,6 @@ const helmet = require('helmet');
 const compression = require('compression');
 const {PORT} = require('./config');
 const controllers = require('./controllers');
-const cookieParser = require('cookie-parser');
 
 const app = express();
 
@@ -17,7 +16,6 @@ app.set('views', './front/views');
 app.use(compression());
 app.use(express.static(__dirname + '/front/static'));
 app.use(bodyParser.json());
-app.use(cookieParser);
 app.use(helmet());
 
 controllers(app);
@@ -43,7 +41,7 @@ app.use((error, req, res, next) => {
     if (req.status === 401) return;
 
     res.status(500);
-    res.send("Internal Server Error");
+    res.send('Internal Server Error');
 });
 
 app.listen(PORT);

@@ -10,7 +10,12 @@ const setTokenToCookie = require('../helpers/setTokenToCookie');
 
 const router = express.Router();
 
+router.get('/auth',  (req, res) => {
+    res.render('auth.hbs', {layout: 'empty.hbs'});
+});
+
 router.post('/auth', asyncHandler(async (req, res) => {
+    console.log('bbb');
     const createRes = await userServiceRPC[userControllers.user]('create', {
         username: req.body.username,
         password: req.body.password,
