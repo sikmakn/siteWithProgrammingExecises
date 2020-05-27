@@ -1,0 +1,46 @@
+<link rel="stylesheet" href="/styles/auth.css">
+<form method="post" id="authForm" action="/user/auth" class="authForm">
+    <h1>Регистрация</h1>
+    <label for="username">
+        <span>Имя пользователя</span>
+        <input type="text" id="username" name="username" placeholder="Имя пользователя" required>
+        <ul class="inputRequirements">
+            {{#if isUsernameExist}}
+                <li class="invalid">Имя уже существует</li>
+            {{/if}}
+            <li id="usernameSize">Должно содержать от 6 до 20 символов</li>
+            <li id="usernameLatin">Могут использовать только латинские буквы и цифры</li>
+        </ul>
+    </label>
+    <label for="password">
+        <span>Пароль</span>
+        <input type="password" id="password" name="password" placeholder="Пароль" required>
+        <ul class="inputRequirements">
+            <li id="passwordSize">Должен содержать от 6 до 20 символов</li>
+            <li id="passwordUppercase">Должен содежрать как минимум 1 заглавную латинскую букву</li>
+            <li id="passwordLowercase">Должен содежрать как минимум 1 строчную латинскую букву</li>
+            <li id="passwordNumber">Должен содержать как минимум 1 цифру</li>
+            <li id="passwordNonWhitespace">Не должен содержать пробелы</li>
+            <li id="passwordSpecialChar">Должен содержать минимум один специальный символ (!@#$%^&*)</li>
+        </ul>
+    </label>
+    <label for="repeatPassword">
+        <span>Повторите пароль</span>
+        <input type="password" id="repeatPassword" name="repeatPassword" placeholder="Повторите пароль" required>
+        <ul class="inputRequirements">
+            <li id="repPasswordIsRepeat">Должен совпадать с предыдущим паролем</li>
+        </ul>
+    </label>
+    <label for="email">
+        <span>Адресс электронной почты</span>
+        <input type="email" id="email" name="email" placeholder="Адресс электронной почты" required>
+        <ul class="inputRequirements">
+            <li id="emailIsEmail">Должен быть валидный email</li>
+        </ul>
+    </label>
+    <input type="submit" value="Зарегестрироваться">
+    <a href="/user/login">У меня уже есть аккаунт</a>
+</form>
+<script src="/scripts/dist/auth/validationRequirements.js"></script>
+<script src="/scripts/dist/auth/validator.js"></script>
+<script src="/scripts/dist/auth/auth.js"></script>

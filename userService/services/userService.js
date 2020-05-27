@@ -1,10 +1,10 @@
 const userRepository = require('../db/repositories/userRepository');
 const argon2 = require('argon2');
 const {STATIC_SALT} = require('../config');
-const crypto = require('crypto');
+const {getRandomString} = require('../helpers/randomString');
 
 async function create({username, password, email, status = 'free', isBlocked = false}) {
-    const dynamicSalt = crypto.randomBytes(128).toString('base64');
+    const dynamicSalt = getRandomString();
     const saltedPassword = `${password}.${STATIC_SALT}.${dynamicSalt}`;
     const hashedPassword = await argon2.hash(saltedPassword);
     const newUser = await userRepository.create({
@@ -21,6 +21,11 @@ async function create({username, password, email, status = 'free', isBlocked = f
 async function validate({username, password}) {
     const user = await userRepository.findByUsername(username);
     return await argon2.verify(user.password, `${password}.${STATIC_SALT}.${user.salt}`);
+}
+
+async function isValidNonBLocked({username, password}) {
+    const user = (await userRepository.findByUsername(username))._doc;
+    return !user.isBlocked && await argon2.verify(user.password, `${password}.${STATIC_SALT}.${user.salt}`);
 }
 
 async function findByUsername(username) {
@@ -41,7 +46,7 @@ async function updateStatus({username, status = 'free'}) {
 }
 
 async function updatePassword({username, password}) {
-    const dynamicSalt = crypto.randomBytes(128).toString('base64');
+    const dynamicSalt = getRandomString();
     const saltedPassword = `${password}.${STATIC_SALT}.${dynamicSalt}`;
     const hashedPassword = await argon2.hash(saltedPassword);
     return (await userRepository.updateUser({username, password: hashedPassword, salt: dynamicSalt}))._doc;
@@ -54,5 +59,6 @@ module.exports = {
     updateBlocking,
     findByUsername,
     updateEmail,
+    isValidNonBLocked,
     updatePassword,
 };

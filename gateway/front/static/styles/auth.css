@@ -1,0 +1,39 @@
+.authForm {
+    display: flex;
+    flex-direction: column;
+    background: #a6a6a6;
+    padding: 10px;
+}
+
+.authForm label {
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+}
+
+.authForm input {
+    border: none;
+    border-bottom: 1px solid #a6a6a6;
+    background: #dfdfdf;
+    margin: 5px;
+}
+
+.authForm a {
+    color: #e2e2e2;
+}
+
+.invalidInput {
+    border: 2px solid red;
+}
+
+.validInput {
+    border: 2px solid lightgreen;
+}
+
+.invalid {
+    color: red;
+}
+
+.valid {
+    color: lightgreen;
+}

@@ -1,0 +1,6 @@
+module.exports = {
+    AMQP_HOST: process.env.AMQP_HOST,
+    JWT_SECRET: process.env.JWT_SECRET,
+    CONCURRENT_AUTHORIZATION_LIMIT: process.env.CONCURRENT_AUTHORIZATION_LIMIT,
+    EXPIRES_HOURS: process.env.EXPIRES_HOURS,
+};
