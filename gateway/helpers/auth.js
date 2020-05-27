@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 async function isAuth(req, res, next) {
     const token = getTokenFromCookie(req);
     if (!token) {
-        res.status(403).send();//todo redirect to login page
+        res.redirect('/user/login');
         return;
     }
     const {result: newToken} = await authServiceRPC[authControllers.user]('updateToken', {
@@ -17,7 +17,7 @@ async function isAuth(req, res, next) {
         fingerPrint: req.headers.fingerprint,
     });
     if (!newToken) {
-        res.status(403).send();//todo redirect to login page
+        res.redirect('/user/login');
         return;
     }
     setToken(res, token);
