@@ -1,5 +1,5 @@
 const subExchanges = {
-    email: 'email',
+    email: 'emailNotification',
 };
 const emailTemplates = {
     blockUserObj: {subject: 'Блокировка аккаунта'},

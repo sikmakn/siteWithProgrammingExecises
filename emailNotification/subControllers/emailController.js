@@ -13,12 +13,13 @@ module.exports = async function () {
 
 async function subscribe(content) {
     try {
-        if (content.block) {
+        if (content.isBlocked) {
             await emailService.sendBlockMail(content);
         } else {
             await emailService.sendUnblockMail(content);
         }
     } catch (e) {
+        console.log('subController');
         console.log(e);  //todo add logs
     }
 }
