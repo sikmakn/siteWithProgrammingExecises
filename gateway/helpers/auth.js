@@ -2,16 +2,17 @@ const {rpcServices} = require('../options');
 const {rpcQueues} = require('../amqpHandler');
 const authServiceRPC = rpcQueues[rpcServices.AUTH_SERVICE.serviceName];
 const authControllers = rpcServices.AUTH_SERVICE.controllers;
-const setTokenToCookie = require('../helpers/setTokenToCookie');
+const {setToken} = require('./setToCookie');
+const jwt = require('jsonwebtoken');
 
 
-async function isAuthMiddleware(req, res, next) {
+async function isAuth(req, res, next) {
     const token = getTokenFromCookie(req);
     if (!token) {
         res.status(403).send();//todo redirect to login page
         return;
     }
-    const {result: newToken} = await authServiceRPC[authControllers.user]('isAuthenticated', {
+    const {result: newToken} = await authServiceRPC[authControllers.user]('updateToken', {
         token,
         fingerPrint: req.headers.fingerprint,
     });
@@ -19,30 +20,42 @@ async function isAuthMiddleware(req, res, next) {
         res.status(403).send();//todo redirect to login page
         return;
     }
-    setTokenToCookie(res, token);
+    setToken(res, token);
     next();
 }
 
-async function authValidate(req, res) {
+async function authValidate(req, res, next) {
     const token = getTokenFromCookie(req);
-    if (!token) return;
+    if (!token) {
+        next();
+        return;
+    }
 
-    const {result: newToken} = await authServiceRPC[authControllers.user]('isAuthenticated', {
+    const {result: newToken} = await authServiceRPC[authControllers.auth]('updateToken', {
         token,
-        fingerPrint: req.headers.fingerprint,
+        fingerPrint: req.cookies.fingerprint,
     });
-    if (!newToken) return;
+    if (!newToken) {
+        next();
+        return;
+    }
 
-    setTokenToCookie(res, token);
-    return token;
+    setToken(res, newToken);
+    req.token = newToken;
+    next();
+}
+
+async function decodeToken(token) {
+    return jwt.decode(token);
 }
 
 module.exports = {
-    isAuthMiddleware,
-    authValidate
+    isAuth,
+    authValidate,
+    decodeToken,
 };
 
 function getTokenFromCookie(req) {
-    if (req.cookies.authorization && req.cookies.authorization.split(' ')[0] === 'Bearer')
-        return req.headers.authorization.split(' ')[1];
+    if (req.cookies.Authorization && req.cookies.Authorization.split(' ')[0] === 'Bearer')
+        return req.cookies.Authorization.split(' ')[1];
 }

@@ -6,27 +6,30 @@ const userServiceRPC = rpcQueues[rpcServices.USER_SERVICE.serviceName];
 const userControllers = rpcServices.USER_SERVICE.controllers;
 const authServiceRPC = rpcQueues[rpcServices.AUTH_SERVICE.serviceName];
 const authControllers = rpcServices.AUTH_SERVICE.controllers;
-const setTokenToCookie = require('../helpers/setTokenToCookie');
+const {setFingerprint, setToken} = require('../helpers/setToCookie');
 
 const router = express.Router();
 
-router.get('/auth',  (req, res) => {
-    res.render('auth.hbs', {layout: 'empty.hbs'});
+router.get('/auth', (req, res) => {
+    res.render('registration.hbs', {layout: 'empty.hbs'});
 });
 
-router.post('/auth', asyncHandler(async (req, res) => {
-    console.log('bbb');
+router.post('/registration', asyncHandler(async (req, res) => {
     const createRes = await userServiceRPC[userControllers.user]('create', {
         username: req.body.username,
         password: req.body.password,
         email: req.body.email,
     });
     if (!createRes.result) {
-        res.status(401).send();
+        res.render('registration.hbs', {layout: 'empty.hbs', isUsernameExist: true});
         return;
     }
-    res.status(200).send();//todo redirect to login
+    res.redirect('/user/login');
 }));
+
+router.get('/login', (req, res) => {
+    res.render('login.hbs', {layout: 'empty.hbs'});
+});
 
 router.post('/login', asyncHandler(async (req, res) => {
     const {result: isValid} = await userServiceRPC[userControllers.user]('isValidNonBlocked', {
@@ -34,7 +37,7 @@ router.post('/login', asyncHandler(async (req, res) => {
         password: req.body.password,
     });
     if (!isValid) {
-        res.status(401).send();
+        res.render('login.hbs', {layout: 'empty.hbs', isNonValid: true});
         return;
     }
     const {result: token} = await authServiceRPC[authControllers.auth]('login', {
@@ -42,11 +45,13 @@ router.post('/login', asyncHandler(async (req, res) => {
         fingerPrint: req.body.fingerprint,
     });
     if (!token) {
-        res.status(401).send();
+        res.render('login.hbs', {layout: 'empty.hbs', isNonValid: true});
         return;
     }
-    setTokenToCookie(res, token);
-    res.status(200).send();//todo redirect to userPage
+    setToken(res, token);
+    setFingerprint(res, req.body.fingerprint);
+
+    res.redirect('/');//todo redirect to userPage
 }));
 
 module.exports = router;

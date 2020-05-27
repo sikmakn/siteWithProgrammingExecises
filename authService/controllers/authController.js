@@ -1,13 +1,14 @@
 const authService = require('../services/authService');
 
 module.exports = {
-    name: 'user',
+    name: 'auth',
     methods: [
         {
-            name: 'logIn',
+            name: 'login',
             method: async (msg, res) => {
                 try {
                     let {userId, fingerPrint} = msg;
+                    console.log(msg);
                     if (await authService.isTooManyAuth(userId)) {
                         await authService.blockUser(userId);
                         throw new Error('too many concurrent auth by user');
@@ -22,7 +23,7 @@ module.exports = {
             }
         },
         {
-            name: 'isAuthenticated',
+            name: 'updateToken',
             method: async (msg, res) => {
                 try {
                     let {token, fingerPrint} = msg;
@@ -37,7 +38,7 @@ module.exports = {
             }
         },
         {
-            name: 'logOut',
+            name: 'logout',
             method: async (msg, res) => {
                 try {
                     let {userId, fingerPrint} = msg;

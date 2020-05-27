@@ -29,9 +29,9 @@ const rpcServices = {
         }
     },
     AUTH_SERVICE: {
-        serviceName:'authServiceTestQ',
-        controllers:{
-            auth:'auth',
+        serviceName: 'authServiceTestQ',
+        controllers: {
+            auth: 'auth',
         }
     }
 };

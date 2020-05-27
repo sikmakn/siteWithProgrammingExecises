@@ -7,11 +7,11 @@ async function create({userId, fingerPrint, expiresIn}) {
 }
 
 async function findCount(userId) {
-    return await authData.count({userId});
+    return await authData.countDocuments({userId});
 }
 
-async function findOne({userId, fingerPrint, expiresIn}) {
-    return await authData.findOne({userId, fingerPrint, expiresIn});
+async function findOne({userId, fingerPrint}) {
+    return await authData.findOne({userId, fingerPrint});
 }
 
 async function findByUserId(userId) {
@@ -19,7 +19,7 @@ async function findByUserId(userId) {
 }
 
 async function updateAuthData({userId, fingerPrint, expiresIn}) {
-    return await user.findOneAndUpdate({userId, fingerPrint},
+    return await authData.findOneAndUpdate({userId, fingerPrint},
         {userId, fingerPrint, expiresIn},
         mongooseUpdateParams);
 }

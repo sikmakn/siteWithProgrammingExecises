@@ -20,9 +20,9 @@ async function createToken({userId, fingerPrint}) {
 
 async function isValidToken({token, fingerPrint}) {
     try {
-        const decoded = jwt.verify(token, JWT_SECRET);
-        return fingerPrint !== decoded &&
-            !!await authDataRepository.findOne({userId: decoded.userId, fingerPrint});
+        const {userId, fingerPrint: oldFingerPrint} = jwt.verify(token, JWT_SECRET);
+        return fingerPrint === oldFingerPrint &&
+            !!await authDataRepository.findOne({userId, fingerPrint});
     } catch (e) {
         return false;
     }
