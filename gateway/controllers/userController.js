@@ -10,7 +10,7 @@ const {setFingerprint, setToken} = require('../helpers/setToCookie');
 
 const router = express.Router();
 
-router.get('/auth', (req, res) => {
+router.get('/registration', (req, res) => {
     res.render('registration.hbs', {layout: 'empty.hbs'});
 });
 
