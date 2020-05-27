@@ -11,6 +11,7 @@
     "amqp-connection-manager": "^3.2.0",
     "amqplib": "^0.5.5",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.9.15"
+    "mongoose": "^5.9.15",
+    "uuid": "^8.1.0"
   }
 }
