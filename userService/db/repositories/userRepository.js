@@ -14,7 +14,11 @@ async function findByUsername(username) {
     return await user.findOne({username});
 }
 
-async function updateUser({ username, password, email, status, isBlocked, salt}) {
+async function findByIdentityData({username, email}) {
+    return await user.findOne({$or: [{username}, {email}]});
+}
+
+async function updateUser({username, password, email, status, isBlocked, salt}) {
     return await user.findOneAndUpdate({username},
         {
             username,
@@ -31,5 +35,6 @@ module.exports = {
     create,
     findById,
     findByUsername,
+    findByIdentityData,
     updateUser,
 };

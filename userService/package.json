@@ -15,7 +15,8 @@
     "amqplib": "^0.5.5",
     "argon2": "^0.26.2",
     "mongodb": "^3.5.7",
-    "mongoose": "^5.9.12"
+    "mongoose": "^5.9.12",
+    "uuid": "^8.1.0"
   },
   "devDependencies": {
     "@shelf/jest-mongodb": "^1.1.5",

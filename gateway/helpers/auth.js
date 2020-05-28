@@ -1,5 +1,5 @@
 const {rpcServices} = require('../options');
-const {rpcQueues} = require('../amqpHandler');
+const {rpcQueues, getChannel} = require('../amqpHandler');
 const authServiceRPC = rpcQueues[rpcServices.AUTH_SERVICE.serviceName];
 const authControllers = rpcServices.AUTH_SERVICE.controllers;
 const {setToken} = require('./setToCookie');
@@ -12,7 +12,8 @@ async function isAuth(req, res, next) {
         res.redirect('/user/login');
         return;
     }
-    const {result: newToken} = await authServiceRPC[authControllers.user]('updateToken', {
+    const channel = await getChannel();
+    const {result: newToken} = await authServiceRPC[authControllers.user](channel, 'updateToken', {
         token,
         fingerPrint: req.headers.fingerprint,
     });
@@ -30,12 +31,14 @@ async function authValidate(req, res, next) {
         next();
         return;
     }
-
-    const {result: newToken} = await authServiceRPC[authControllers.auth]('updateToken', {
+    const channel = await getChannel();
+    const {result: newToken} = await authServiceRPC[authControllers.auth](channel, 'updateToken', {
         token,
         fingerPrint: req.cookies.fingerprint,
     });
     if (!newToken) {
+        delete req.cookies.Authorization;
+        res.clearCookie('Authorization');
         next();
         return;
     }

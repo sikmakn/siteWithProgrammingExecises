@@ -8,7 +8,6 @@ module.exports = {
             method: async (msg, res) => {
                 try {
                     let {userId, fingerPrint} = msg;
-                    console.log(msg);
                     if (await authService.isTooManyAuth(userId)) {
                         await authService.blockUser(userId);
                         throw new Error('too many concurrent auth by user');

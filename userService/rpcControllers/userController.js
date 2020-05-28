@@ -9,7 +9,7 @@ module.exports = {
             method: async (msg, res) => {
                 try {
                     const userData = await userSchema.validateAsync(msg);
-                    if (await userService.findByUsername(userData.username)) {
+                    if (await userService.findByIdentityData({username: userData.username, email: userData.email})) {
                         res({error: 'user exist'});
                         return;
                     }

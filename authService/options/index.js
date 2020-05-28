@@ -7,8 +7,17 @@ const mongoOptions = {
 
 const mongooseUpdateParams = {new: true, omitUndefined: true};
 
+const rpcServices = {
+    USER_SERVICE: {
+        serviceName: 'userServiceTestQ',
+        controllers: {
+            user: 'user',
+        }
+    }
+};
 module.exports = {
     mongoOptions,
     mongooseUpdateParams,
     rpcServiceName: 'authServiceTestQ',
+    rpcServices,
 };

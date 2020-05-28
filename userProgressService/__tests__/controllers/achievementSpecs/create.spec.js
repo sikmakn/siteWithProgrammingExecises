@@ -1,6 +1,6 @@
 const achievementService = require('../../../services/achievementService');
 jest.mock('../../../services/achievementService');
-const achievementController = require('../../../controllers/achievementController');
+const achievementController = require('../../../rpcControllers/achievementController');
 
 describe('create function', () => {
     let msg;

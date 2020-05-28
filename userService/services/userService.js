@@ -2,6 +2,8 @@ const userRepository = require('../db/repositories/userRepository');
 const argon2 = require('argon2');
 const {STATIC_SALT} = require('../config');
 const {getRandomString} = require('../helpers/randomString');
+const {publish, getChannel} = require('../amqpHandler');
+const {pubExchanges} = require('../options');
 
 async function create({username, password, email, status = 'free', isBlocked = false}) {
     const dynamicSalt = getRandomString();
@@ -29,7 +31,11 @@ async function isValidNonBLocked({username, password}) {
 }
 
 async function findByUsername(username) {
-    return await userRepository.findByUsername(username);
+    return (await userRepository.findByUsername(username))._doc;
+}
+
+async function findByIdentityData({username, email}) {
+    return (await userRepository.findByIdentityData({username, email}))._doc;
 }
 
 async function updateEmail({username, email}) {
@@ -37,7 +43,9 @@ async function updateEmail({username, email}) {
 }
 
 async function updateBlocking({username, isBlocked = true}) {
-    //todo pub
+    const {email} = (await userRepository.findByUsername(username))._doc;
+    await publish(await getChannel(), pubExchanges.blockUser, {username, email, isBlocked: true});
+
     return (await userRepository.updateUser({username, isBlocked}))._doc;
 }
 
@@ -58,6 +66,7 @@ module.exports = {
     updateStatus,
     updateBlocking,
     findByUsername,
+    findByIdentityData,
     updateEmail,
     isValidNonBLocked,
     updatePassword,

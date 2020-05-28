@@ -6,8 +6,6 @@ async function start() {
     await mongoose.connect(MONGODB_URI, mongoOptions);
     const {reconnect} = require('./amqpHandler');
     await reconnect();
-
-    await require('./subControllers/exerciseResultController')();
 }
 
 start();

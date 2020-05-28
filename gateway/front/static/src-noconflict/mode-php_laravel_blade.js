@@ -670,7 +670,7 @@ ace.define("ace/mode/doc_comment_highlight_rules", ["require", "exports", "modul
             }],
             directives: [{
                 token: ["directive.declaration.blade", "keyword.directives.blade"],
-                regex: "(@)(endunless|endisset|endempty|endauth|endguest|endcomponent|endslot|endalert|endverbatim|endsection|show|php|endphp|endpush|endprepend|endenv|endforelse|isset|empty|component|slot|alert|json|verbatim|section|auth|guest|hasSection|forelse|includeIf|includeWhen|includeFirst|each|push|stack|prepend|inject|env|elseenv|unless|yield|extends|parent|include|acfrepeater|block|can|cannot|choice|debug|elsecan|elsecannot|embed|hipchat|lang|layout|macro|macrodef|minify|partial|render|servers|set|slack|story|task|unset|wpposts|acfend|after|append|breakpoint|endafter|endcan|endcannot|endembed|endmacro|endmarkdown|endminify|endpartial|endsetup|endstory|endtask|endunless|markdown|overwrite|setup|stop|wpempty|wpend|wpquery)"
+                regex: "(@)(endunless|endisset|endempty|endauth|endguest|endcomponent|endslot|endalert|endverbatim|endsection|show|php|endphp|endpush|endprepend|endenv|endforelse|isset|empty|component|slot|alert|json|verbatim|section|auth|guest|hasSection|forelse|includeIf|includeWhen|includeFirst|each|push|stack|prepend|inject|env|elseenv|unless|yield|extends|parent|include|acfrepeater|block|can|cannot|choice|debug|elsecan|elsecannot|embed|hipchat|lang|layout|macro|macrodef|minify|partial|render|servers|set|slack|story|task|unset|wpposts|acfend|after|append|breakpoint|endafter|endcan|endcannot|endembed|endmacro|endmarkdown|endminify|endpartial|endsetup|endstory|endtask|endunless|markdown|overwrite|setupChannel|stop|wpempty|wpend|wpquery)"
             }, {
                 token: ["directive.declaration.blade", "keyword.control.blade"],
                 regex: "(@)(if|else|elseif|endif|foreach|endforeach|switch|case|break|default|endswitch|for|endfor|while|endwhile|continue)"
@@ -2543,7 +2543,7 @@ ace.define("ace/mode/doc_comment_highlight_rules", ["require", "exports", "modul
         session_cache_limiter: ["string session_cache_limiter([string new_cache_limiter])", "Return the current cache limiter. If new_cache_limited is given, the current cache_limiter is replaced with new_cache_limiter"],
         session_decode: ["bool session_decode(string data)", "Deserializes data and reinitializes the variables"],
         session_destroy: ["bool session_destroy(void)", "Destroy the current session and all data associated with it"],
-        session_encode: ["string session_encode(void)", "Serializes the current setup and returns the serialized representation"],
+        session_encode: ["string session_encode(void)", "Serializes the current setupChannel and returns the serialized representation"],
         session_get_cookie_params: ["array session_get_cookie_params(void)", "Return the session cookie parameters"],
         session_id: ["string session_id([string newid])", "Return the current session id. If newid is given, the session id is replaced with newid"],
         session_is_registered: ["bool session_is_registered(string varname)", "Checks if a variable is registered in session"],
