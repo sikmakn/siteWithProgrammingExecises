@@ -2440,7 +2440,7 @@ ace.define("ace/mode/doc_comment_highlight_rules", ["require", "exports", "modul
         session_cache_limiter: ["string session_cache_limiter([string new_cache_limiter])", "Return the current cache limiter. If new_cache_limited is given, the current cache_limiter is replaced with new_cache_limiter"],
         session_decode: ["bool session_decode(string data)", "Deserializes data and reinitializes the variables"],
         session_destroy: ["bool session_destroy(void)", "Destroy the current session and all data associated with it"],
-        session_encode: ["string session_encode(void)", "Serializes the current setup and returns the serialized representation"],
+        session_encode: ["string session_encode(void)", "Serializes the current setupChannel and returns the serialized representation"],
         session_get_cookie_params: ["array session_get_cookie_params(void)", "Return the session cookie parameters"],
         session_id: ["string session_id([string newid])", "Return the current session id. If newid is given, the session id is replaced with newid"],
         session_is_registered: ["bool session_is_registered(string varname)", "Checks if a variable is registered in session"],

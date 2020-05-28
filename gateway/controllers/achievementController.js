@@ -1,7 +1,7 @@
 const express = require("express");
 const asyncHandler = require('express-async-handler');
 const {rpcServices} = require('../options');
-const {rpcQueues} = require('../amqpHandler');
+const {rpcQueues, getChannel} = require('../amqpHandler');
 const progressServiceRPC = rpcQueues[rpcServices.PROGRESS_SERVICE.serviceName];
 const progressControllers = rpcServices.PROGRESS_SERVICE.controllers;
 const multer = require('multer');
@@ -11,7 +11,8 @@ const stream = require('stream');
 const router = express.Router();
 
 router.post('/', upload.single('achievementImg'), asyncHandler(async (req, res) => {
-    const achievement = await progressServiceRPC[progressControllers.achievement]('create', {
+    const channel = await getChannel();
+    const achievement = await progressServiceRPC[progressControllers.achievement](channel, 'create', {
         conditions: JSON.parse(req.body.conditions),
         file: req.file,
         description: req.body.description,
@@ -21,7 +22,8 @@ router.post('/', upload.single('achievementImg'), asyncHandler(async (req, res) 
 }));
 
 router.put('/:id', asyncHandler(async (req, res) => {
-    const achievement = await progressServiceRPC[progressControllers.achievement]('updateAchievementFile', {
+    const channel = await getChannel();
+    const achievement = await progressServiceRPC[progressControllers.achievement](channel, 'updateAchievementFile', {
         id: req.params.id,
         name: req.body.name,
         description: req.body.description,
@@ -31,7 +33,8 @@ router.put('/:id', asyncHandler(async (req, res) => {
 }));
 
 router.get('/file/:id', asyncHandler(async (req, res) => {
-    const file = await progressServiceRPC[progressControllers.achievement]('getAchievementFile', {id: req.params.id});
+    const channel = await getChannel();
+    const file = await progressServiceRPC[progressControllers.achievement](channel, 'getAchievementFile', {id: req.params.id});
     res.set('Content-Type', file.contentType);
     const bufferStream = new stream.PassThrough();
     bufferStream.end(Buffer.from(file.buffer));
@@ -39,7 +42,8 @@ router.get('/file/:id', asyncHandler(async (req, res) => {
 }));
 
 router.put('/file/:id', upload.single('achievementIng'), asyncHandler(async (req, res) => {
-    const achievementFile = await progressServiceRPC[progressControllers.achievement]('updateAchievementFile', {
+    const channel = await getChannel();
+    const achievementFile = await progressServiceRPC[progressControllers.achievement](channel, 'updateAchievementFile', {
         conditions: JSON.parse(req.body.conditions),
         file: req.file,
         fileId: req.params.id,

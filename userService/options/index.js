@@ -7,8 +7,13 @@ const mongoOptions = {
 
 const mongooseUpdateParams = {new: true, omitUndefined: true};
 
+const pubExchanges = {
+    blockUser: 'blockUser',
+};
+
 module.exports = {
     rpcServiceName: 'userServiceTestQ',
     mongooseUpdateParams,
     mongoOptions,
+    pubExchanges,
 };

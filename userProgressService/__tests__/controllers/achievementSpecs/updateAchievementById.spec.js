@@ -4,7 +4,7 @@ jest.mock('../../../services/achievementService');
 require('../../../services/userAchievementService');
 jest.mock('../../../services/userAchievementService');
 
-const achievementController = require('../../../controllers/achievementController');
+const achievementController = require('../../../rpcControllers/achievementController');
 
 describe('updateAchievementById function', () => {
     let updateAchievementById;

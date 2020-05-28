@@ -1,7 +1,11 @@
 const authDataRepository = require('../db/repositories/authDataRepository');
 const {CONCURRENT_AUTHORIZATION_LIMIT, EXPIRES_HOURS, JWT_SECRET} = require('../config');
 const jwt = require('jsonwebtoken');
-const {getRandomString} = require('../helpers/randomString');
+const {v4: uuidv4} = require('uuid');
+const {rpcQueues, getChannel} = require('../amqpHandler');
+const {rpcServices} = require('../options');
+const userServiceRPC = rpcQueues[rpcServices.USER_SERVICE.serviceName];
+const userControllers = rpcServices.USER_SERVICE.controllers.user;
 
 async function isTooManyAuth(userId) {
     return (await authDataRepository.findCount(userId)) >= CONCURRENT_AUTHORIZATION_LIMIT;
@@ -9,7 +13,7 @@ async function isTooManyAuth(userId) {
 
 async function blockUser(userId) {
     await authDataRepository.deleteByUserId(userId);
-    //todo push block User
+    return await userServiceRPC[userControllers](await getChannel(), 'updateBlock', {username: userId});
 }
 
 async function createToken({userId, fingerPrint}) {
@@ -53,7 +57,7 @@ module.exports = {
 };
 
 function sign({userId, fingerPrint}) {
-    return jwt.sign({userId, fingerPrint, id: getRandomString()},
+    return jwt.sign({userId, fingerPrint, id: uuidv4()},
         JWT_SECRET,
         {expiresIn: EXPIRES_HOURS + 'h'});
 }

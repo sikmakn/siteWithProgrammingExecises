@@ -46,7 +46,8 @@ async function addByUsername(username) {
         if (checkCommonConditions({conditions: commonConditions, userResults}))
             achievementIds.push(achievement._id);
     }
-    return await addAchievements({username, achievementIds});
+    if (achievementIds.length)
+        return await addAchievements({username, achievementIds});
 }
 
 async function addByConditions(conditions, achievementId) {

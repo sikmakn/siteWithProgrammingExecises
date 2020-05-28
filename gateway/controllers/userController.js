@@ -1,7 +1,7 @@
 const express = require("express");
 const asyncHandler = require('express-async-handler');
 const {rpcServices} = require('../options');
-const {rpcQueues} = require('../amqpHandler');
+const {rpcQueues, getChannel} = require('../amqpHandler');
 const userServiceRPC = rpcQueues[rpcServices.USER_SERVICE.serviceName];
 const userControllers = rpcServices.USER_SERVICE.controllers;
 const authServiceRPC = rpcQueues[rpcServices.AUTH_SERVICE.serviceName];
@@ -15,7 +15,8 @@ router.get('/registration', (req, res) => {
 });
 
 router.post('/registration', asyncHandler(async (req, res) => {
-    const createRes = await userServiceRPC[userControllers.user]('create', {
+    const channel = await getChannel();
+    const createRes = await userServiceRPC[userControllers.user](channel, 'create', {
         username: req.body.username,
         password: req.body.password,
         email: req.body.email,
@@ -32,7 +33,8 @@ router.get('/login', (req, res) => {
 });
 
 router.post('/login', asyncHandler(async (req, res) => {
-    const {result: isValid} = await userServiceRPC[userControllers.user]('isValidNonBlocked', {
+    const channel = await getChannel();
+    const {result: isValid} = await userServiceRPC[userControllers.user](channel, 'isValidNonBlocked', {
         username: req.body.username,
         password: req.body.password,
     });
@@ -40,7 +42,7 @@ router.post('/login', asyncHandler(async (req, res) => {
         res.render('login.hbs', {layout: 'empty.hbs', isNonValid: true});
         return;
     }
-    const {result: token} = await authServiceRPC[authControllers.auth]('login', {
+    const {result: token} = await authServiceRPC[authControllers.auth](channel, 'login', {
         userId: req.body.username,
         fingerPrint: req.body.fingerprint,
     });

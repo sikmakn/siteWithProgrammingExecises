@@ -1,6 +1,6 @@
 const exerciseResultService = require('../../../services/exerciseResultService');
 jest.mock('../../../services/exerciseResultService');
-const exerciseResultController = require('../../../controllers/exerciseResultController');
+const exerciseResultController = require('../../../rpcControllers/exerciseResultController');
 
 describe('find function', () => {
     let msg;

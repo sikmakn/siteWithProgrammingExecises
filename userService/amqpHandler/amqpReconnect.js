@@ -11,8 +11,8 @@ async function reconnect() {
 }
 
 function makeConnectionReconnect() {
-    connection.on("close", function () {
-        console.error("[AMQP] reconnecting"); //todo to logs
+    connection.on('close', function () {
+        console.error('[AMQP] reconnecting'); //todo to logs
         return setTimeout(reconnect, 1000);
     });
 }
@@ -20,16 +20,16 @@ function makeConnectionReconnect() {
 async function createConnection() {
     connection = await amqp.connect(AMQP_HOST);
 
-    connection.on("error", function (err) {
-        if (err.message !== "Connection closing")
-            console.error("[AMQP] conn error", err.message); //todo to logs
+    connection.on('error', function (err) {
+        if (err.message !== 'Connection closing')
+            console.error('[AMQP] conn error', err.message); //todo to logs
     });
     makeConnectionReconnect();
 }
 
 async function createChannel() {
     producingChannel = await connection.createConfirmChannel();
-    setupChannel(producingChannel);
+    await setupChannel(producingChannel);
 }
 
 async function getChannel() {
