@@ -16,4 +16,5 @@ module.exports = {
     mongooseUpdateParams,
     mongoOptions,
     pubExchanges,
+    serviceName: 'userService',
 };

@@ -1,4 +1,4 @@
-const { rpcServices } = require("../options");
+const { rpcServices, serviceName } = require("../options");
 const { v4: uuidv4 } = require("uuid");
 const bufferMapper = require("../helpers/objBufferMapper");
 //todo try catch all
@@ -10,7 +10,7 @@ const sendRPCMessage = function ({rpcQueue, controller, route, message, channel}
       resolve(objResult);
     });
 
-    const replyTo = rpcQueue + "Reply";
+    const replyTo = `${rpcQueue}${serviceName}Reply`;
     channel.sendToQueue(
       rpcQueue,
       bufferMapper.objToBuffer({ message, controller, route }),

@@ -1,4 +1,4 @@
-const { rpcServices } = require("../options");
+const { rpcServices, serviceName } = require("../options");
 const { v4: uuidv4 } = require("uuid");
 const bufferMapper = require("../helpers/objBufferMapper");
 //todo try catch all
@@ -10,11 +10,11 @@ const sendRPCMessage = function ({rpcQueue, controller, route, message, channel}
       resolve(objResult);
     });
 
-    const replyTo = rpcQueue + "Reply";
+    const replyTo = `${rpcQueue}${serviceName}Reply`;
     channel.sendToQueue(
-      rpcQueue,
-      bufferMapper.objToBuffer({ message, controller, route }),
-      { correlationId, replyTo }
+        rpcQueue,
+        bufferMapper.objToBuffer({ message, controller, route }),
+        { correlationId, replyTo }
     );
   });
 };
@@ -22,13 +22,13 @@ const sendRPCMessage = function ({rpcQueue, controller, route, message, channel}
 function addControllersCallers({ serviceObjToAdd, controllers, serviceName }) {
   for (let controller in controllers) {
     serviceObjToAdd[controller] = (channel,route, message) =>
-       sendRPCMessage({
-        rpcQueue: serviceName,
-        controller: controllers[controller],
-        route,
-        message,
-        channel,
-      });
+        sendRPCMessage({
+          rpcQueue: serviceName,
+          controller: controllers[controller],
+          route,
+          message,
+          channel,
+        });
   }
 }
 

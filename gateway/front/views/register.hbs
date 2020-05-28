@@ -1,0 +1,47 @@
+<link rel="stylesheet" href="/styles/auth.css">
+<form method="post" id="authForm" action="/user/registration" class="authForm">
+    <div class="authTabs">
+        <span class="activeTab">Регистрация</span>
+        <a class="unactiveTab" href="/user/login">Вход</a>
+    </div>
+    <label for="username">
+        <input type="text" id="username" name="username" placeholder="Имя пользователя" required>
+        <ul class="inputRequirements">
+            {{#if isUsernameExist}}
+                <li class="invalid">Имя уже существует</li>
+            {{/if}}
+            <li id="usernameSize" class="invalid">Должно содержать от 6 до 20 символов</li>
+            <li id="usernameLatin">Могут использовать только латинские буквы и цифры</li>
+        </ul>
+    </label>
+    <label for="password">
+        <input type="password" id="password" name="password" placeholder="Пароль" required>
+        <ul class="inputRequirements">
+            <li id="passwordSize">Должен содержать от 6 до 20 символов</li>
+            <li id="passwordUppercase">Должен содежрать как минимум 1 заглавную латинскую букву</li>
+            <li id="passwordLowercase">Должен содежрать как минимум 1 строчную латинскую букву</li>
+            <li id="passwordNumber">Должен содержать как минимум 1 цифру</li>
+            <li id="passwordNonWhitespace">Не должен содержать пробелы</li>
+            <li id="passwordSpecialChar">Должен содержать минимум один специальный символ (!@#$%^&*)</li>
+        </ul>
+    </label>
+    <label for="repeatPassword">
+        <input type="password" id="repeatPassword" name="repeatPassword" placeholder="Подтверждение пароля" required>
+        <ul class="inputRequirements">
+            <li id="repPasswordIsRepeat">Должен совпадать с предыдущим паролем</li>
+        </ul>
+    </label>
+    <label for="email">
+        <input type="text" id="email" name="email" placeholder="Почта" required>
+        <ul class="inputRequirements">
+            {{#if isEmailExist}}
+                <li class="invalid">Почта уже занята</li>
+            {{/if}}
+            <li id="emailIsEmail">Должен быть валидный email</li>
+        </ul>
+    </label>
+    <input type="submit" value="Зарегестрироваться">
+</form>
+<script src="/scripts/src/auth/validationRequirements.js"></script>
+<script src="/scripts/src/auth/validator.js"></script>
+<script src="/scripts/src/auth/auth.js"></script>

@@ -10,11 +10,11 @@ const {setFingerprint, setToken} = require('../helpers/setToCookie');
 
 const router = express.Router();
 
-router.get('/registration', (req, res) => {
-    res.render('registration.hbs', {layout: 'empty.hbs'});
+router.get('/register', (req, res) => {
+    res.render('register.hbs', {layout: 'empty.hbs'});
 });
 
-router.post('/registration', asyncHandler(async (req, res) => {
+router.post('/register', asyncHandler(async (req, res) => {
     const channel = await getChannel();
     const createRes = await userServiceRPC[userControllers.user](channel, 'create', {
         username: req.body.username,
@@ -22,7 +22,7 @@ router.post('/registration', asyncHandler(async (req, res) => {
         email: req.body.email,
     });
     if (!createRes.result) {
-        res.render('registration.hbs', {layout: 'empty.hbs', isUsernameExist: true});
+        res.render('register.hbs', {layout: 'empty.hbs', isUsernameExist: true});
         return;
     }
     res.redirect('/user/login');
@@ -38,6 +38,7 @@ router.post('/login', asyncHandler(async (req, res) => {
         username: req.body.username,
         password: req.body.password,
     });
+    console.log('aaa');
     if (!isValid) {
         res.render('login.hbs', {layout: 'empty.hbs', isNonValid: true});
         return;

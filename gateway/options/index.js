@@ -43,4 +43,5 @@ const pubExchanges = {
 module.exports = {
     rpcServices,
     pubExchanges,
+    serviceName:'gateway',
 };

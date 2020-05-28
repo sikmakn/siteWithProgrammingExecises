@@ -25,19 +25,19 @@ class Validator {
         if (isValid) {
             this.input.classList.add('validInput');
             this.input.classList.remove('invalidInput');
-        } else {
-            this.input.classList.remove('validInput');
-            this.input.classList.add('invalidInput');
+            return;
         }
+        this.input.classList.remove('validInput');
+        this.input.classList.add('invalidInput');
     }
 
     _addValidationCss(element, isValid = true) {
         if (isValid) {
             element.classList.add('valid');
             element.classList.remove('invalid');
-        } else {
-            element.classList.add('invalid');
-            element.classList.remove('valid');
+            return;
         }
+        element.classList.add('invalid');
+        element.classList.remove('valid');
     }
 }

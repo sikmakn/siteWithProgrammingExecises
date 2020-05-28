@@ -39,4 +39,5 @@ module.exports = {
     rpcServiceName: 'webServiceTestQ',
     mongooseUpdateParams,
     compilerOptions,
+    serviceName: 'webService',
 };

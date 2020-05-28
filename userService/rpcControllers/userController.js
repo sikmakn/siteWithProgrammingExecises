@@ -26,7 +26,8 @@ module.exports = {
             name: 'isValidNonBlocked',
             method: async (msg, res) => {
                 try {
-                    res({result: await userService.isValidNonBLocked(msg)});
+                    const result = await userService.isValidNonBLocked(msg);
+                    res({result});
                 } catch (e) {
                     console.error(e);
                     //todo logs

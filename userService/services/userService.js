@@ -26,8 +26,8 @@ async function validate({username, password}) {
 }
 
 async function isValidNonBLocked({username, password}) {
-    const user = (await userRepository.findByUsername(username))._doc;
-    return !user.isBlocked && await argon2.verify(user.password, `${password}.${STATIC_SALT}.${user.salt}`);
+    const user = await userRepository.findByUsername(username);
+    return user && !user.isBlocked && await argon2.verify(user.password, `${password}.${STATIC_SALT}.${user.salt}`);
 }
 
 async function findByUsername(username) {
