@@ -37,12 +37,26 @@ module.exports = {
             }
         },
         {
-            name: 'logout',
+            name: 'logoutByUserData',
             method: async (msg, res) => {
                 try {
                     let {userId, fingerPrint} = msg;
                     await authService.deleteOneAuthData({userId, fingerPrint});
                     res({result: true});
+                } catch (e) {
+                    //todo logs
+                    console.error(e);
+                    res({error: e});
+                }
+            }
+        },
+        {
+            name: 'logoutByToken',
+            method: async (msg, res) => {
+                try {
+                    let {token} = msg;
+                    const result = await authService.logOutByToken(token);
+                    res({result});
                 } catch (e) {
                     //todo logs
                     console.error(e);

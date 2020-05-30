@@ -10,11 +10,12 @@ const router = express.Router();
 router.get('/:lang', asyncHandler(async (req, res) => {
     const channel = await getChannel();
     const {lang} = req.params;
-    const themesList = await webServiceRPC[themeController](channel,'getAllByLang', {lang});
+    const themesList = await webServiceRPC[themeController](channel, 'getAllByLang', {lang});
     const resObj = {
         layout: 'themeSelectMain.hbs',
         themesList,
         lang,
+        isAuth: !!req.token,
     };
     const flagName = `is${lang[0].toUpperCase() + lang.slice(1)}`;
     resObj[flagName] = true;
@@ -23,7 +24,7 @@ router.get('/:lang', asyncHandler(async (req, res) => {
 
 router.post('/', asyncHandler(async (req, res) => {//todo auth isAdmin
     const channel = await getChannel();
-    const createdTheme = await webServiceRPC[themeController](channel,'create', req.body);
+    const createdTheme = await webServiceRPC[themeController](channel, 'create', req.body);
     res.json(createdTheme);
 }));
 

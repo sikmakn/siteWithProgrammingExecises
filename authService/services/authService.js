@@ -46,7 +46,20 @@ async function logOutUser(userId) {
     return await authDataRepository.deleteByUserId(userId);
 }
 
+async function logOutByToken(token) {
+    try {
+        const {userId, fingerPrint} = jwt.verify(token, JWT_SECRET);
+        const user = await authDataRepository.findOne({userId, fingerPrint});
+        if (!user) return false;
+        await authDataRepository.deleteOneAuthData({userId, fingerPrint});
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
 module.exports = {
+    logOutByToken,
     isTooManyAuth,
     blockUser,
     createToken,

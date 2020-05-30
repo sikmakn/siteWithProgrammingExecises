@@ -39,6 +39,7 @@ async function authValidate(req, res, next) {
     if (!newToken) {
         delete req.cookies.Authorization;
         res.clearCookie('Authorization');
+        res.clearCookie('fingerprint');
         next();
         return;
     }

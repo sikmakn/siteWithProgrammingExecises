@@ -15,8 +15,8 @@ async function index(channel) {
 
 function assertPublisher(channel) {
     if (pubExchanges)
-        for (let exchange in pubExchanges)
-            channel.assertExchange(pubExchanges[exchange], "fanout", {durable: false});
+        for (let exchange of Object.values(pubExchanges))
+            channel.assertExchange(exchange, "fanout", {durable: false});
 }
 
 

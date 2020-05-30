@@ -33,8 +33,8 @@ function sendAnswer(answer, channel, replyTo, correlationId) {
     channel.sendToQueue(replyTo, answer, {correlationId});
 }
 
-module.exports = {
-    setup: (channel) => {
+module.exports ={
+    setup: (channel) =>{
         if (rpcServiceName) {
             const rpcControllers = require('../../rpcControllers');
             setupConsume(channel, rpcControllers);

@@ -2,50 +2,71 @@ header {
     height: 50px;
     display: flex;
     justify-content: space-between;
-    font-family: 'Alegreya Sans SC', sans-serif;
+    font-family: Oswald, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 36px;
+    padding-left: 7%;
+    padding-right: 5%;
+    padding-top: 10px;
 }
 
-header nav {
-    display: flex;
-    margin-left: 20px;
-}
-
-header nav > a {
-    padding: 15px 10px 10px 5px;
+header a {
     text-decoration: none;
     color: #000000;
-}
-
-header nav > a:hover {
-    text-decoration: underline;
-}
-
-.logoName {
-    text-decoration: none;
-    color: #000;
-    font-family: 'Righteous', cursive;
-    font-weight: bold;
-    font-size: 28px;
-    align-self: center;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
 }
 
 .headerContacts {
     display: flex;
     align-self: center;
     margin-right: 40px;
+    height: 100%;
+}
+
+.headerContacts > a {
+    margin-right: 50px;
+    height: 24px;
+}
+
+.contactLogo {
+    display: flex;
+    height: 100%;
 }
 
 .headerContacts div {
     align-self: center;
     margin-right: 15px;
+    height: 100%;
 }
 
 .headerContacts img {
     width: 24px;
     height: 24px;
-    margin-right: 10px;
+    margin-right: 20px;
     align-self: center;
+}
+
+.rightHeader {
+}
+
+.rightHeader a {
+    margin-left: 25px;
+    margin-right: 25px;
+}
+
+header a:hover {
+    text-decoration: underline;
+}
+
+.logoName {
+    text-decoration: none;
+    color: #000;
+    font-size: 32px;
+    line-height: 47px;
+    align-self: center;
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translate(-50%);
 }

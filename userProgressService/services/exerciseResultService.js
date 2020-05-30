@@ -2,14 +2,7 @@ const exerciseResultRepository = require('../db/repositories/exerciseResultRepos
 
 async function findOneAndUpdate({findParams, updatedExercise, results}) {
     updatedExercise.result = findCommonResult(results);
-    const result = await exerciseResultRepository.findOneAndUpdate({findParams, updatedExercise});
-    return result._doc;
-}
-
-function findCommonResult(results) {
-    if (results.some(r => r.resultName === 'error')) return 'error';
-    if (results.some(r => r.resultName === 'incorrect')) return 'incorrect';
-    return 'correct';
+    return (await exerciseResultRepository.findOneAndUpdate({findParams, updatedExercise}))._doc;
 }
 
 async function find(findParams) {
@@ -30,3 +23,9 @@ module.exports = {
     aggregate,
     findByUsername,
 };
+
+function findCommonResult(results) {
+    if (results.some(r => r.resultName === 'error')) return 'error';
+    if (results.some(r => r.resultName === 'incorrect')) return 'incorrect';
+    return 'correct';
+}

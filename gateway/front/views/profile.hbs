@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="/styles/auth.css">
+<form method="post" id="form" action="/user/profile" class="form">
+    <div class="formHeader">Изменить личную информацию</div>
+    <input type="text" placeholder="{{username}}" disabled>
+    <label for="email">
+        <input type="text" id="email" name="email" placeholder="Почта" value="{{email}}" required>
+        <ul class="inputRequirements">
+            {{#if isEmailExist}}
+                <li class="invalid">Почта уже занята</li>
+            {{/if}}
+            <li id="emailIsEmail">Должен быть валидный email</li>
+        </ul>
+    </label>
+    <label for="oldPassword">
+    <input type="password" id="oldPassword" name="oldPassword" placeholder="Текущий пароль">
+        <ul class="oldPassword">
+            <li id="oldPasswordRequired">Необходимо ввести для смены пароля</li>
+        </ul>
+    </label>
+    <label for="password">
+        <input type="password" id="password" name="password" placeholder="Новый пароль">
+        <ul class="inputRequirements">
+            <li id="passwordSize">Должен содержать от 6 до 20 символов</li>
+            <li id="passwordUppercase">Должен содежрать как минимум 1 заглавную латинскую букву</li>
+            <li id="passwordLowercase">Должен содежрать как минимум 1 строчную латинскую букву</li>
+            <li id="passwordNumber">Должен содержать как минимум 1 цифру</li>
+            <li id="passwordNonWhitespace">Не должен содержать пробелы</li>
+            <li id="passwordSpecialChar">Должен содержать минимум один специальный символ (!@#$%^&*)</li>
+        </ul>
+    </label>
+    <label for="repeatPassword">
+        <input type="password" id="repeatPassword" name="repeatPassword" placeholder="Подтвердить новый пароль">
+        <ul class="inputRequirements">
+            <li id="repPasswordIsRepeat">Должен совпадать с предыдущим паролем</li>
+        </ul>
+    </label>
+    {{#if isNotUpdated}}
+        <span class="invalid">Аккаунта не обновлен</span>
+    {{/if}}
+    {{#if isUpdated}}
+        <span class="valid">Аккаунта обновлен</span>
+    {{/if}}
+    <input type="submit" value="Сохранить изменения">
+</form>
+<script type="module" src="/scripts/src/auth/profile.js"></script>

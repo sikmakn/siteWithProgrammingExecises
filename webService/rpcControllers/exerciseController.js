@@ -15,10 +15,14 @@ module.exports = {
         {
             name: 'getByThemeId',
             method: async (msg, res) => {
-                const {themeId, difficulty} = msg;
-                const exercises = await exerciseService.findByThemeId(themeId, difficulty);
-                const mappedExercises = exercises.map(ex => exerciseMapper.fromExerciseToOutObj(ex));
-                res(mappedExercises);
+                try {
+                    const {themeId, difficulty} = msg;
+                    const exercises = await exerciseService.findByThemeId(themeId, difficulty);
+                    const mappedExercises = exercises.map(ex => exerciseMapper.fromExerciseToOutObj(ex));
+                    res(mappedExercises);
+                }catch (e) {
+                    res(null)
+                }
             }
         },
         {

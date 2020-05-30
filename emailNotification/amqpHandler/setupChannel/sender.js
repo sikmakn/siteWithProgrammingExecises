@@ -1,21 +1,17 @@
-const {rpcServices} = require("../../options");
+const {rpcServices, replyRPCQueueName} = require("../../options");
 
 function assert(channel) {
-    for (let service in rpcServices) {
-        const replyQueue = `${rpcServices[service].serviceName}Reply`;
-        channel.assertQueue(replyQueue, {durable: false});
-    }
+    for (let {serviceName} of Object.values(rpcServices))
+        channel.assertQueue(serviceName + replyRPCQueueName, {durable: false});
 }
 
 function consume(channel) {
-    for (let service in rpcServices) {
-        const replyQueue = `${rpcServices[service].serviceName}Reply`;
+    for (let {serviceName} of Object.values(rpcServices))
         channel.consume(
-            replyQueue,
+            serviceName + replyRPCQueueName,
             (msg) => channel.responseEmitter.emit(msg.properties.correlationId, msg.content),
             {noAck: true}
         );
-    }
 }
 
 module.exports = {

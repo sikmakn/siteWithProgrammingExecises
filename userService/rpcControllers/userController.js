@@ -26,7 +26,8 @@ module.exports = {
             name: 'isValidNonBlocked',
             method: async (msg, res) => {
                 try {
-                    res({result: await userService.isValidNonBLocked(msg)});
+                    const result = await userService.isValidNonBLocked(msg);
+                    res({result});
                 } catch (e) {
                     console.error(e);
                     //todo logs
@@ -52,9 +53,17 @@ module.exports = {
             name: 'updatePersonalInfo',
             method: async (msg, res) => {
                 try {
-                    const email = await emailSchema.validateAsync(msg.email);
-                    await userService.updateEmail({username: msg.username, email});
-                    res({result: true});
+                    let {username, password, email, oldPassword} = msg;
+                    if (email) email = await emailSchema.validateAsync(email);
+                    if (password) {
+                        password = await passwordSchema.validateAsync(password);
+                        oldPassword = await passwordSchema.validateAsync(oldPassword)
+                    }
+                    if (await userService.updatePersonalInfo({username, oldPassword, password, email})) {
+                        res({result: true});
+                        return;
+                    }
+                    res({error: new Error('oldPassword is not valid')});
                 } catch (e) {
                     //todo logs
                     res({error: e});

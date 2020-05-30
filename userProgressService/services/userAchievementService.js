@@ -7,9 +7,9 @@ const {isArrsEquals} = require('../helpers/arrayHelps');
 const {v4: uuidv4} = require('uuid');
 
 async function addAchievements({username, achievementIds}) {
-    const userAchievement = await userAchievementRepository.addAchievements({username, achievementIds});
+    const userAchievement = (await userAchievementRepository.addAchievements({username, achievementIds}))?._doc;
     //todo push
-    return userAchievement._doc;
+    return userAchievement;
 }
 
 async function addAchievementsToManyUsers({usernames, achievementIds}) {
@@ -19,32 +19,25 @@ async function addAchievementsToManyUsers({usernames, achievementIds}) {
 }
 
 async function deleteAchievements({username, achievementIds}) {
-    const userAchievement = await userAchievementRepository.deleteAchievements({username, achievementIds});
-    return userAchievement._doc;
+    return (await userAchievementRepository.deleteAchievements({username, achievementIds}))?._doc;
 }
 
 async function findByUsername(username) {
-    const userAchievement = await userAchievementRepository.findByUsername(username);
-    return userAchievement._doc;
+    return (await userAchievementRepository.findByUsername(username))?._doc;
 }
 
 async function addByUsername(username) {
     const userResults = await exerciseResultService.findByUsername(username);
     const allAchievements = await achievementService.findMany({achievementForFind: {}});
     const achievementIds = [];
-    for (let achievement of allAchievements) {
-        const conditions = achievement.conditions;
-
+    for (let {conditions, _id} of allAchievements) {
         const exerciseConditions = conditions.filter(c => c.exerciseId);
         if (!containAllExerciseConditions({exerciseConditions, userResults})) continue;
 
         const commonConditions = conditions.filter(c => !c.exerciseId);
-        if (!commonConditions.length) {
-            achievementIds.push(achievement._id);
-            continue;
-        }
-        if (checkCommonConditions({conditions: commonConditions, userResults}))
-            achievementIds.push(achievement._id);
+        if (!commonConditions.length || checkCommonConditions({commonConditions, userResults}))
+            achievementIds.push(_id);
+
     }
     if (achievementIds.length)
         return await addAchievements({username, achievementIds});
@@ -86,10 +79,9 @@ function findUserResults({themeId, difficulty, result, userResults}) {
     });
 }
 
-function checkCommonConditions({conditions, userResults}) {
+function checkCommonConditions({commonConditions, userResults}) {
     let countOfTruth = 0;
-    for (let condition of conditions) {
-        const {themeId, difficulty, result, count} = condition;
+    for (let {themeId, difficulty, result, count} of commonConditions) {
         const userResultsByCondition = findUserResults({
             userResults,
             themeId,
@@ -100,7 +92,7 @@ function checkCommonConditions({conditions, userResults}) {
 
         countOfTruth++;
     }
-    return countOfTruth === conditions.length;
+    return countOfTruth === commonConditions.length;
 }
 
 function containAllExerciseConditions({exerciseConditions, userResults}) {

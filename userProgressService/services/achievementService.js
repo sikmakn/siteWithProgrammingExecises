@@ -1,13 +1,11 @@
 const achievementRepository = require('../db/repositories/achievementRepository');
 
 async function create({file, conditions, description, name}) {
-    let newAchievement = await achievementRepository.create({file, conditions, description, name});
-    return newAchievement._doc;
+    return (await achievementRepository.create({file, conditions, description, name}))?._doc;
 }
 
 async function findById(id) {
-    const achievement = await achievementRepository.findById(id);
-    return achievement._doc;
+    return (await achievementRepository.findById(id))?._doc;
 }
 
 async function findFile(fileImg) {
@@ -19,8 +17,7 @@ async function findMany({achievementForFind, count, sort = {name: 1}, skip = 0})
 }
 
 async function updateById({id, conditions, description, name}) {
-    const updatedAchievement = await achievementRepository.updateAchievement({id, conditions, description, name});
-    return updatedAchievement._doc;
+    return (await achievementRepository.updateAchievement({id, conditions, description, name}))?._doc;
 }
 
 async function updateFile({fileId, file}) {
