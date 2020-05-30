@@ -1,7 +1,7 @@
 export const validityObjs = {
     username: [
         {
-            isInvalid: input => input.value.length < 6| input.value.length > 20,
+            isInvalid: input => input.value.length < 6 | input.value.length > 20,
             element: document.getElementById('usernameSize'),
         },
         {
@@ -9,9 +9,15 @@ export const validityObjs = {
             element: document.getElementById('usernameLatin'),
         },
     ],
+    oldPassword: [
+        {
+            isInvalid: input => !input.value.length,
+            element: document.getElementById('oldPasswordRequired'),
+        }
+    ],
     password: [
         {
-            isInvalid: input => input.value.length < 6| input.value.length > 20,
+            isInvalid: input => input.value.length < 6 | input.value.length > 20,
             element: document.getElementById('passwordSize'),
         },
         {
