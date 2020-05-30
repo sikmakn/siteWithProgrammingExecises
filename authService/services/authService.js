@@ -6,6 +6,13 @@ const {rpcQueues, getChannel} = require('../amqpHandler');
 const {rpcServices} = require('../options');
 const userServiceRPC = rpcQueues[rpcServices.USER_SERVICE.serviceName];
 const userControllers = rpcServices.USER_SERVICE.controllers.user;
+const schedule = require('node-schedule');
+
+function startRemoveExpiresSchedule() {
+    schedule.scheduleJob({hour: 1}, async function () {
+        await authDataRepository.deleteExpired();
+    })
+}
 
 async function isTooManyAuth(userId) {
     return (await authDataRepository.findCount(userId)) >= CONCURRENT_AUTHORIZATION_LIMIT;
@@ -67,6 +74,7 @@ module.exports = {
     updateToken,
     logOutUser,
     deleteOneAuthData,
+    startRemoveExpiresSchedule,
 };
 
 function sign({userId, fingerPrint}) {
