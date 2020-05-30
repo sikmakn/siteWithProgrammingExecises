@@ -16,6 +16,11 @@ async function findMany({achievementForFind, count, sort = {name: 1}, skip = 0})
     return await achievementRepository.findMany({achievementForFind, count, sort, skip});
 }
 
+async function findManyByIds(ids) {
+    const matchIds = ids.map(id => ({_id: id}));
+    return await achievementRepository.findMany({achievementForFind: {$or: matchIds}});
+}
+
 async function updateById({id, conditions, description, name}) {
     return (await achievementRepository.updateAchievement({id, conditions, description, name}))?._doc;
 }
@@ -31,4 +36,5 @@ module.exports = {
     findMany,
     findFile,
     updateFile,
+    findManyByIds,
 };

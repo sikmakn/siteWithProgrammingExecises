@@ -6,10 +6,35 @@ const userServiceRPC = rpcQueues[rpcServices.USER_SERVICE.serviceName];
 const userControllers = rpcServices.USER_SERVICE.controllers;
 const authServiceRPC = rpcQueues[rpcServices.AUTH_SERVICE.serviceName];
 const authController = rpcServices.AUTH_SERVICE.controllers.auth;
+const progressServiceRPC = rpcQueues[rpcServices.PROGRESS_SERVICE.serviceName];
+const progressControllers = rpcServices.PROGRESS_SERVICE.controllers;
 const {setFingerprint, setToken} = require('../helpers/setToCookie');
 const {decodeToken} = require('../helpers/auth');
 
 const router = express.Router();
+
+router.get('/achievements', asyncHandler(async (req, res) => {
+    if (!req.token) {
+        res.redirect('/user/login');
+        return;
+    }
+    const channel = await getChannel();
+    const {userId: username} = await decodeToken(req.token);
+    const {result: achievements} = await progressServiceRPC[progressControllers.userAchievement](channel,
+        'getByUsername', {username});
+
+    let choosenAchievement = !req.query.achievementId ?
+        achievements[0] :
+        await progressServiceRPC[progressControllers.achievement](channel,
+            'getAchievement', {id: req.query.achievementId});
+
+    res.render('achievements.hbs', {
+        layout: 'empty.hbs',
+        isAuth: true,
+        achievements,
+        choosenAchievement,
+    });
+}));
 
 router.get('/register', (req, res) =>
     res.render('register.hbs', {layout: 'empty.hbs'}));
