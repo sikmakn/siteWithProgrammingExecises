@@ -7,12 +7,12 @@ const userControllers = rpcServices.USER_SERVICE.controllers;
 const authServiceRPC = rpcQueues[rpcServices.AUTH_SERVICE.serviceName];
 const authControllers = rpcServices.AUTH_SERVICE.controllers;
 const {setFingerprint, setToken} = require('../helpers/setToCookie');
+const {decodeToken} = require('../helpers/auth');
 
 const router = express.Router();
 
-router.get('/register', (req, res) => {
-    res.render('register.hbs', {layout: 'empty.hbs'});
-});
+router.get('/register', (req, res) =>
+    res.render('register.hbs', {layout: 'empty.hbs', isAuth: !!req.token}));
 
 router.post('/register', asyncHandler(async (req, res) => {
     const channel = await getChannel();
@@ -22,15 +22,41 @@ router.post('/register', asyncHandler(async (req, res) => {
         email: req.body.email,
     });
     if (!createRes.result) {
-        res.render('register.hbs', {layout: 'empty.hbs', isUsernameExist: true});
+        res.render('register.hbs', {layout: 'empty.hbs', isUsernameExist: true, isAuth: !!req.token});
         return;
     }
     res.redirect('/user/login');
 }));
 
-router.get('/login', (req, res) => {
-    res.render('login.hbs', {layout: 'empty.hbs'});
-});
+router.get('/login', (req, res) =>
+    res.render('login.hbs', {layout: 'empty.hbs', isAuth: !!req.token}));
+
+router.get('/profile', asyncHandler(async (req, res) => {
+    if (!req.token) {
+        res.redirect('/user/login');
+        return;
+    }
+    const channel = await getChannel();
+    const {userId: username} = await decodeToken(req.token);
+    const {email} = await userServiceRPC[userControllers.user](channel, 'getPersonalInfo', {username});
+    res.render('profile.hbs', {layout: 'empty.hbs', email, username, isAuth: !!req.token});
+}));
+
+router.post('/profile', asyncHandler(async (req, res) => {
+    if (!req.token) {
+        res.redirect('/user/login');
+        return;
+    }
+
+    const {userId: username} = await decodeToken(req.token);
+    const answer = await userServiceRPC[userControllers.user](await getChannel(), 'updatePersonalInfo', {
+        username,
+        oldPassword: req.body.oldPassword,
+        email: req.body.email,
+        password: req.body.password,
+    });
+    res.render('profile.hbs', {isAuth: !!req.token, isUpdated: !!answer.result, isNotUpdate: !answer.result});
+}));
 
 router.post('/login', asyncHandler(async (req, res) => {
     const channel = await getChannel();
@@ -38,9 +64,9 @@ router.post('/login', asyncHandler(async (req, res) => {
         username: req.body.username,
         password: req.body.password,
     });
-    console.log('aaa');
+
     if (!isValid) {
-        res.render('login.hbs', {layout: 'empty.hbs', isNonValid: true});
+        res.render('login.hbs', {layout: 'empty.hbs', isNonValid: true, isAuth: !!req.token});
         return;
     }
     const {result: token} = await authServiceRPC[authControllers.auth](channel, 'login', {
@@ -48,13 +74,13 @@ router.post('/login', asyncHandler(async (req, res) => {
         fingerPrint: req.body.fingerprint,
     });
     if (!token) {
-        res.render('login.hbs', {layout: 'empty.hbs', isNonValid: true});
+        res.render('login.hbs', {layout: 'empty.hbs', isNonValid: true, isAuth: !!req.token});
         return;
     }
     setToken(res, token);
     setFingerprint(res, req.body.fingerprint);
 
-    res.redirect('/');//todo redirect to userPage
+    res.redirect('/user/achievements');
 }));
 
 module.exports = router;

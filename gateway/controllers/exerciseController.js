@@ -6,11 +6,11 @@ const webServiceRPC = rpcQueues[rpcServices.WEB_SERVICE.serviceName];
 const progressServiceRPC = rpcQueues[rpcServices.PROGRESS_SERVICE.serviceName];
 const webServiceControllers = rpcServices.WEB_SERVICE.controllers;
 const progressServiceControllers = rpcServices.PROGRESS_SERVICE.controllers;
-const {authValidate, decodeToken} = require('../helpers/auth');
+const {decodeToken} = require('../helpers/auth');
 
 const router = express.Router();
 
-router.post('/:exerciseId/test', authValidate, asyncHandler(async (req, res) => {
+router.post('/:exerciseId/test', asyncHandler(async (req, res) => {
     const channel = await getChannel();
     const {sourceCode, themeId, difficulty} = req.body;
     const results = await webServiceRPC[webServiceControllers.exercise](channel, 'testById', {
@@ -47,7 +47,7 @@ router.post('/', asyncHandler(async (req, res) => {
     res.json(exercise);
 }));
 
-router.get('/:themeId/:difficulty', authValidate, asyncHandler(async (req, res) => {
+router.get('/:themeId/:difficulty', asyncHandler(async (req, res) => {
     const channel = await getChannel();
     const {themeId, difficulty} = req.params;
     const theme = await webServiceRPC[webServiceControllers.theme](channel, 'getById', {id: themeId});
@@ -79,6 +79,7 @@ router.get('/:themeId/:difficulty', authValidate, asyncHandler(async (req, res) 
         difficulty: req.params.difficulty,
         theme,
         exercises,
+        isAuth: !!req.token,
     });
 }));
 

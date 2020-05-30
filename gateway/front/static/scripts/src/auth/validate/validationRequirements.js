@@ -1,4 +1,4 @@
-const validityObjs = {
+export const validityObjs = {
     username: [
         {
             isInvalid: input => input.value.length < 6| input.value.length > 20,

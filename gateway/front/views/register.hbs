@@ -1,9 +1,6 @@
 <link rel="stylesheet" href="/styles/auth.css">
-<form method="post" id="authForm" action="/user/registration" class="authForm">
-    <div class="authTabs">
-        <span class="activeTab">Регистрация</span>
-        <a class="unactiveTab" href="/user/login">Вход</a>
-    </div>
+<form method="post" id="form" action="/user/register" class="form">
+    <div class="formHeader">Регистрация</div>
     <label for="username">
         <input type="text" id="username" name="username" placeholder="Имя пользователя" required>
         <ul class="inputRequirements">
@@ -42,6 +39,4 @@
     </label>
     <input type="submit" value="Зарегестрироваться">
 </form>
-<script src="/scripts/src/auth/validationRequirements.js"></script>
-<script src="/scripts/src/auth/validator.js"></script>
-<script src="/scripts/src/auth/auth.js"></script>
+<script type="module" src="/scripts/src/auth/auth.js"></script>

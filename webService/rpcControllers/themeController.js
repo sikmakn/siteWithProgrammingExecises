@@ -15,10 +15,14 @@ module.exports = {
         {
             name: 'getById',
             method: async (msg, res) => {
-                const theme = await themeService.findById(msg.id);
-                if (!theme) return res(theme);
-                const themeOut = themeMapper.fromThemeToOutObj(theme);
-                res(themeOut);
+                try {
+                    const theme = await themeService.findById(msg.id);
+                    if (!theme) return res(null);
+                    const themeOut = themeMapper.fromThemeToOutObj(theme);
+                    res(themeOut);
+                }catch(e){
+                    res(null);
+                }
             }
         },
         {

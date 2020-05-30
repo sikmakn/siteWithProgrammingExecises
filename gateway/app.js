@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const compression = require('compression');
 const {PORT} = require('./config');
 const controllers = require('./controllers');
+const {authValidate} = require('./helpers/auth');
 
 const app = express();
 
@@ -23,19 +24,23 @@ app.use(helmet());
 
 controllers(app);
 
-app.get('/', (req, res) => {
-    res.render('layouts/main.hbs')
+app.get('/', authValidate,  (req, res) => {
+    res.render('layouts/main.hbs', {
+        isAuth: !!req.token,
+    });
 });
 
-app.get('/about', (req, res) => {
+app.get('/about', authValidate, (req, res) => {
     res.render('about.hbs', {
         layout: 'themeSelectMain.hbs',
+        isAuth: !!req.token,
     })
 });
 
-app.use((req, res) => {
+app.use(authValidate, (req, res) => {
     res.status(404).render('404.hbs', {
         layout: 'themeSelectMain.hbs',
+        isAuth: !!req.token,
     })
 });
 

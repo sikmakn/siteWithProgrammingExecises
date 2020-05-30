@@ -1,4 +1,4 @@
-class Validator {
+export class Validator {
     constructor(input, validityArr) {
         this.input = input;
         this.validityArr = validityArr;

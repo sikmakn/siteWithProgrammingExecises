@@ -1,11 +1,23 @@
 <header>
-    <nav>
-        <a href="/about">О САЙТЕ</a>
-    </nav>
-    <a href="/" class="logoName">KOLCHANOV</a>
     <div class="headerContacts">
-        <div>КОНТАКТЫ</div>
-        <a href="https://t.me/sikmakn"><img src="/styles/src/tg-logo.svg" alt="telegram"></a>
-        <a href="https://www.instagram.com/sikmakn/"><img src="/styles/src/insta-logo.svg" alt="instagram"></a>
+        <a href="/about">О нас</a>
+        <div>Контакты:</div>
+        <div class="contactLogo">
+            <a href="https://t.me/sikmakn"><img src="/styles/src/tg-logo.svg" alt="telegram"></a>
+            <a href="https://www.instagram.com/sikmakn/"><img src="/styles/src/insta-logo.svg" alt="instagram"></a>
+        </div>
+    </div>
+
+    <a href="/" class="logoName">KOLCHANOV</a>
+
+    <div class="rightHeader">
+        {{#if isAuth}}
+            <a href="/user/achievements">Достижения</a>
+            <a href="/user/profile">Профиль</a>
+            <a href="/user/logout">Выйти</a>
+        {{else}}
+            <a href="/user/register">Регистрация</a>
+            <a href="/user/login">Войти</a>
+        {{/if}}
     </div>
 </header>

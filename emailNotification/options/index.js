@@ -11,5 +11,5 @@ module.exports = {
     rpcServiceName: 'emailNotificationService',
     subExchanges,
     emailTemplates,
-    serviceName: 'emailNotificationService',
+    replyRPCQueueName: 'emailNotificationServiceReply',
 };

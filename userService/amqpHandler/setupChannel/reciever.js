@@ -11,8 +11,8 @@ function consume(channel, rpcControllers) {
     channel.consume(rpcServiceName, (msg) => {
         const {controller: controllerName, route: routeName, message} = bufferMapper.bufferToObj(msg.content);
         const {replyTo, correlationId} = msg.properties;
-        const makeAnswer = (answer) => sendAnswer(answer, channel, replyTo, correlationId);
-
+        const makeAnswer = (answer) =>
+            sendAnswer(answer, channel, replyTo, correlationId);
         const controller = rpcControllers.find((cr) => cr.name === controllerName);
         if (!controller) return;
 
@@ -33,8 +33,8 @@ function sendAnswer(answer, channel, replyTo, correlationId) {
     channel.sendToQueue(replyTo, answer, {correlationId});
 }
 
-module.exports = {
-    setup: (channel) => {
+module.exports ={
+    setup: (channel) =>{
         if (rpcServiceName) {
             const rpcControllers = require('../../rpcControllers');
             setupConsume(channel, rpcControllers);

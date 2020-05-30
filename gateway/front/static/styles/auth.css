@@ -1,37 +1,42 @@
-.authForm {
+
+.form {
     display: flex;
     flex-direction: column;
     align-items: center;
     background: #FFFFFF;
     border: 1px solid #E7E7E9;
     padding: 45px;
+    width: 400px;
+    margin: 170px auto;
 }
 
-.authTabs{
+.formHeader {
     display: flex;
-    width:300px;
-    justify-content: space-around;
+    width: 300px;
+    justify-content: center;
     font-family: Roboto, sans-serif;
     font-style: normal;
     font-weight: 500;
     font-size: 24px;
     line-height: 28px;
-
+    text-align: center;
     color: #191919;
 }
-.unactiveTab{
+
+.unactiveTab {
     color: #E7E7E9;
 }
-.authForm a{
+
+.form a {
     text-decoration: none;
 }
 
-.authForm label {
+.form label {
     display: flex;
     flex-direction: column;
 }
 
-.authForm li{
+.form li {
     font-family: 'Roboto', sans-serif;
     font-style: normal;
     font-weight: normal;
@@ -40,7 +45,7 @@
     display: none;
 }
 
-.authForm input {
+.form input {
     font-family: 'Roboto', sans-serif;
     font-style: normal;
     font-weight: 500;
@@ -57,7 +62,7 @@
     border: 1px solid #E7E7E9;
 }
 
-.authForm input[type="submit"]{
+.form input[type="submit"] {
     margin: 30px 0 0;
     background: #191919;
     font-family: 'Roboto', sans-serif;
@@ -66,17 +71,17 @@
     font-size: 16px;
     line-height: 19px;
     color: #FFFFFF;
-    width:174px;
-    height:42px;
-    border:none;
+    width: 174px;
+    height: 42px;
+    border: none;
 }
 
-.authForm input:hover{
+.form input:hover {
     transition: .1s;
     box-shadow: 0 0 1px 0 #3A2F28;
 }
 
-.authForm input:before{
+.form input:before {
     content: '';
     position: absolute;
     left: 5px;
@@ -88,19 +93,19 @@
     transform: translateY(-50%);
 }
 
-.authForm .invalidInput {
+.form .invalidInput {
     background: rgba(217, 22, 4, 0.6);
 }
 
-.authForm .validInput{
+.form .validInput {
     background: rgba(114, 191, 36, 0.6);
 }
 
-.authForm .invalid {
+.form .invalid {
     display: block;
     color: rgba(217, 22, 4, 0.6);
 }
 
-.authForm .valid {
-
+.form .valid {
+    color: rgba(114, 191, 36, 0.6);
 }

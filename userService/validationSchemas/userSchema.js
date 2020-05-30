@@ -14,7 +14,7 @@ const userSchema = Joi.object({
 });
 
 const statusSchema = Joi.string().valid('free', 'paid', 'admin');
-const passwordSchema = Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{6,20}$'));
+const passwordSchema = Joi.string().pattern(new RegExp('^[a-zA-Z0-9!\@\#\$\%\^\&\*]{6,20}$'));
 const emailSchema = Joi.string().email();
 
 module.exports = {

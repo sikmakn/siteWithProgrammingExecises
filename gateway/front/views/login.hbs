@@ -1,13 +1,10 @@
 <link rel="stylesheet" href="/styles/auth.css">
-<form method="post" id="authForm" action="/user/login" class="authForm">
-    <div class="authTabs">
-        <a class="unactiveTab" href="/user/register">Регистрация</a>
-        <span class="activeTab">Вход</span>
-    </div>
+<form method="post" id="authForm" action="/user/login" class="form">
+    <div class="formHeader">Вход</div>
     <input type="text" id="username" name="username" placeholder="Имя пользователя" required>
     <input type="password" id="password" name="password" placeholder="Пароль" required>
     {{#if isNonValid}}
-        <p class="invalid">Ошибка в username или login</p>
+        <span class="invalid">Ошибка в username или login</span>
     {{/if}}
     <input type="submit" value="Войти">
 </form>

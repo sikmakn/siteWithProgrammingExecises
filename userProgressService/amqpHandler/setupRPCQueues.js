@@ -1,51 +1,33 @@
-const { rpcServices, serviceName } = require("../options");
-const { v4: uuidv4 } = require("uuid");
+const {rpcServices, replyRPCQueueName} = require("../options");
+const {v4: uuidv4} = require("uuid");
 const bufferMapper = require("../helpers/objBufferMapper");
 //todo try catch all
-const sendRPCMessage = function ({rpcQueue, controller, route, message, channel}) {
-  return new Promise((resolve) => {
-    const correlationId = uuidv4();
-    channel.responseEmitter.once(correlationId, (result) => {
-      const objResult = bufferMapper.bufferToObj(result);
-      resolve(objResult);
-    });
+const sendRPCMessage = function ({queueName, controller, route, message, channel}) {
+    return new Promise((resolve) => {
+        const correlationId = uuidv4();
+        channel.responseEmitter.once(correlationId, (result) => resolve(bufferMapper.bufferToObj(result)));
 
-    const replyTo = `${rpcQueue}${serviceName}Reply`;
-    channel.sendToQueue(
-        rpcQueue,
-        bufferMapper.objToBuffer({ message, controller, route }),
-        { correlationId, replyTo }
-    );
-  });
+        const replyTo = queueName + replyRPCQueueName;
+        const bufferReplyMessage = bufferMapper.objToBuffer({message, controller, route});
+        channel.sendToQueue(queueName, bufferReplyMessage, {correlationId, replyTo});
+    });
 };
 
-function addControllersCallers({ serviceObjToAdd, controllers, serviceName }) {
-  for (let controller in controllers) {
-    serviceObjToAdd[controller] = (channel,route, message) =>
-        sendRPCMessage({
-          rpcQueue: serviceName,
-          controller: controllers[controller],
-          route,
-          message,
-          channel,
-        });
-  }
+function addControllersCallers({controllers, serviceName}) {
+    const serviceObj = {};
+    for (const [controllerName, controller] of Object.entries(controllers)) {
+        serviceObj[controllerName] = (channel, route, message) =>
+            sendRPCMessage({queueName: serviceName, controller, route, message, channel});
+    }
+    return serviceObj;
 }
 
 function createRpcQueues() {
-  const rpcQueues = {};
-  for (let service in rpcServices) {
-    const serviceName = rpcServices[service].serviceName;
-    const controllers = rpcServices[service].controllers;
-
-    rpcQueues[serviceName] = {};
-    addControllersCallers({
-      serviceObjToAdd: rpcQueues[serviceName],
-      controllers,
-      serviceName,
-    });
-  }
-  return rpcQueues;
+    const rpcQueues = {};
+    if (rpcServices)
+        for (let service of Object.values(rpcServices))
+            rpcQueues[service.serviceName] = addControllersCallers(service);
+    return rpcQueues;
 }
 
 module.exports = createRpcQueues();
