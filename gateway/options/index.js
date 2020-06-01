@@ -20,6 +20,7 @@ const rpcServices = {
         controllers: {
             achievement: 'achievement',
             exerciseResult: 'exerciseResult',
+            userAchievement: 'userAchievement',
         },
     },
     USER_SERVICE: {
@@ -43,4 +44,5 @@ const pubExchanges = {
 module.exports = {
     rpcServices,
     pubExchanges,
+    replyRPCQueueName:'gatewayReply',
 };

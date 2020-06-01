@@ -1,33 +1,22 @@
-const form = document.getElementById('authForm');
-const submit = document.querySelector('input[type="submit"');
+import {Validator} from './validate/validator.js';
 
-const validators = makeValidators();
-submit.addEventListener('click', validateAll);
-form.addEventListener('submit', validateAll);
+validate(['username', 'password', 'repeatPassword', 'email']);
 
-function makeValidators() {
-    const validators = [];
-    addValidator(validators, 'username');
-    addValidator(validators, 'password');
-    addValidator(validators, 'repeatPassword');
-    addValidator(validators, 'email');
+function validate(fields) {
+    const validators = makeValidators(fields);
+    const form = document.getElementById('form');
+    const submit = document.querySelector('input[type="submit"');
+    submit.addEventListener('click', e => validateAll(e, validators));
+    form.addEventListener('submit', e => validateAll(e, validators));
+}
+
+function makeValidators(fields) {
+    const validators = fields.map(f => Validator.getValidator(f).validator);
     validators.forEach(v => v.registerListeners());
     return validators;
 }
 
-function addValidator(validators, name) {
-    const input = document.getElementById(name);
-    const newValidator = new Validator(input, validityObjs[name]);
-    validators.push(newValidator);
-}
-
-function validateAll(event) {
-    let result = true;
-    for (let validator of validators) {
-        if (!validator.validate()) {
-            result = false;
-            break;
-        }
-    }
-    if (!result) event.preventDefault();
+function validateAll(event, validators) {
+    if (validators.some(v => !v.validate()))
+        event.preventDefault();
 }

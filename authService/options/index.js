@@ -20,4 +20,5 @@ module.exports = {
     mongooseUpdateParams,
     rpcServiceName: 'authServiceTestQ',
     rpcServices,
+    replyRPCQueueName: 'authServiceReply',
 };

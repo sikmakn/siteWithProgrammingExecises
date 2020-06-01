@@ -2,10 +2,11 @@ const themeCommonController = require('./themeController');
 const exerciseController = require('./exerciseController');
 const achievementController = require('./achievementController');
 const userController = require('./userController');
+const {authValidate} = require('../helpers/auth');
 
 module.exports = function (app) {
-    app.use('/theme', themeCommonController);
-    app.use('/exercises', exerciseController);
-    app.use('/achievement', achievementController);
-    app.use('/user', userController);
+    app.use('/theme', authValidate, themeCommonController);
+    app.use('/exercises',authValidate, exerciseController);
+    app.use('/achievement',authValidate, achievementController);
+    app.use('/user', authValidate,userController);
 };

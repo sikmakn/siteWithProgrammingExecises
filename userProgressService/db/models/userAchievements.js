@@ -4,10 +4,10 @@ const userAchievements = new mongoose.Schema({
     username: {
         type: String,
         required: true,
+        unique:true,
     },
     achievements: [{
         type: mongoose.ObjectId,
-        ref: 'Achievement',
     }],
 });
 

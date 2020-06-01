@@ -1,8 +1,7 @@
 const themeRepo = require('../db/repositories/themeRepository');
 
 async function create(newTheme) {
-    let newThemeModel = await themeRepo.create(newTheme);
-    return newThemeModel._doc;
+    return (await themeRepo.create(newTheme))?._doc;
 }
 
 async function findThemes(themeForFind, sort = {number: 1}, count, skip = 0) {
@@ -10,24 +9,15 @@ async function findThemes(themeForFind, sort = {number: 1}, count, skip = 0) {
 }
 
 async function findById(id) {
-    const theme = await themeRepo.findById(id);
-    if (theme === null)
-        return theme;
-    return theme._doc;
+    return (await themeRepo.findById(id))?._doc;
 }
 
 async function findByNumber(number) {
-    const theme = await themeRepo.findByNumber(number);
-    if (theme === null)
-        return theme;
-    return theme._doc;
+    return (await themeRepo.findByNumber(number))?._doc;
 }
 
 async function findByIdAndUpdate(id, updateTheme) {
-    const res = await themeRepo.findByIdAndUpdate(id, updateTheme);
-    if (res === null)
-        return res;
-    return res._doc;
+    return (await themeRepo.findByIdAndUpdate(id, updateTheme))?._doc;
 }
 
 module.exports = {

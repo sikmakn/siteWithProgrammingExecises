@@ -18,4 +18,5 @@ module.exports = {
     mongooseUpdateParams,
     mongoOptions,
     fileDb,
+    replyRPCQueueName: 'userProgressService',
 };

@@ -1,19 +1,12 @@
 <link rel="stylesheet" href="/styles/auth.css">
-<form method="post" id="authForm" action="/user/login" class="authForm">
-    <h1>Вход</h1>
+<form method="post" id="authForm" action="/user/login" class="form">
+    <div class="formHeader">Вход</div>
+    <input type="text" id="username" name="username" placeholder="Имя пользователя" required>
+    <input type="password" id="password" name="password" placeholder="Пароль" required>
     {{#if isNonValid}}
-        <p class="invalid">Ошибка в username или login</p>
+        <span class="invalid">Ошибка в username или login</span>
     {{/if}}
-    <label for="username">
-        <span>Имя пользователя</span>
-        <input type="text" id="username" name="username" placeholder="Имя пользователя" required>
-    </label>
-    <label for="password">
-        <span>Пароль</span>
-        <input type="password" id="password" name="password" placeholder="Пароль" required>
-    </label>
     <input type="submit" value="Войти">
-    <a href="/user/auth">У меня нет аккаунта</a>
 </form>
 <script src="/scripts/fingerprint2.min.js"></script>
-<script src="/scripts/dist/auth/login.js"></script>
+<script src="/scripts/src/auth/login.js"></script>

@@ -10,6 +10,12 @@ const stream = require('stream');
 
 const router = express.Router();
 
+router.get('/:id', asyncHandler(async (req, res) => {
+    const channel = await getChannel();
+    const achievement = await progressServiceRPC[progressControllers.achievement](channel, 'getAchievement', {id: req.params.id});
+    res.json(achievement);
+}));
+
 router.post('/', upload.single('achievementImg'), asyncHandler(async (req, res) => {
     const channel = await getChannel();
     const achievement = await progressServiceRPC[progressControllers.achievement](channel, 'create', {
@@ -32,9 +38,13 @@ router.put('/:id', asyncHandler(async (req, res) => {
     res.json(achievement);
 }));
 
-router.get('/file/:id', asyncHandler(async (req, res) => {
+router.get('/file/:id', asyncHandler(async (req, res, next) => {
     const channel = await getChannel();
     const file = await progressServiceRPC[progressControllers.achievement](channel, 'getAchievementFile', {id: req.params.id});
+    if (!file.buffer) {
+        next();
+        return;
+    }
     res.set('Content-Type', file.contentType);
     const bufferStream = new stream.PassThrough();
     bufferStream.end(Buffer.from(file.buffer));
