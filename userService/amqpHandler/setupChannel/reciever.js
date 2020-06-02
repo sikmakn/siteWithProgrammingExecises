@@ -14,10 +14,16 @@ function consume(channel, rpcControllers) {
         const makeAnswer = (answer) =>
             sendAnswer(answer, channel, replyTo, correlationId);
         const controller = rpcControllers.find((cr) => cr.name === controllerName);
-        if (!controller) return;
+        if (!controller) {
+            makeAnswer({error: new Error('controller is not defined')});
+            return;
+        }
 
         const fullMethod = controller.methods.find((m) => m.name === routeName);
-        if (!fullMethod) return;
+        if (!fullMethod) {
+            makeAnswer({error: new Error('method is not defined')});
+            return;
+        }
 
         const result = fullMethod.method(message, makeAnswer, channel);
         if (result instanceof Promise) {
@@ -33,8 +39,8 @@ function sendAnswer(answer, channel, replyTo, correlationId) {
     channel.sendToQueue(replyTo, answer, {correlationId});
 }
 
-module.exports ={
-    setup: (channel) =>{
+module.exports = {
+    setup: (channel) => {
         if (rpcServiceName) {
             const rpcControllers = require('../../rpcControllers');
             setupConsume(channel, rpcControllers);
