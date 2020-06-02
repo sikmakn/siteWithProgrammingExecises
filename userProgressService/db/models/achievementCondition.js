@@ -19,6 +19,6 @@ const achievementCondition = new mongoose.Schema({
 });
 
 module.exports = {
-    exercise: mongoose.model('AchievementCondition', achievementCondition),
+    achievementCondition: mongoose.model('AchievementCondition', achievementCondition),
     scheme: achievementCondition,
 };
