@@ -7,22 +7,20 @@ const {bucketName} = require('../../options').fileDb;
 const {mongoOptions} = require('../../options');
 const stream = require('stream');
 
-async function create({file, conditions, description, name}) {
-    const fileId = mongoose.Types.ObjectId();
-    await createFile({file, fileId});
-    return await createAchievement({name, fileId, conditions, description})
+async function create({file, conditions, description, name, previewFile}) {
+    const fileId = await createFile({file});
+    const previewFileId = await createFile({file: previewFile});
+    return await createAchievement({name, fileId, conditions, description, previewFileId});
 }
 
-async function createFile({file, fileId}) {
-    return await MongoClient.connect(MONGODB_URI, mongoOptions).then(client => {
+async function createFile({file}) {
+    const fileId = mongoose.Types.ObjectId();
+    await MongoClient.connect(MONGODB_URI, mongoOptions).then(client => {
         const db = client.db(MONGODB_DB_NAME);
         const bucket = new GridFSBucket(db, {bucketName});
-        return createFileByBucket({
-            file,
-            fileId,
-            bucket,
-        });
+        return createFileByBucket({file, fileId, bucket});
     });
+    return fileId;
 }
 
 function createFileByBucket({file, fileId, bucket}) {
@@ -34,13 +32,8 @@ function createFileByBucket({file, fileId, bucket}) {
     return new Promise(resolve => bufferStream.on('finish', resolve))
 }
 
-async function createAchievement({name, fileId, conditions, description}) {
-    const newAchievementModel = new achievement({
-        name,
-        fileId,
-        conditions,
-        description,
-    });
+async function createAchievement({name, fileId, conditions, description, previewFileId}) {
+    const newAchievementModel = new achievement({name, fileId, conditions, description, previewFileId});
     return await newAchievementModel.save();
 }
 
@@ -48,12 +41,7 @@ async function updateFile({fileId, file}) {
     return await MongoClient.connect(MONGODB_URI, mongoOptions).then(client => {
         const db = client.db(MONGODB_DB_NAME);
         const bucket = new GridFSBucket(db, {bucketName});
-        return bucket.delete(fileId)
-            .then(() => createFileByBucket({
-                file,
-                fileId,
-                bucket,
-            }));
+        return bucket.delete(fileId).then(() => createFileByBucket({file, fileId, bucket}));
     })
 }
 
@@ -72,9 +60,9 @@ async function findFile(fileId) {
                         fileInfo.buffer = Buffer.concat(chunks);
                         resolve(fileInfo);
                     });
-                })
+                });
             });
-    })
+    });
 }
 
 async function findMany({achievementForFind, count, sort, skip}) {//todo check
@@ -88,16 +76,12 @@ async function findMany({achievementForFind, count, sort, skip}) {//todo check
 async function addConditions({id, conditions}) {//todo check
     return await achievement.findByIdAndUpdate(id,
         {$push: {'conditions': conditions}},
-        {
-            upsert: true,
-            ...mongooseUpdateParams
-        });
+        {upsert: true, ...mongooseUpdateParams});
 }
 
 async function deleteConditions({id, conditions}) {//todo check
     return await achievement.findOneAndUpdate(id,
-        {$pull: {'conditions': conditions}},
-        mongooseUpdateParams);
+        {$pull: {'conditions': conditions}}, mongooseUpdateParams);
 }
 
 async function updateAchievement({id, name, conditions, description}) {

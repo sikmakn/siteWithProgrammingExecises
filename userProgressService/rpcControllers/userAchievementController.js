@@ -17,6 +17,7 @@ module.exports = {
                         _id: ach._id,
                         name: ach.name,
                         fileId: ach.fileId,
+                        previewFileId: ach.previewFileId,
                         description: ach.description,
                     }));
                     res({result: achievements});

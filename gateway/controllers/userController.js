@@ -27,7 +27,6 @@ router.get('/achievements', asyncHandler(async (req, res) => {
         achievements[0] :
         await progressServiceRPC[progressControllers.achievement](channel,
             'getAchievement', {id: req.query.achievementId});
-
     res.render('achievements.hbs', {
         layout: 'empty.hbs',
         isAuth: true,
