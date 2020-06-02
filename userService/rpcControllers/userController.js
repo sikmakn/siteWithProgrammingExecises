@@ -75,7 +75,7 @@ module.exports = {
             method: async (msg, res) => {
                 try {
                     const {email} = await userService.findByUsername(msg.username);
-                    res({email});
+                    res({result: {email}});
                 } catch (e) {
                     //todo logs
                     res({error: e});

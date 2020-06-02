@@ -22,10 +22,10 @@ module.exports = {
                         Object.assign(result, fullResult);
                         return result;
                     });
-                    res(results);
-                } catch (e) {
-                    console.log(e);
-                    res(e);
+                    res({result: results});
+                } catch (error) {
+                    console.log(error);
+                    res({error});
                 }
             }
         },

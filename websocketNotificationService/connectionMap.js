@@ -19,6 +19,8 @@ module.exports = {
         if (!group.keys().length) connections.delete(groupId);
     },
     getElementsByUserId: ({userId}) => {
-        return [...connections.get(userId)?.values()];
+        const values = connections.get(userId)?.values();
+        if (!values) return [];
+        return [...values];
     }
 };

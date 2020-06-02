@@ -8,8 +8,7 @@ module.exports = {
             name: 'getAllByLang',
             method: async (msg, res) => {
                 const themes = await themeService.findThemes({language: msg.lang});
-                const themesOut = themes.map(th => themeMapper.fromThemeToOutObj(th));
-                res(themesOut);
+                res({result: themes.map(th => themeMapper.fromThemeToOutObj(th))});
             }
         },
         {
@@ -17,38 +16,46 @@ module.exports = {
             method: async (msg, res) => {
                 try {
                     const theme = await themeService.findById(msg.id);
-                    if (!theme) return res(null);
-                    const themeOut = themeMapper.fromThemeToOutObj(theme);
-                    res(themeOut);
-                }catch(e){
-                    res(null);
+                    if (!theme) return res({error: new Error('theme not found')});
+                    res({result: themeMapper.fromThemeToOutObj(theme)});
+                } catch (error) {
+                    res({error});
                 }
             }
         },
         {
             name: 'getByNumber',
             method: async (msg, res) => {
-                const theme = await themeService.findByNumber(msg.number);
-                if (!theme) return res(theme);
-                const themeOut = themeMapper.fromThemeToOutObj(theme);
-                res(themeOut);
+                try {
+                    const theme = await themeService.findByNumber(msg.number);
+                    if (!theme) return res({error: new Error('theme not found')});
+                    res({result: themeMapper.fromThemeToOutObj(theme)});
+                } catch (error) {
+                    res({error});
+                }
             }
         },
         {
             name: 'create',
             method: async (msg, res) => {
-                const newTheme = themeMapper.fromObjToThemeObj(msg);
-                const createdTheme = await themeService.create(newTheme);
-                res(createdTheme);
+                try {
+                    const newTheme = themeMapper.fromObjToThemeObj(msg);
+                    res({result: await themeService.create(newTheme)});
+                } catch (error) {
+                    res({error});
+                }
             }
         },
         {
             name: 'updateById',
             method: async (msg, res) => {
-                const {id, theme} = msg;
-                const themeObj = themeMapper.fromObjToThemeObj(theme);
-                const resultTheme = await themeService.findByIdAndUpdate(id, themeObj);
-                res(resultTheme);
+                try {
+                    const {id, theme} = msg;
+                    const themeObj = themeMapper.fromObjToThemeObj(theme);
+                    res({result: await themeService.findByIdAndUpdate(id, themeObj)});
+                } catch (error) {
+                    res({error});
+                }
             }
         },
     ]

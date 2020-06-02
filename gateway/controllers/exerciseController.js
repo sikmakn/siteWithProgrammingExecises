@@ -13,11 +13,10 @@ const router = express.Router();
 router.post('/:exerciseId/test', asyncHandler(async (req, res) => {
     const channel = await getChannel();
     const {sourceCode, themeId, difficulty} = req.body;
-    const results = await webServiceRPC[webServiceControllers.exercise](channel, 'testById', {
+    const {result: results} = await webServiceRPC[webServiceControllers.exercise](channel, 'testById', {
         sourceCode,
         id: req.params.exerciseId,
     });
-
     if (req.token) {
         const {userId} = await decodeToken(req.token);
         await publish(channel, pubExchanges.exerciseTests, {
@@ -34,7 +33,7 @@ router.post('/:exerciseId/test', asyncHandler(async (req, res) => {
 
 router.patch('/:id', asyncHandler(async (req, res) => {
     const channel = await getChannel();
-    const updatedExercise = await webServiceRPC[webServiceControllers.exercise](channel, 'updateById', {
+    const {result: updatedExercise} = await webServiceRPC[webServiceControllers.exercise](channel, 'updateById', {
         id: req.params.id,
         exercise: req.body,
     });
@@ -43,22 +42,21 @@ router.patch('/:id', asyncHandler(async (req, res) => {
 
 router.post('/', asyncHandler(async (req, res) => {
     const channel = await getChannel();
-    const exercise = await webServiceRPC[webServiceControllers.theme](channel, 'create', req.body);
+    const {result: exercise} = await webServiceRPC[webServiceControllers.theme](channel, 'create', req.body);
     res.json(exercise);
 }));
 
 router.get('/:themeId/:difficulty', asyncHandler(async (req, res) => {
     const channel = await getChannel();
     const {themeId, difficulty} = req.params;
-    const theme = await webServiceRPC[webServiceControllers.theme](channel, 'getById', {id: themeId});
-    const exercises = await webServiceRPC[webServiceControllers.exercise](channel, 'getByThemeId', {
+    const {result: theme} = await webServiceRPC[webServiceControllers.theme](channel, 'getById', {id: themeId});
+    const {result: exercises} = await webServiceRPC[webServiceControllers.exercise](channel, 'getByThemeId', {
         themeId,
         difficulty
     });
-
     if (req.token) {
         const {userId} = await decodeToken(req.token);
-        const results = await progressServiceRPC[progressServiceControllers.exerciseResult](channel, 'get', {
+        const {result: results} = await progressServiceRPC[progressServiceControllers.exerciseResult](channel, 'get', {
             username: userId,
             themeId,
             difficulty,
@@ -94,13 +92,10 @@ router.get('/:themeId/:difficulty/next', asyncHandler(async (req, res, next) => 
             break;
         case 'hard':
             const channel = await getChannel();
-            const {number, language} = await webServiceRPC[webServiceControllers.theme](channel, 'getById', {id: themeId});
-            const theme = await webServiceRPC[webServiceControllers.theme](channel, 'getByNumber', {number: number + 1});
-            if (!theme) {
-                res.redirect(`/theme/${language}`);
-            } else {
-                res.redirect(`/exercises/${theme._id}/easy`);
-            }
+            const {result: {number, language}} = await webServiceRPC[webServiceControllers.theme](channel, 'getById', {id: themeId});
+            const {result: theme} = await webServiceRPC[webServiceControllers.theme](channel, 'getByNumber', {number: number + 1});
+            const path = theme ? `/exercises/${theme._id}/easy` : `/theme/${language}`;
+            res.redirect(path);
             break;
         default:
             next();
@@ -113,13 +108,10 @@ router.get('/:themeId/:difficulty/prev', asyncHandler(async (req, res, next) => 
     switch (req.params.difficulty) {
         case 'easy':
             const channel = await getChannel();
-            const {number, language} = await webServiceRPC[webServiceControllers.theme](channel, 'getById', {id: themeId});
+            const {result: {number, language}} = await webServiceRPC[webServiceControllers.theme](channel, 'getById', {id: themeId});
             const theme = await webServiceRPC[webServiceControllers.theme](channel, 'getByNumber', {number: number - 1});
-            if (!theme) {
-                res.redirect(`/theme/${language}`);
-            } else {
-                res.redirect(`/exercises/${theme._id}/hard`);
-            }
+            const path = theme ? `/exercises/${theme._id}/easy` : `/theme/${language}`;
+            res.redirect(path);
             break;
         case 'hard':
             res.redirect(`/exercises/${themeId}/middle`);

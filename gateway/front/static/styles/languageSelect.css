@@ -2,7 +2,6 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: url("src/FlowersBackground.svg") no-repeat center;
     background-size: cover;
 }
 

@@ -25,7 +25,7 @@ async function updateAuthData({userId, fingerPrint, expiresIn}) {
 }
 
 async function deleteOneAuthData({userId, fingerPrint}) {
-    return await authData.findByIdAndDelete({userId, fingerPrint});
+    return await authData.deleteOne({userId, fingerPrint});
 }
 
 async function deleteExpired() {
