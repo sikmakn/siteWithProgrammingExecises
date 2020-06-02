@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const newAchievements = new mongoose.Schema({
     userId: {
-        type: mongoose.ObjectId,
+        type: String,
         require: true,
         unique: true,
     },
@@ -14,6 +14,6 @@ const newAchievements = new mongoose.Schema({
 });
 
 module.exports = {
-    newAchievements: mongoose.model('AchievementCondition', newAchievements),
+    newAchievements: mongoose.model('newAchievement', newAchievements),
     scheme: newAchievements,
 };

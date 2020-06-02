@@ -70,3 +70,23 @@ header a:hover {
     left: 50%;
     transform: translate(-50%);
 }
+#achievementsLink{
+    position: relative;
+}
+
+.achievementCount {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-family: Oswald, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    color: white;
+    background: black;
+    position: absolute;
+    display: none;
+    top:0;
+}

@@ -1,4 +1,4 @@
-const cookieparser = require("cookieparser");
+const cookieparser = require('cookieparser');
 module.exports = {
-    getToken: (cookie) => cookieparser.parse(cookie)?.Authorization.split(' ')[1],
+    getToken: (cookie) => cookieparser.parse(cookie)?.Authorization?.split(' ')[1],
 };

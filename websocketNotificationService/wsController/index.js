@@ -1,26 +1,26 @@
 const WebSocket = require('ws');
+const {PORT} = require('../config');
 const {v4: uuid} = require('uuid');
 const jwt = require('jsonwebtoken');
-const {addToGroup} = require('../helpers/connectionMap');
+const {addToGroup, deleteByElementId} = require('../connectionMap');
 const {getToken} = require('../helpers/getToken');
+const newUserAchievementsService = require('../services/newUserAchievementsService');
 
-const connections = new Map();
+const wss = new WebSocket.Server({port: PORT});
 
-const wss = new WebSocket.Server({port: 3002});
-
-wss.on('connection', function connection(ws, req) {
+wss.on('connection', async function connection(ws, req) {
     let wsId = uuid();
 
     const token = getToken(req.headers.cookie);
     if (!token) return;
     const {userId} = jwt.decode(token);
-    addToGroup({map: connections, groupId: userId, elementId: wsId, element: ws});
+    addToGroup({userId, wsId, ws});
 
-    ws.on('message', function incoming(message) {
-        console.log('received: %s', message);
-    });
-    ws.on('close', () => connections.delete(req.headers.cookie))
-    //  ws.send('something');
+    const count = await newUserAchievementsService.getCount({userId});
+    if (count) ws.send(count);
+
+    ws.on('message', async () => await newUserAchievementsService.readNotification({userId}));
+    ws.on('close', () => deleteByElementId({userId, wsId}))
 });
 
 module.exports = {wss};

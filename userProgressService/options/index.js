@@ -12,6 +12,10 @@ const fileDb = {
     fileColl: 'achievements.files',
 };
 
+const pubExchanges = {
+    newUserAchievement: 'newUserAchievement',
+};
+
 module.exports = {
     achievementFields: ["themeId", "result", "difficulty"],
     rpcServiceName: 'userProgressServiceTestQ',
@@ -19,4 +23,5 @@ module.exports = {
     mongoOptions,
     fileDb,
     replyRPCQueueName: 'userProgressService',
+    pubExchanges,
 };

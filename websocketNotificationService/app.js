@@ -11,7 +11,7 @@ async function start() {
 
 start();
 
-process.on("SIGINT", () => {
+process.on('SIGINT', () => {
     mongoose.disconnect().then(() => {
         process.exit();
     });

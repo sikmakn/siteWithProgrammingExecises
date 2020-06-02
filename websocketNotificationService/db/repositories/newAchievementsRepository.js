@@ -6,12 +6,21 @@ async function create({userId, count}) {
     return await newAchievementModel.save();
 }
 
+async function findMany({userIds}) {
+    const query = userIds.map(userId => ({userId}));
+    return await newAchievements.find({$or: query})
+}
+
 async function findByUserId(userId) {
     return await newAchievements.findOne({userId});
 }
 
-async function update({userId, count}) {
-    return await newAchievements.updateOne({userId}, {count}, mongooseUpdateParams);
+async function createOrUpdateMany(queryObjArr) {
+    return await newAchievements.bulkWrite(queryObjArr, {ordered: false});
+}
+
+async function update({userId, updateQuery}) {
+    return await newAchievements.updateOne({userId}, updateQuery, mongooseUpdateParams);
 }
 
 async function deleteByUserId(userId) {
@@ -19,8 +28,10 @@ async function deleteByUserId(userId) {
 }
 
 module.exports = {
+    findMany,
     create,
     update,
     findByUserId,
     deleteByUserId,
+    createOrUpdateMany,
 };

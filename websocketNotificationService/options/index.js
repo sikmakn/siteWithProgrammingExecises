@@ -5,7 +5,7 @@ const mongoOptions = {
     useCreateIndex: true,
 };
 
-const mongooseUpdateParams = {new: true, omitUndefined: true};
+const mongooseUpdateParams = {new: true, omitUndefined: true, upsert: true};
 
 module.exports = {
     mongooseUpdateParams,

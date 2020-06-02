@@ -5,16 +5,18 @@ const {achievementFields} = require('../options');
 const getCombinations = require('../helpers/combinations');
 const {isArrsEquals} = require('../helpers/arrayHelps');
 const {v4: uuidv4} = require('uuid');
+const {publish, getChannel} = require('../amqpHandler');
+const {pubExchanges} = require('../options');
 
 async function addAchievements({username, achievementIds}) {
     const userAchievement = (await userAchievementRepository.addAchievements({username, achievementIds}))?._doc;
-    //todo push
+    await publish(await getChannel(), pubExchanges.newUserAchievement, {userIds: [username], achievementIds});
     return userAchievement;
 }
 
 async function addAchievementsToManyUsers({usernames, achievementIds}) {
     const usersAchievements = await userAchievementRepository.addAchievementsToManyUsers({usernames, achievementIds});
-    //todo push
+    await publish(await getChannel(), pubExchanges.newUserAchievement, {userIds: usernames, achievementIds});
     return usersAchievements;
 }
 

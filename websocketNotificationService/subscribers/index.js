@@ -4,8 +4,8 @@ module.exports = [
     {
         subExchange: 'newUserAchievement',
         method: async (content) => {
-            const {name, userId} = content;
-
+            const {userIds, achievementIds} = content;
+            await newUserAchievementsService.createOrUpdateMany({userIds, count: achievementIds.length});
         },
     },
 ];
