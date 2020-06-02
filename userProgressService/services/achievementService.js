@@ -1,7 +1,7 @@
 const achievementRepository = require('../db/repositories/achievementRepository');
 
-async function create({file, conditions, description, name}) {
-    return (await achievementRepository.create({file, conditions, description, name}))?._doc;
+async function create({file, conditions, description, name, previewFile}) {
+    return (await achievementRepository.create({file, conditions, description, name, previewFile}))?._doc;
 }
 
 async function findById(id) {

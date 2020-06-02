@@ -13,6 +13,10 @@ const achievementScheme = new mongoose.Schema({
         type: mongoose.ObjectId,
         required: true,
     },
+    previewFileId: {
+        type: mongoose.ObjectId,
+        required: true,
+    },
     description: {
         type: String,
         required: true,

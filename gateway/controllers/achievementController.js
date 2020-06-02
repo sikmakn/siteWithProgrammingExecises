@@ -16,13 +16,14 @@ router.get('/:id', asyncHandler(async (req, res) => {
     res.json(achievement);
 }));
 
-router.post('/', upload.single('achievementImg'), asyncHandler(async (req, res) => {
+router.post('/', upload.fields([{name: 'achievementImg'}, {name: 'previewImg'}]), asyncHandler(async (req, res) => {
     const channel = await getChannel();
     const achievement = await progressServiceRPC[progressControllers.achievement](channel, 'create', {
         conditions: JSON.parse(req.body.conditions),
-        file: req.file,
+        file: req.files.achievementImg[0],
         description: req.body.description,
         name: req.body.name,
+        previewFile: req.files.previewImg[0],
     });
     res.json(achievement);
 }));

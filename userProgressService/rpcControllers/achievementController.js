@@ -21,8 +21,8 @@ module.exports = {
             method: async (msg, res) => {
                 try {
                     const {id} = msg;
-                    const {name, description, _id, fileId} = await achievementService.findById(id);
-                    res({name, description, _id, fileId});
+                    const {name, description, _id, fileId, previewFileId} = await achievementService.findById(id);
+                    res({name, description, _id, fileId, previewFileId});
                 } catch (e) {
                     res(e);
                 }
@@ -33,8 +33,7 @@ module.exports = {
             method: async (msg, res) => {
                 try {
                     const {id} = msg;
-                    const file = await achievementService.findFile(id);
-                    res(file);
+                    res(await achievementService.findFile(id));
                 } catch (e) {
                     res(e);
                 }
@@ -50,6 +49,7 @@ module.exports = {
                         name: ach.name,
                         fileId: ach.fileId,
                         description: ach.description,
+                        previewFileId: ach.previewFileId,
                     }));
                     res(results);
                 } catch (e) {
