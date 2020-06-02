@@ -12,7 +12,9 @@
 
     <div class="rightHeader">
         {{#if isAuth}}
-            <a href="/user/achievements">Достижения</a>
+            <a href="/user/achievements" id="achievementsLink">
+                <div class="achievementCount"></div>
+                <span>Достижения</span></a>
             <a href="/user/profile">Профиль</a>
             <a href="/user/logout">Выйти</a>
         {{else}}
