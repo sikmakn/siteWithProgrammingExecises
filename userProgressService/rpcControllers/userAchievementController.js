@@ -21,8 +21,8 @@ module.exports = {
                         description: ach.description,
                     }));
                     res({result: achievements});
-                } catch (e) {
-                    res(e);
+                } catch (error) {
+                    res({error});
                 }
             }
         },

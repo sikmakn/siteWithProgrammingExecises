@@ -20,13 +20,14 @@ router.get('/achievements', asyncHandler(async (req, res) => {
     }
     const channel = await getChannel();
     const {userId: username} = await decodeToken(req.token);
-    const {result: achievements} = await progressServiceRPC[progressControllers.userAchievement](channel,
+    let {result: achievements} = await progressServiceRPC[progressControllers.userAchievement](channel,
         'getByUsername', {username});
+    if (!achievements) achievements = [];
 
     let choosenAchievement = !req.query.achievementId ?
         achievements[0] :
-        await progressServiceRPC[progressControllers.achievement](channel,
-            'getAchievement', {id: req.query.achievementId});
+        (await progressServiceRPC[progressControllers.achievement](channel,
+            'getAchievement', {id: req.query.achievementId})).result;
     res.render('achievements.hbs', {
         layout: 'empty.hbs',
         isAuth: true,
@@ -97,8 +98,8 @@ router.get('/profile', asyncHandler(async (req, res) => {
     }
     const channel = await getChannel();
     const {userId: username} = await decodeToken(req.token);
-    const {email} = await userServiceRPC[userControllers.user](channel, 'getPersonalInfo', {username});
-    res.render('profile.hbs', {layout: 'empty.hbs', email, username, isAuth: true});
+    const {result} = await userServiceRPC[userControllers.user](channel, 'getPersonalInfo', {username});
+    res.render('profile.hbs', {layout: 'empty.hbs', email: result.email, username, isAuth: true});
 }));
 
 router.post('/profile', asyncHandler(async (req, res) => {

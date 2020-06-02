@@ -10,9 +10,9 @@ module.exports = {
                 try {
                     const achievement = await achievementService.create(msg);
                     await userAchievementService.addByConditions(achievement.conditions, achievement._id);
-                    res(achievement);
+                    res({result: achievement});
                 } catch (e) {
-                    res(e);
+                    res({error: e});
                 }
             }
         },
@@ -22,9 +22,9 @@ module.exports = {
                 try {
                     const {id} = msg;
                     const {name, description, _id, fileId, previewFileId} = await achievementService.findById(id);
-                    res({name, description, _id, fileId, previewFileId});
+                    res({result: {name, description, _id, fileId, previewFileId}});
                 } catch (e) {
-                    res(e);
+                    res({error: e});
                 }
             }
         },
@@ -33,9 +33,9 @@ module.exports = {
             method: async (msg, res) => {
                 try {
                     const {id} = msg;
-                    res(await achievementService.findFile(id));
+                    res({result: await achievementService.findFile(id)});
                 } catch (e) {
-                    res(e);
+                    res({error: e});
                 }
             }
         },
@@ -51,9 +51,9 @@ module.exports = {
                         description: ach.description,
                         previewFileId: ach.previewFileId,
                     }));
-                    res(results);
+                    res({result: results});
                 } catch (e) {
-                    res(e);
+                    res({error: e});
                 }
             }
         },
@@ -63,9 +63,9 @@ module.exports = {
                 try {
                     const updatedAchievement = await achievementService.updateById(msg);
                     await userAchievementService.addByConditions(updatedAchievement.conditions, updatedAchievement._id);
-                    res(updatedAchievement);
+                    res({result: updatedAchievement});
                 } catch (e) {
-                    res(e);
+                    res({error: e});
                 }
             }
         },
@@ -73,10 +73,9 @@ module.exports = {
             name: 'updateAchievementFile',
             method: async (msg, res) => {
                 try {
-                    const updatedAchievement = await achievementService.updateFile(msg);
-                    res(updatedAchievement);
+                    res({result: await achievementService.updateFile(msg)});
                 } catch (e) {
-                    res(e);
+                    res({error: e});
                 }
             }
         }

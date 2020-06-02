@@ -30,17 +30,13 @@ async function createToken({userId, fingerPrint}) {
 }
 
 async function isValidToken({token, fingerPrint}) {
-    try {
-        const {userId, fingerPrint: oldFingerPrint} = jwt.verify(token, JWT_SECRET);
-        return fingerPrint === oldFingerPrint &&
-            !!await authDataRepository.findOne({userId, fingerPrint});
-    } catch (e) {
-        return false;
-    }
+    const {fingerPrint: oldFingerPrint} = jwt.verify(token, JWT_SECRET);
+    return fingerPrint === oldFingerPrint;
 }
 
 async function updateToken(token) {
     const {userId, fingerPrint} = jwt.decode(token);
+
     await authDataRepository.updateAuthData({userId, fingerPrint, expiresIn: Date.now() + EXPIRES_HOURS * 60 * 60});
     return sign({userId, fingerPrint})
 }
@@ -54,15 +50,11 @@ async function logOutUser(userId) {
 }
 
 async function logOutByToken(token) {
-    try {
-        const {userId, fingerPrint} = jwt.verify(token, JWT_SECRET);
-        const user = await authDataRepository.findOne({userId, fingerPrint});
-        if (!user) return false;
-        await authDataRepository.deleteOneAuthData({userId, fingerPrint});
-        return true;
-    } catch (e) {
-        return false;
-    }
+    const {userId, fingerPrint} = jwt.verify(token, JWT_SECRET);
+    const user = await authDataRepository.findOne({userId, fingerPrint});
+    if (!user) return false;
+    await authDataRepository.deleteOneAuthData({userId, fingerPrint});
+    return true;
 }
 
 module.exports = {

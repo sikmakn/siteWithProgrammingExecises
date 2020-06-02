@@ -7,9 +7,12 @@ module.exports = {
         {
             name: 'testById',
             method: async (msg, res) => {
-                const {id, sourceCode} = msg;
-                const results = await exerciseService.makeTests(id, sourceCode);
-                res(results);
+                try {
+                    const {id, sourceCode} = msg;
+                    res({result: await exerciseService.makeTests(id, sourceCode)});
+                } catch (error) {
+                    res({error});
+                }
             }
         },
         {
@@ -18,28 +21,33 @@ module.exports = {
                 try {
                     const {themeId, difficulty} = msg;
                     const exercises = await exerciseService.findByThemeId(themeId, difficulty);
-                    const mappedExercises = exercises.map(ex => exerciseMapper.fromExerciseToOutObj(ex));
-                    res(mappedExercises);
-                }catch (e) {
-                    res(null)
+                    res({result: exercises.map(ex => exerciseMapper.fromExerciseToOutObj(ex))});
+                } catch (error) {
+                    res({error});
                 }
             }
         },
         {
             name: 'create',
             method: async (msg, res) => {
-                let newExercise = exerciseMapper.fromObjToExerciseObj(msg);
-                const result = await exerciseService.create(newExercise);
-                res(result);
+                try {
+                    let newExercise = exerciseMapper.fromObjToExerciseObj(msg);
+                    res({result: await exerciseService.create(newExercise)});
+                } catch (error) {
+                    res({error});
+                }
             }
         },
         {
             name: 'updateById',
             method: async (msg, res) => {
-                const {id, exercise} = msg;
-                const exerciseObj = exerciseMapper.fromObjToExerciseObj(exercise);
-                const resultExercise = await exerciseService.findByIdAndUpdate(id, exerciseObj);
-                res(resultExercise);
+                try {
+                    const {id, exercise} = msg;
+                    const exerciseObj = exerciseMapper.fromObjToExerciseObj(exercise);
+                    res({result: await exerciseService.findByIdAndUpdate(id, exerciseObj)});
+                } catch (error) {
+                    res({error});
+                }
             }
         },
     ]

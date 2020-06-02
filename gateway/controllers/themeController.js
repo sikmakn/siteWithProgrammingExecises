@@ -10,7 +10,7 @@ const router = express.Router();
 router.get('/:lang', asyncHandler(async (req, res) => {
     const channel = await getChannel();
     const {lang} = req.params;
-    const themesList = await webServiceRPC[themeController](channel, 'getAllByLang', {lang});
+    const {result: themesList} = await webServiceRPC[themeController](channel, 'getAllByLang', {lang});
     const resObj = {
         layout: 'themeSelectMain.hbs',
         themesList,
@@ -24,13 +24,13 @@ router.get('/:lang', asyncHandler(async (req, res) => {
 
 router.post('/', asyncHandler(async (req, res) => {//todo auth isAdmin
     const channel = await getChannel();
-    const createdTheme = await webServiceRPC[themeController](channel, 'create', req.body);
+    const {result:createdTheme} = await webServiceRPC[themeController](channel, 'create', req.body);
     res.json(createdTheme);
 }));
 
 router.patch('/:id', asyncHandler(async (req, res) => {//todo auth isAdmin
     const channel = await getChannel();
-    const updatedTheme = await webServiceRPC[themeController](channel, 'updateById', {
+    const {result:updatedTheme} = await webServiceRPC[themeController](channel, 'updateById', {
         id: req.params.id,
         theme: req.body,
     });
