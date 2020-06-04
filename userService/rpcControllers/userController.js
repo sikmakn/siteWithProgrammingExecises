@@ -1,5 +1,7 @@
 const userService = require('../services/userService');
 const {userSchema, statusSchema, passwordSchema, emailSchema} = require('../validationSchemas/userSchema');
+const {pubExchanges, serviceName} = require('../options');
+const {publish, getChannel} = require('../amqpHandler');
 
 module.exports = {
     name: 'user',
@@ -15,10 +17,10 @@ module.exports = {
                     }
                     await userService.create(userData);
                     res({result: true});
-                } catch (e) {
-                    //todo logs
-                    console.error(e);
-                    res({error: e});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error, date: Date.now(), serviceName});
+                    res({error});
                 }
             }
         },
@@ -28,10 +30,10 @@ module.exports = {
                 try {
                     const result = await userService.isValidNonBLocked(msg);
                     res({result});
-                } catch (e) {
-                    console.error(e);
-                    //todo logs
-                    res({error: e});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error, date: Date.now(), serviceName});
+                    res({error});
                 }
             }
         },
@@ -42,10 +44,10 @@ module.exports = {
                     const password = await passwordSchema.validateAsync(msg.password);
                     await userService.updatePassword({username: msg.username, password});
                     res({result: true});
-                } catch (e) {
-                    console.error(e);
-                    //todo logs
-                    res({error: e});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error, date: Date.now(), serviceName});
+                    res({error});
                 }
             }
         },
@@ -64,9 +66,10 @@ module.exports = {
                         return;
                     }
                     res({error: new Error('oldPassword is not valid')});
-                } catch (e) {
-                    //todo logs
-                    res({error: e});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error, date: Date.now(), serviceName});
+                    res({error});
                 }
             }
         },
@@ -76,9 +79,10 @@ module.exports = {
                 try {
                     const {email} = await userService.findByUsername(msg.username);
                     res({result: {email}});
-                } catch (e) {
-                    //todo logs
-                    res({error: e});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error, date: Date.now(), serviceName});
+                    res({error});
                 }
             }
         },
@@ -92,9 +96,10 @@ module.exports = {
                         status
                     });
                     res({result: true});
-                } catch (e) {
-                    //todo logs
-                    res({error: e});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error, date: Date.now(), serviceName});
+                    res({error});
                 }
             }
         },
@@ -104,9 +109,10 @@ module.exports = {
                 try {
                     await userService.updateBlocking(msg);
                     res({result: true});
-                } catch (e) {
-                    //todo logs
-                    res({error: e});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error, date: Date.now(), serviceName});
+                    res({error});
                 }
             }
         },

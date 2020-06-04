@@ -12,7 +12,7 @@ async function subscribe(channel, subExchange, handler) {
 
 module.exports = {
     setup: async function (channel) {
-        if(!isFileExist(__dirname+'/../../subscribers'))return;
+        if (!isFileExist(__dirname + '/../../subscribers')) return;
         const subscribers = require('../../subscribers');
         for (let subscriber of subscribers)
             await subscribe(channel, subscriber.subExchange, subscriber.method);

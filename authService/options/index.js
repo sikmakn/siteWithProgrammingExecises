@@ -9,16 +9,21 @@ const mongooseUpdateParams = {new: true, omitUndefined: true};
 
 const rpcServices = {
     USER_SERVICE: {
-        serviceName: 'userServiceTestQ',
+        serviceName: 'userServiceQ',
         controllers: {
             user: 'user',
         }
     }
 };
+
+const pubExchanges = {error: 'error'};
+
 module.exports = {
     mongoOptions,
     mongooseUpdateParams,
-    rpcServiceName: 'authServiceTestQ',
+    rpcServiceName: 'authServiceQ',
+    serviceName: 'authService',
+    pubExchanges,
     rpcServices,
     replyRPCQueueName: 'authServiceReply',
 };

@@ -17,4 +17,4 @@ function connect() {
     };
 }
 
-connect();
+if (achievementsLink) connect();

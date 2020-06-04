@@ -1,4 +1,6 @@
 const resultService = require('../services/exerciseResultService');
+const {pubExchanges, serviceName} = require('../options');
+const {publish, getChannel} = require('../amqpHandler');
 
 module.exports = {
     name: 'exerciseResult',
@@ -24,7 +26,8 @@ module.exports = {
                     });
                     res({result: results});
                 } catch (error) {
-                    console.log(error);
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error, date: Date.now(), serviceName});
                     res({error});
                 }
             }

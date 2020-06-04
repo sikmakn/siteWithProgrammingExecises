@@ -7,7 +7,7 @@ main {
 
 
 .selectContainer {
-    font-family: 'Squada One', cursive;
+    font-family: Oswald, sans-serif;
     height: 400px;
     width: 200px;
     display: flex;

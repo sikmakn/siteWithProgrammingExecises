@@ -1,5 +1,7 @@
 const themeService = require('../services/themeService');
 const themeMapper = require('../Mappers/themeMapper');
+const {pubExchanges, serviceName} = require('../options');
+const {publish, getChannel} = require('../amqpHandler');
 
 module.exports = {
     name: 'theme',
@@ -7,8 +9,14 @@ module.exports = {
         {
             name: 'getAllByLang',
             method: async (msg, res) => {
-                const themes = await themeService.findThemes({language: msg.lang});
-                res({result: themes.map(th => themeMapper.fromThemeToOutObj(th))});
+                try {
+                    const themes = await themeService.findThemes({language: msg.lang});
+                    res({result: themes.map(th => themeMapper.fromThemeToOutObj(th))});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error, date: Date.now(), serviceName});
+                    res({error});
+                }
             }
         },
         {
@@ -19,6 +27,8 @@ module.exports = {
                     if (!theme) return res({error: new Error('theme not found')});
                     res({result: themeMapper.fromThemeToOutObj(theme)});
                 } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error, date: Date.now(), serviceName});
                     res({error});
                 }
             }
@@ -31,6 +41,8 @@ module.exports = {
                     if (!theme) return res({error: new Error('theme not found')});
                     res({result: themeMapper.fromThemeToOutObj(theme)});
                 } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error, date: Date.now(), serviceName});
                     res({error});
                 }
             }
@@ -42,6 +54,8 @@ module.exports = {
                     const newTheme = themeMapper.fromObjToThemeObj(msg);
                     res({result: await themeService.create(newTheme)});
                 } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error, date: Date.now(), serviceName});
                     res({error});
                 }
             }
@@ -54,6 +68,8 @@ module.exports = {
                     const themeObj = themeMapper.fromObjToThemeObj(theme);
                     res({result: await themeService.findByIdAndUpdate(id, themeObj)});
                 } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error, date: Date.now(), serviceName});
                     res({error});
                 }
             }

@@ -1,5 +1,7 @@
 const achievementService = require('../services/achievementService');
 const userAchievementService = require('../services/userAchievementService');
+const {pubExchanges, serviceName} = require('../options');
+const {publish, getChannel} = require('../amqpHandler');
 
 module.exports = {
     name: 'achievement',
@@ -11,8 +13,10 @@ module.exports = {
                     const achievement = await achievementService.create(msg);
                     await userAchievementService.addByConditions(achievement.conditions, achievement._id);
                     res({result: achievement});
-                } catch (e) {
-                    res({error: e});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error, date: Date.now(), serviceName});
+                    res({error});
                 }
             }
         },
@@ -23,8 +27,10 @@ module.exports = {
                     const {id} = msg;
                     const {name, description, _id, fileId, previewFileId} = await achievementService.findById(id);
                     res({result: {name, description, _id, fileId, previewFileId}});
-                } catch (e) {
-                    res({error: e});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error, date: Date.now(), serviceName});
+                    res({error});
                 }
             }
         },
@@ -34,8 +40,10 @@ module.exports = {
                 try {
                     const {id} = msg;
                     res({result: await achievementService.findFile(id)});
-                } catch (e) {
-                    res({error: e});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error, date: Date.now(), serviceName});
+                    res({error});
                 }
             }
         },
@@ -52,8 +60,10 @@ module.exports = {
                         previewFileId: ach.previewFileId,
                     }));
                     res({result: results});
-                } catch (e) {
-                    res({error: e});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error, date: Date.now(), serviceName});
+                    res({error});
                 }
             }
         },
@@ -64,8 +74,10 @@ module.exports = {
                     const updatedAchievement = await achievementService.updateById(msg);
                     await userAchievementService.addByConditions(updatedAchievement.conditions, updatedAchievement._id);
                     res({result: updatedAchievement});
-                } catch (e) {
-                    res({error: e});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error, date: Date.now(), serviceName});
+                    res({error});
                 }
             }
         },
@@ -74,8 +86,10 @@ module.exports = {
             method: async (msg, res) => {
                 try {
                     res({result: await achievementService.updateFile(msg)});
-                } catch (e) {
-                    res({error: e});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error, date: Date.now(), serviceName});
+                    res({error});
                 }
             }
         }

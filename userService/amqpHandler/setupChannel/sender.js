@@ -1,4 +1,4 @@
-const {rpcServices, replyRPCQueueName} = require("../../options");
+const {rpcServices, replyRPCQueueName} = require('../../options');
 
 function assert(channel) {
     for (let {serviceName} of Object.values(rpcServices))
