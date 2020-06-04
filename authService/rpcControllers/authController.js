@@ -1,6 +1,7 @@
 const authService = require('../services/authService');
 const {pubExchanges, serviceName} = require('../options');
 const {publish, getChannel} = require('../amqpHandler');
+const {serializeError} = require('serialize-error');
 
 module.exports = {
     name: 'auth',
@@ -17,8 +18,8 @@ module.exports = {
                     res({result: await authService.createToken({userId, fingerPrint, role})});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
-                        {error, date: Date.now(), serviceName});
-                    res({error});
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
                 }
             }
         },
@@ -33,8 +34,8 @@ module.exports = {
                     res({result: newToken});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
-                        {error, date: Date.now(), serviceName});
-                    res({error});
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
                 }
             }
         },
@@ -47,8 +48,8 @@ module.exports = {
                     res({result});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
-                        {error, date: Date.now(), serviceName});
-                    res({error});
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
                 }
             }
         },
@@ -61,8 +62,8 @@ module.exports = {
                     res({result: true});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
-                        {error, date: Date.now(), serviceName});
-                    res({error});
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
                 }
             }
         },

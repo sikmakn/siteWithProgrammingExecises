@@ -1,6 +1,7 @@
 const newUserAchievementsService = require('../services/newUserAchievementsService');
 const {pubExchanges, serviceName} = require('../options');
 const {publish, getChannel} = require('../amqpHandler');
+const {serializeError} = require('serialize-error');
 
 module.exports = [
     {
@@ -11,7 +12,7 @@ module.exports = [
                 await newUserAchievementsService.createOrUpdateMany({userIds, count: achievementIds.length});
             }catch (error) {
                 await publish(await getChannel(), pubExchanges.error,
-                    {error, date: Date.now(), serviceName});
+                    {error: serializeError(error), date: Date.now(), serviceName});
             }
         },
     },

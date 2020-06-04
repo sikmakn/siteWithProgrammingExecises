@@ -13,6 +13,7 @@
     "cookieparser": "^0.1.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.16",
+    "serialize-error": "^7.0.1",
     "uuid": "^8.1.0",
     "ws": "^7.3.0"
   }

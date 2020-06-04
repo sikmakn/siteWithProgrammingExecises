@@ -36,9 +36,11 @@ const rpcServices = {
 
 const pubExchanges = {
     exerciseTests: 'exerciseTests',
+    error: 'error',
 };
 
 module.exports = {
+    serviceName: 'gateway',
     rpcServices,
     pubExchanges,
     replyRPCQueueName: 'gatewayReply',

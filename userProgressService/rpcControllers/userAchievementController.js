@@ -2,6 +2,7 @@ const userAchievementService = require('../services/userAchievementService');
 const achievementService = require('../services/achievementService');
 const {pubExchanges, serviceName} = require('../options');
 const {publish, getChannel} = require('../amqpHandler');
+const {serializeError} = require('serialize-error');
 
 module.exports = {
     name: 'userAchievement',
@@ -23,8 +24,8 @@ module.exports = {
                     res({result: achievements});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
-                        {error, date: Date.now(), serviceName});
-                    res({error});
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
                 }
             }
         },

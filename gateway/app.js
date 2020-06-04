@@ -47,10 +47,14 @@ app.use(authValidate, (req, res) => {
     })
 });
 
+const {serializeError} = require('serialize-error');
 app.use(async (error, req, res, next) => {
     if (req.status === 401) return;
-
-    await publish(await getChannel(), pubExchanges.error, {error, date: Date.now(), serviceName});
+    await publish(await getChannel(), pubExchanges.error, {
+        error: serializeError(error),
+        date: Date.now(),
+        serviceName,
+    });
 
     res.status(500);
     res.send('Internal Server Error');

@@ -2,6 +2,7 @@ const exerciseService = require('../services/exerciseService');
 const exerciseMapper = require('../Mappers/exerciseMapper');
 const {pubExchanges, serviceName} = require('../options');
 const {publish, getChannel} = require('../amqpHandler');
+const {serializeError} = require('serialize-error');
 
 module.exports = {
     name: 'exercise',
@@ -14,8 +15,8 @@ module.exports = {
                     res({result: await exerciseService.makeTests(id, sourceCode)});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
-                        {error, date: Date.now(), serviceName});
-                    res({error});
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
                 }
             }
         },
@@ -28,8 +29,8 @@ module.exports = {
                     res({result: exercises.map(ex => exerciseMapper.fromExerciseToOutObj(ex))});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
-                        {error, date: Date.now(), serviceName});
-                    res({error});
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
                 }
             }
         },
@@ -41,8 +42,8 @@ module.exports = {
                     res({result: await exerciseService.create(newExercise)});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
-                        {error, date: Date.now(), serviceName});
-                    res({error});
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
                 }
             }
         },
@@ -55,8 +56,8 @@ module.exports = {
                     res({result: await exerciseService.findByIdAndUpdate(id, exerciseObj)});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
-                        {error, date: Date.now(), serviceName});
-                    res({error});
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
                 }
             }
         },

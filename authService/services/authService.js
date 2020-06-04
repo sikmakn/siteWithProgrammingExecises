@@ -2,15 +2,24 @@ const authDataRepository = require('../db/repositories/authDataRepository');
 const {CONCURRENT_AUTHORIZATION_LIMIT, EXPIRES_HOURS, JWT_SECRET} = require('../config');
 const jwt = require('jsonwebtoken');
 const {v4: uuidv4} = require('uuid');
-const {rpcQueues, getChannel} = require('../amqpHandler');
-const {rpcServices} = require('../options');
+const {rpcQueues, getChannel, publish} = require('../amqpHandler');
+const {rpcServices, pubExchanges, serviceName} = require('../options');
 const userServiceRPC = rpcQueues[rpcServices.USER_SERVICE.serviceName];
 const userControllers = rpcServices.USER_SERVICE.controllers.user;
 const schedule = require('node-schedule');
+const {serializeError} = require('serialize-error');
 
 function startRemoveExpiresSchedule() {
     schedule.scheduleJob({hour: 1}, async function () {
-        await authDataRepository.deleteExpired();
+        try {
+            await authDataRepository.deleteExpired();
+        } catch (error) {
+            await publish(await getChannel(), pubExchanges.error, {
+                error: serializeError(error),
+                date: Date.now(),
+                serviceName,
+            });
+        }
     })
 }
 

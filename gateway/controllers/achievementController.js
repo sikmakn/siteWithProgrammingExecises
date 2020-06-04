@@ -20,25 +20,25 @@ router.get('/:id', asyncHandler(async (req, res) => {
 router.post('/', adminValidate,
     upload.fields([{name: 'achievementImg'}, {name: 'previewImg'}]),
     asyncHandler(async (req, res) => {
-        const channel = await getChannel();
-        const answer = await progressServiceRPC[progressControllers.achievement](channel, 'create', {
-            conditions: JSON.parse(req.body.conditions),
-            file: req.files.achievementImg[0],
-            description: req.body.description,
-            name: req.body.name,
-            previewFile: req.files.previewImg[0],
-        });
+        const answer = await progressServiceRPC[progressControllers.achievement](await getChannel(),
+            'create', {
+                conditions: JSON.parse(req.body.conditions),
+                file: req.files.achievementImg[0],
+                description: req.body.description,
+                name: req.body.name,
+                previewFile: req.files.previewImg[0],
+            });
         res.json(answer.result);
     }));
 
 router.put('/:id', adminValidate, asyncHandler(async (req, res) => {
-    const channel = await getChannel();
-    const answer = await progressServiceRPC[progressControllers.achievement](channel, 'updateAchievementFile', {
-        id: req.params.id,
-        name: req.body.name,
-        description: req.body.description,
-        conditions: JSON.parse(req.body.conditions),
-    });
+    const answer = await progressServiceRPC[progressControllers.achievement](await getChannel(),
+        'updateAchievementFile', {
+            id: req.params.id,
+            name: req.body.name,
+            description: req.body.description,
+            conditions: JSON.parse(req.body.conditions),
+        });
     res.json(answer.result);
 }));
 
