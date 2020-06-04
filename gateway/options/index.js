@@ -1,22 +1,13 @@
-const loggerOptions = {//todo
-    filename: './log/application-%DATE%.log',
-    datePattern: 'YYYY-MM-DD',
-    zippedArchive: true,
-    maxSize: '20m',
-    maxFiles: '14d'
-};
-
-
 const rpcServices = {
     WEB_SERVICE: {
-        serviceName: 'webServiceTestQ',
+        serviceName: 'webServiceQ',
         controllers: {
             theme: 'theme',
             exercise: 'exercise',
         },
     },
     PROGRESS_SERVICE: {
-        serviceName: 'userProgressServiceTestQ',
+        serviceName: 'userProgressServiceQ',
         controllers: {
             achievement: 'achievement',
             exerciseResult: 'exerciseResult',
@@ -24,17 +15,23 @@ const rpcServices = {
         },
     },
     USER_SERVICE: {
-        serviceName: 'userServiceTestQ',
+        serviceName: 'userServiceQ',
         controllers: {
             user: 'user',
         }
     },
     AUTH_SERVICE: {
-        serviceName: 'authServiceTestQ',
+        serviceName: 'authServiceQ',
         controllers: {
             auth: 'auth',
         }
-    }
+    },
+    LOG_SERVICE: {
+        serviceName: 'loggingServiceQ',
+        controllers: {
+            log: 'log',
+        }
+    },
 };
 
 const pubExchanges = {
@@ -44,5 +41,5 @@ const pubExchanges = {
 module.exports = {
     rpcServices,
     pubExchanges,
-    replyRPCQueueName:'gatewayReply',
+    replyRPCQueueName: 'gatewayReply',
 };

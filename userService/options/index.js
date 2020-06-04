@@ -9,10 +9,12 @@ const mongooseUpdateParams = {new: true, omitUndefined: true};
 
 const pubExchanges = {
     blockUser: 'blockUser',
+    error: 'error',
 };
 
 module.exports = {
-    rpcServiceName: 'userServiceTestQ',
+    rpcServiceName: 'userServiceQ',
+    serviceName: 'userService',
     mongooseUpdateParams,
     mongoOptions,
     pubExchanges,

@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 const asyncHandler = require('express-async-handler');
 const {rpcServices, pubExchanges} = require('../options');
 const {rpcQueues, publish, getChannel} = require('../amqpHandler');

@@ -5,22 +5,45 @@ const jwt = require('jsonwebtoken');
 const {addToGroup, deleteByElementId} = require('../connectionMap');
 const {getToken} = require('../helpers/getToken');
 const newUserAchievementsService = require('../services/newUserAchievementsService');
+const {pubExchanges, serviceName} = require('../options');
+const {publish, getChannel} = require('../amqpHandler');
 
 const wss = new WebSocket.Server({port: PORT});
 
 wss.on('connection', async function connection(ws, req) {
-    let wsId = uuid();
+    try {
+        let wsId = uuid();
 
-    const token = getToken(req.headers.cookie);
-    if (!token) return;
-    const {userId} = jwt.decode(token);
-    addToGroup({userId, wsId, ws});
+        const token = getToken(req.headers.cookie);
+        if (!token) return;
 
-    const count = await newUserAchievementsService.getCount({userId});
-    if (count) ws.send(count);
+        const {userId} = jwt.decode(token);
+        addToGroup({userId, wsId, ws});
 
-    ws.on('message', async () => await newUserAchievementsService.readNotification({userId}));
-    ws.on('close', () => deleteByElementId({userId, wsId}))
+        const count = await newUserAchievementsService.getCount({userId});
+        if (count) ws.send(count);
+
+        ws.on('message', async () => {
+            try {
+                await newUserAchievementsService.readNotification({userId});
+            } catch (error) {
+                await publish(await getChannel(), pubExchanges.error,
+                    {error, date: Date.now(), serviceName});
+            }
+        });
+        ws.on('close', async () => {
+            try {
+                deleteByElementId({userId, wsId});
+            } catch (error) {
+                await publish(await getChannel(), pubExchanges.error,
+                    {error, date: Date.now(), serviceName});
+            }
+        });
+
+    } catch (error) {
+        await publish(await getChannel(), pubExchanges.error,
+            {error, date: Date.now(), serviceName});
+    }
 });
 
 module.exports = {wss};

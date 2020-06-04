@@ -14,11 +14,13 @@ const fileDb = {
 
 const pubExchanges = {
     newUserAchievement: 'newUserAchievement',
+    error: 'error',
 };
 
 module.exports = {
     achievementFields: ["themeId", "result", "difficulty"],
-    rpcServiceName: 'userProgressServiceTestQ',
+    rpcServiceName: 'userProgressServiceQ',
+    serviceName: 'userProgressService',
     mongooseUpdateParams,
     mongoOptions,
     fileDb,

@@ -41,9 +41,8 @@ function sendAnswer(answer, channel, replyTo, correlationId) {
 
 module.exports = {
     setup: (channel) => {
-        if (rpcServiceName) {
-            const rpcControllers = require('../../rpcControllers');
-            setupConsume(channel, rpcControllers);
-        }
+        if (!rpcServiceName) return;
+        const rpcControllers = require('../../rpcControllers');
+        setupConsume(channel, rpcControllers);
     }
 };

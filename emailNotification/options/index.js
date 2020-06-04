@@ -7,8 +7,12 @@ const emailTemplates = {
     verifyUserObj: {subject: 'Подтверждение аккаунта'}
 };
 
+const pubExchanges = {error: 'error'};
+
 module.exports = {
     rpcServiceName: 'emailNotificationService',
+    serviceName: 'emailNotification',
+    pubExchanges,
     subExchanges,
     emailTemplates,
     replyRPCQueueName: 'emailNotificationServiceReply',

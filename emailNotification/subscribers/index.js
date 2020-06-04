@@ -1,4 +1,7 @@
 const emailService = require('../services/emailService');
+const {pubExchanges, serviceName} = require('../options');
+const {publish, getChannel} = require('../amqpHandler');
+
 module.exports = [
     {
         subExchange: 'blockUser',
@@ -9,9 +12,9 @@ module.exports = [
                 } else {
                     await emailService.sendUnblockMail(content);
                 }
-            } catch (e) {
-                console.log('subController');
-                console.log(e);  //todo add logs
+            } catch (error) {
+                await publish(await getChannel(), pubExchanges.error,
+                    {error, date: Date.now(), serviceName});
             }
         },
     },
