@@ -5,14 +5,14 @@ const {getRandomString} = require('../helpers/randomString');
 const {publish, getChannel} = require('../amqpHandler');
 const {pubExchanges} = require('../options');
 
-async function create({username, password, email, status = 'free', isBlocked = false}) {
+async function create({username, password, email, role = 'free', isBlocked = false}) {
     const {hashedPassword, salt} = await createPassword(password);
     const newUser = await userRepository.create({
         username,
         password: hashedPassword,
         salt,
         isBlocked,
-        status,
+        role,
         email,
     });
     return newUser._doc;
@@ -47,8 +47,8 @@ async function updateBlocking({username, isBlocked = true}) {
     return (await userRepository.updateUser({username, isBlocked}))?._doc;
 }
 
-async function updateStatus({username, status = 'free'}) {
-    return (await userRepository.updateUser({username, status}))?._doc;
+async function updateRole({username, role = 'free'}) {
+    return (await userRepository.updateUser({username, role}))?._doc;
 }
 
 async function updatePersonalInfo({username, password, oldPassword, email}) {
@@ -70,7 +70,7 @@ async function updatePassword({username, password}) {
 module.exports = {
     create,
     validate,
-    updateStatus,
+    updateRole,
     updateBlocking,
     findByUsername,
     findByIdentityData,

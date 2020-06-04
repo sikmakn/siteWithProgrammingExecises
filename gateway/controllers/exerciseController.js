@@ -6,7 +6,7 @@ const webServiceRPC = rpcQueues[rpcServices.WEB_SERVICE.serviceName];
 const progressServiceRPC = rpcQueues[rpcServices.PROGRESS_SERVICE.serviceName];
 const webServiceControllers = rpcServices.WEB_SERVICE.controllers;
 const progressServiceControllers = rpcServices.PROGRESS_SERVICE.controllers;
-const {decodeToken} = require('../helpers/auth');
+const {decodeToken, adminValidate} = require('../helpers/auth');
 
 const router = express.Router();
 
@@ -31,7 +31,7 @@ router.post('/:exerciseId/test', asyncHandler(async (req, res) => {
     res.json(results);
 }));
 
-router.patch('/:id', asyncHandler(async (req, res) => {
+router.patch('/:id', adminValidate, asyncHandler(async (req, res) => {
     const channel = await getChannel();
     const {result: updatedExercise} = await webServiceRPC[webServiceControllers.exercise](channel, 'updateById', {
         id: req.params.id,
@@ -40,7 +40,7 @@ router.patch('/:id', asyncHandler(async (req, res) => {
     res.json(updatedExercise);
 }));
 
-router.post('/', asyncHandler(async (req, res) => {
+router.post('/', adminValidate, asyncHandler(async (req, res) => {
     const channel = await getChannel();
     const {result: exercise} = await webServiceRPC[webServiceControllers.theme](channel, 'create', req.body);
     res.json(exercise);

@@ -1,5 +1,5 @@
 const userService = require('../services/userService');
-const {userSchema, statusSchema, passwordSchema, emailSchema} = require('../validationSchemas/userSchema');
+const {userSchema, roleSchema, passwordSchema, emailSchema} = require('../validationSchemas/userSchema');
 const {pubExchanges, serviceName} = require('../options');
 const {publish, getChannel} = require('../amqpHandler');
 
@@ -17,6 +17,19 @@ module.exports = {
                     }
                     await userService.create(userData);
                     res({result: true});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error, date: Date.now(), serviceName});
+                    res({error});
+                }
+            }
+        },
+        {
+            name: 'getRole',
+            method: async ({username}, res) => {
+                try {
+                    const {role} = await userService.findByUsername(username);
+                    res({result: role});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
                         {error, date: Date.now(), serviceName});
@@ -87,13 +100,13 @@ module.exports = {
             }
         },
         {
-            name: 'updateStatus',
+            name: 'updateRole',
             method: async (msg, res) => {
                 try {
-                    const status = await statusSchema.validateAsync(msg.status);
-                    await userService.updateStatus({
+                    const role = await roleSchema.validateAsync(msg.role);
+                    await userService.updateRole({
                         username: msg.username,
-                        status
+                        role
                     });
                     res({result: true});
                 } catch (error) {

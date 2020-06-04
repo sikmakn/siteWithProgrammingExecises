@@ -62,12 +62,15 @@ router.post('/login', asyncHandler(async (req, res) => {
         username: req.body.username,
         password: req.body.password,
     });
-
+    console.log(req.body.username);
     if (!isValid) {
         res.render('login.hbs', {layout: 'empty.hbs', isNonValid: true});
         return;
     }
+    const {result: role} = await userServiceRPC[userControllers.user](channel, 'getRole',
+        {username: req.body.username});
     const {result: token} = await authServiceRPC[authController](channel, 'login', {
+        role,
         userId: req.body.username,
         fingerPrint: req.body.fingerprint,
     });

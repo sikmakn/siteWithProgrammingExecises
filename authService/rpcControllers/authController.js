@@ -9,13 +9,12 @@ module.exports = {
             name: 'login',
             method: async (msg, res) => {
                 try {
-                    let {userId, fingerPrint} = msg;
+                    let {userId, fingerPrint, role} = msg;
                     if (await authService.isTooManyAuth(userId)) {
                         await authService.blockUser(userId);
                         return res({error: new Error('too many concurrent auth by user')});
                     }
-                    const token = await authService.createToken({userId, fingerPrint});
-                    res({result: token});
+                    res({result: await authService.createToken({userId, fingerPrint, role})});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
                         {error, date: Date.now(), serviceName});
