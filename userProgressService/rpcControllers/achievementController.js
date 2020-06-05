@@ -3,6 +3,7 @@ const userAchievementService = require('../services/userAchievementService');
 const {pubExchanges, serviceName} = require('../options');
 const {publish, getChannel} = require('../amqpHandler');
 const {serializeError} = require('serialize-error');
+const {Types} = require('mongoose');
 
 module.exports = {
     name: 'achievement',
@@ -26,7 +27,14 @@ module.exports = {
             method: async (msg, res) => {
                 try {
                     const {id} = msg;
-                    const {name, description, _id, fileId, previewFileId} = await achievementService.findById(id);
+                    if (!Types.ObjectId.isValid(id))
+                        return res({error: serializeError(new Error('Not valid ObjectId'))});
+
+                    const achievement = await achievementService.findById(id);
+                    if (!achievement)
+                        return res({error: serializeError(new Error('Not found achievement'))});
+
+                    const {name, description, _id, fileId, previewFileId} = achievement;
                     res({result: {name, description, _id, fileId, previewFileId}});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
@@ -40,7 +48,13 @@ module.exports = {
             method: async (msg, res) => {
                 try {
                     const {id} = msg;
-                    res({result: await achievementService.findFile(id)});
+                    if (!Types.ObjectId.isValid(id))
+                        return res({error: serializeError(new Error('Not valid ObjectId'))});
+
+                    const file = await achievementService.findFile(id);
+                    if (file) return res({result: file});
+
+                    res({error: serializeError(new Error('Not found file'))});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
                         {error: serializeError(error), date: Date.now(), serviceName});

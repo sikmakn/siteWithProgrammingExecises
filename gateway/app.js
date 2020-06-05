@@ -56,8 +56,7 @@ app.use(async (error, req, res, next) => {
         serviceName,
     });
 
-    res.status(500);
-    res.send('Internal Server Error');
+    res.status(500).send('Internal Server Error');
 });
 
 app.listen(PORT);

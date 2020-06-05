@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 const asyncHandler = require('express-async-handler');
 const {rpcServices} = require('../options');
 const {rpcQueues, getChannel} = require('../amqpHandler');
@@ -12,9 +12,10 @@ const {adminValidate} = require('../helpers/auth');
 const router = express.Router();
 
 router.get('/:id', asyncHandler(async (req, res) => {
-    const answer = await progressServiceRPC[progressControllers.achievement](await getChannel(),
+    const {result} = await progressServiceRPC[progressControllers.achievement](await getChannel(),
         'getAchievement', {id: req.params.id});
-    res.json(answer.result);
+    if (result) return res.json(result);
+    res.status(500).send('Internal Server Error');
 }));
 
 router.post('/', adminValidate,
@@ -28,24 +29,26 @@ router.post('/', adminValidate,
                 name: req.body.name,
                 previewFile: req.files.previewImg[0],
             });
-        res.json(answer.result);
+        res.json(answer);
     }));
 
 router.put('/:id', adminValidate, asyncHandler(async (req, res) => {
     const answer = await progressServiceRPC[progressControllers.achievement](await getChannel(),
-        'updateAchievementFile', {
+        'updateAchievementById', {
             id: req.params.id,
             name: req.body.name,
             description: req.body.description,
             conditions: JSON.parse(req.body.conditions),
         });
-    res.json(answer.result);
+    return res.json(answer);
 }));
 
-router.get('/file/:id', asyncHandler(async (req, res, next) => {
+router.get('/file/:id', asyncHandler(async (req, res) => {
     const {result: file} = await progressServiceRPC[progressControllers.achievement](await getChannel(),
         'getAchievementFile', {id: req.params.id});
-    if (!file.buffer) return next();
+    if (!file || !file.buffer)
+        return res.status(500).send('Internal Server Error');
+
     res.set('Content-Type', file.contentType);
     const bufferStream = new stream.PassThrough();
     bufferStream.end(Buffer.from(file.buffer));

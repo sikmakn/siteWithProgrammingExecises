@@ -72,18 +72,6 @@ async function findMany({achievementForFind, count, sort, skip}) {//todo check
     return await find;
 }
 
-
-async function addConditions({id, conditions}) {//todo check
-    return await achievement.findByIdAndUpdate(id,
-        {$push: {'conditions': conditions}},
-        {upsert: true, ...mongooseUpdateParams});
-}
-
-async function deleteConditions({id, conditions}) {//todo check
-    return await achievement.findOneAndUpdate(id,
-        {$pull: {'conditions': conditions}}, mongooseUpdateParams);
-}
-
 async function updateAchievement({id, name, conditions, description}) {
     return await achievement.findByIdAndUpdate(id, {name, conditions, description}, mongooseUpdateParams);
 }
@@ -95,10 +83,8 @@ async function findById(id) {
 module.exports = {
     create,
     findById,
-    addConditions,
     findMany,
     findFile,
     updateFile,
-    deleteConditions,
     updateAchievement,
 };

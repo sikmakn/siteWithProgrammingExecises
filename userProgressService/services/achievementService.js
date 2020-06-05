@@ -8,8 +8,8 @@ async function findById(id) {
     return (await achievementRepository.findById(id))?._doc;
 }
 
-async function findFile(fileImg) {
-    return await achievementRepository.findFile(fileImg);
+async function findFile(fileId) {
+    return await achievementRepository.findFile(fileId);
 }
 
 async function findMany({achievementForFind, count, sort = {name: 1}, skip = 0}) {
