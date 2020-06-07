@@ -62,7 +62,7 @@ router.post('/login', asyncHandler(async (req, res) => {
         username: req.body.username,
         password: req.body.password,
     });
-    console.log(req.body.username);
+
     if (!isValid) {
         res.render('login.hbs', {layout: 'empty.hbs', isNonValid: true});
         return;

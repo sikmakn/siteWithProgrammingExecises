@@ -38,6 +38,7 @@ async function createAchievement({name, fileId, conditions, description, preview
 }
 
 async function updateFile({fileId, file}) {
+    fileId = mongoose.Types.ObjectId(fileId);
     return await MongoClient.connect(MONGODB_URI, mongoOptions).then(client => {
         const db = client.db(MONGODB_DB_NAME);
         const bucket = new GridFSBucket(db, {bucketName});
@@ -46,20 +47,20 @@ async function updateFile({fileId, file}) {
 }
 
 async function findFile(fileId) {
+    const _id = mongoose.Types.ObjectId(fileId);
     return await MongoClient.connect(MONGODB_URI, mongoOptions).then(client => {
         const db = client.db(MONGODB_DB_NAME);
         const bucket = new GridFSBucket(db, {bucketName});
-        return bucket.find({_id: mongoose.Types.ObjectId(fileId)})
-            .toArray().then(fileInfos => {
-                const [fileInfo] = fileInfos;
+        return bucket.find({_id})
+            .toArray().then(([fileInfo]) => {
+                if (!fileInfo) return;
+
                 const downloadStream = bucket.openDownloadStreamByName(fileInfo.filename);
                 const chunks = [];
                 downloadStream.on('data', ch => chunks.push(ch));
                 return new Promise(resolve => {
-                    downloadStream.on('close', () => {
-                        fileInfo.buffer = Buffer.concat(chunks);
-                        resolve(fileInfo);
-                    });
+                    downloadStream.on('close', () =>
+                        resolve({...fileInfo, buffer: Buffer.concat(chunks)}));
                 });
             });
     });

@@ -100,6 +100,9 @@ module.exports = {
             name: 'updateAchievementFile',
             method: async (msg, res) => {
                 try {
+                    const {fileId} = msg;
+                    if (!Types.ObjectId.isValid(fileId))
+                        return res({error: serializeError(new Error('Not valid fileId'))});
                     res({result: await achievementService.updateFile(msg)});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,

@@ -29,6 +29,7 @@ router.post('/', adminValidate,
                 name: req.body.name,
                 previewFile: req.files.previewImg[0],
             });
+        if (answer.error) res.status(500);
         res.json(answer);
     }));
 
@@ -40,7 +41,8 @@ router.put('/:id', adminValidate, asyncHandler(async (req, res) => {
             description: req.body.description,
             conditions: JSON.parse(req.body.conditions),
         });
-    return res.json(answer);
+    if (answer.error) res.status(500);
+    res.json(answer);
 }));
 
 router.get('/file/:id', asyncHandler(async (req, res) => {
@@ -56,15 +58,15 @@ router.get('/file/:id', asyncHandler(async (req, res) => {
 }));
 
 router.put('/file/:id', adminValidate,
-    upload.single('achievementIng'),
+    upload.single('achievementImg'),
     asyncHandler(async (req, res) => {
-        const {result: file} = await progressServiceRPC[progressControllers.achievement](await getChannel(),
+        const answer = await progressServiceRPC[progressControllers.achievement](await getChannel(),
             'updateAchievementFile', {
-                conditions: JSON.parse(req.body.conditions),
                 file: req.file,
                 fileId: req.params.id,
             });
-        res.json(file);
+        if (answer.error) res.status(500);
+        res.json(answer);
     }));
 
 module.exports = router;
