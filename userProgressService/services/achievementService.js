@@ -29,6 +29,14 @@ async function updateFile({fileId, file}) {
     return await achievementRepository.updateFile({fileId, file});
 }
 
+async function deleteAchievementById(id) {
+    return await achievementRepository.deleteAchievementById(id);
+}
+
+async function deleteFileById(id) {
+    return await achievementRepository.deleteFileById(id);
+}
+
 module.exports = {
     create,
     findById,
@@ -37,4 +45,6 @@ module.exports = {
     findFile,
     updateFile,
     findManyByIds,
+    deleteFileById,
+    deleteAchievementById,
 };

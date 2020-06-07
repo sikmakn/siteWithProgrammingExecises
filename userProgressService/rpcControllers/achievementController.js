@@ -31,8 +31,7 @@ module.exports = {
                         return res({error: serializeError(new Error('Not valid ObjectId'))});
 
                     const achievement = await achievementService.findById(id);
-                    if (!achievement)
-                        return res({error: serializeError(new Error('Not found achievement'))});
+                    if (!achievement) return res({result: achievement});
 
                     const {name, description, _id, fileId, previewFileId} = achievement;
                     res({result: {name, description, _id, fileId, previewFileId}});
@@ -104,6 +103,40 @@ module.exports = {
                     if (!Types.ObjectId.isValid(fileId))
                         return res({error: serializeError(new Error('Not valid fileId'))});
                     res({result: await achievementService.updateFile(msg)});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
+                }
+            }
+        },
+        {
+            name: 'deleteAchievementById',
+            method: async (msg, res) => {
+                try {
+                    const {id} = msg;
+                    if (!Types.ObjectId.isValid(id))
+                        return res({error: serializeError(new Error('Not valid id'))});
+                    const result = await Promise.all([
+                        achievementService.deleteAchievementById(id),
+                        userAchievementService.deleteAchievementFromAll(id),
+                    ]);
+                    res({result});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
+                }
+            }
+        },
+        {
+            name: 'deleteFileById',
+            method: async (msg, res) => {
+                try {
+                    const {id} = msg;
+                    if (!Types.ObjectId.isValid(id))
+                        return res({error: serializeError(new Error('Not valid id'))});
+                    res({result: await achievementService.deleteFileById(id)});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
                         {error: serializeError(error), date: Date.now(), serviceName});

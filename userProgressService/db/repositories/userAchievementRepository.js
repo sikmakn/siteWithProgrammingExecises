@@ -25,9 +25,15 @@ async function findByUsername(username) {
     return await userAchievements.findOne({username});
 }
 
+async function deleteAchievementFromAll(achievementId) {
+    return await userAchievements.updateMany({achievements: achievementId},
+        {$pull: {'achievements': achievementId}});
+}
+
 module.exports = {
     findByUsername,
     addAchievements,
     deleteAchievements,
+    deleteAchievementFromAll,
     addAchievementsToManyUsers,
 };

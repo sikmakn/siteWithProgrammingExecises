@@ -62,12 +62,17 @@ async function addByConditions(conditions, achievementId) {
         return await addAchievementsToManyUsers({usernames, achievementIds: [achievementId]});
 }
 
+async function deleteAchievementFromAll(achievementId) {
+    return await userAchievementRepository.deleteAchievementFromAll(achievementId);
+}
+
 module.exports = {
     addByUsername,
     findByUsername,
     addByConditions,
     addAchievements,
     deleteAchievements,
+    deleteAchievementFromAll,
     addAchievementsToManyUsers,
 };
 
