@@ -32,6 +32,9 @@ module.exports = {
             method: async (msg, res) => {
                 try {
                     const {themeId, difficulty} = msg;
+                    if (!Types.ObjectId.isValid(themeId))
+                        return res({error: serializeError(new Error('Not valid themeId'))});
+
                     const exercises = await exerciseService.findByThemeId(themeId, difficulty);
                     res({result: exercises.map(ex => exerciseMapper.fromExerciseToOutObj(ex))});
                 } catch (error) {
@@ -67,6 +70,20 @@ module.exports = {
 
                     const exerciseObj = exerciseMapper.fromObjToExerciseObj(exercise);
                     res({result: await exerciseService.findByIdAndUpdate(id, exerciseObj)});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
+                }
+            }
+        },
+        {
+            name: 'deleteById',
+            method: async ({id}, res) => {
+                try {
+                    if (!Types.ObjectId.isValid(id))
+                        return res({error: serializeError(new Error('Not valid id'))});
+                    res({result: await exerciseService.deleteById(id)});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
                         {error: serializeError(error), date: Date.now(), serviceName});

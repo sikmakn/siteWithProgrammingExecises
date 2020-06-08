@@ -9,6 +9,47 @@ async function makeTests(tests, language, sourceCode) {
     return Promise.all(results);
 }
 
+async function create(newExercise) {
+    return await exerciseRepository.create(newExercise);
+}
+
+async function findById(id) {
+    return await exerciseRepository.findById(id);
+}
+
+async function findByThemeId(themeId, difficulty) {
+    return await exerciseRepository.findByThemeId(themeId, difficulty);
+}
+
+async function findByIdAndUpdate(id, updateTheme) {
+    return await exerciseRepository.findByIdAndUpdate(id, updateTheme);
+}
+
+async function deleteById(id) {
+    const deleted = await exerciseRepository.deleteById(id);
+    if (!deleted) return deleted;
+    const modified = await exerciseRepository.updateMany({
+            number: {$gt: deleted.number},
+            themeId: deleted.themeId,
+        },
+        {$inc: {number: -1}});
+    return {deleted, modified};
+}
+
+async function deleteManyByThemeId(themeId){
+    return await exerciseRepository.deleteMany({themeId})
+}
+
+module.exports = {
+    create,
+    findById,
+    makeTests,
+    deleteById,
+    findByThemeId,
+    findByIdAndUpdate,
+    deleteManyByThemeId,
+};
+
 async function makeTest(sourceCode, language, test) {
     const {additionalCode, output, input} = test;
     if (additionalCode) sourceCode += additionalCode;
@@ -27,27 +68,3 @@ async function makeTest(sourceCode, language, test) {
 function getResultName(statusId) {
     return compilerOptions[statusId] ?? compilerOptions.default;
 }
-
-async function create(newExercise) {
-    return (await exerciseRepository.create(newExercise))?._doc;
-}
-
-async function findById(id) {
-    return (await exerciseRepository.findById(id))?._doc;
-}
-
-async function findByThemeId(themeId, difficulty) {
-    return await exerciseRepository.findByThemeId(themeId, difficulty);
-}
-
-async function findByIdAndUpdate(id, updateTheme) {
-    return (await exerciseRepository.findByIdAndUpdate(id, updateTheme))?._doc;
-}
-
-module.exports = {
-    create,
-    findById,
-    findByIdAndUpdate,
-    findByThemeId,
-    makeTests,
-};

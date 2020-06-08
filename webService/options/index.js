@@ -2,11 +2,12 @@ const languages = ['js', 'python', 'net'];
 
 const langOptions = {
     'js': {
-        readLine: `fs=require('fs');
-            let params = fs.readFileSync('/dev/stdin')
-                .toString().split("\\n");
-             let countForPrompt = 0;
-            const prompt = ()=> params[countForPrompt++];`,
+        readLine: `const prompt = (function (){
+                                        const fs=require('fs');
+                                        const params = fs.readFileSync('/dev/stdin').toString().split("\\n");
+                                        let countForPrompt = 0;
+                                        return () => params[countForPrompt++];
+                })();`,
         languageId: 63,
     },
 };
