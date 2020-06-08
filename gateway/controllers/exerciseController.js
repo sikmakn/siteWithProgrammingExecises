@@ -46,7 +46,9 @@ router.patch('/:id', adminValidate, asyncHandler(async (req, res) => {
 
 router.post('/', adminValidate, asyncHandler(async (req, res) => {
     const channel = await getChannel();
-    const answer = await webServiceRPC[webThemeController](channel, 'create', req.body);
+    const newExercise = {...req.body};
+    newExercise.tests = JSON.parse(newExercise.tests);
+    const answer = await webServiceRPC[webExerciseController](channel, 'create', newExercise);
     if (answer.error) res.status(500);
     res.json(answer);
 }));

@@ -5,7 +5,6 @@ function fromObjToExerciseObj(obj) {
         difficulty: obj.difficulty,
         themeId: obj.themeId,
         task: obj.task,
-        language: obj.language,
     };
     if (obj.tests) exercise.tests = testMapper.arrToTests(obj.tests);
     if (obj.number) exercise.number = obj.number;

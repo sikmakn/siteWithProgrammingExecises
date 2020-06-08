@@ -1,4 +1,5 @@
 const exerciseService = require('../services/exerciseService');
+const themeService = require('../services/themeService');
 const exerciseMapper = require('../Mappers/exerciseMapper');
 const {pubExchanges, serviceName} = require('../options');
 const {publish, getChannel} = require('../amqpHandler');
@@ -44,7 +45,10 @@ module.exports = {
             name: 'create',
             method: async (msg, res) => {
                 try {
-                    let newExercise = exerciseMapper.fromObjToExerciseObj(msg);
+                    const newExercise = exerciseMapper.fromObjToExerciseObj(msg);
+                    const theme = await themeService.findById(newExercise.themeId);
+                    if (!theme) return res({error: new Error('Theme is not exist')});
+                    newExercise.language = theme.language;
                     res({result: await exerciseService.create(newExercise)});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
@@ -58,6 +62,9 @@ module.exports = {
             method: async (msg, res) => {
                 try {
                     const {id, exercise} = msg;
+                    if (!Types.ObjectId.isValid(id))
+                        return res({error: serializeError(new Error('Not valid id'))});
+
                     const exerciseObj = exerciseMapper.fromObjToExerciseObj(exercise);
                     res({result: await exerciseService.findByIdAndUpdate(id, exerciseObj)});
                 } catch (error) {

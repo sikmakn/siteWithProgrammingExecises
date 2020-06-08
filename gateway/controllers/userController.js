@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 const asyncHandler = require('express-async-handler');
 const {rpcServices} = require('../options');
 const {rpcQueues, getChannel} = require('../amqpHandler');
@@ -15,13 +15,12 @@ router.get('/register', (req, res) =>
     res.render('register.hbs', {layout: 'empty.hbs'}));
 
 router.post('/register', asyncHandler(async (req, res) => {
+    const {username, password, email} = req.body;
     const channel = await getChannel();
-    const createRes = await userServiceRPC[userControllers.user](channel, 'create', {
-        username: req.body.username,
-        password: req.body.password,
-        email: req.body.email,
-    });
-    if (!createRes.result) return res.render('register.hbs', {layout: 'empty.hbs', isUsernameExist: true});
+    const createRes = await userServiceRPC[userControllers.user](channel, 'create', {username, password, email});
+
+    if (!createRes.result)
+        return res.render('register.hbs', {layout: 'empty.hbs', isUsernameExist: true});
 
     res.redirect('/user/login');
 }));
@@ -37,8 +36,7 @@ router.post('/login', asyncHandler(async (req, res) => {
 
     if (!isValid) return res.render('login.hbs', {layout: 'empty.hbs', isNonValid: true});
 
-    const {result: role} = await userServiceRPC[userControllers.user](channel, 'getRole',
-        {username: req.body.username});
+    const {result: role} = await userServiceRPC[userControllers.user](channel, 'getRole', {username});
 
     const {result: token} = await authServiceRPC[authController](channel, 'login',
         {fingerPrint: fingerprint, userId: username, role});
@@ -48,7 +46,7 @@ router.post('/login', asyncHandler(async (req, res) => {
     setToken(res, token);
     setFingerprint(res, req.body.fingerprint);
 
-    res.redirect('/user/achievements');
+    res.redirect('/achievement');
 }));
 
 router.get('/logout', asyncHandler(async (req, res) => {
@@ -70,22 +68,20 @@ router.get('/profile', asyncHandler(async (req, res) => {
 router.post('/profile', asyncHandler(async (req, res) => {
     if (!req.token) return res.redirect('/user/login');
 
+    const {oldPassword, password, email} = req.body;
     const channel = await getChannel();
     const {userId: username} = await decodeToken(req.token);
-    const answer = await userServiceRPC[userControllers.user](channel, 'updatePersonalInfo', {
-        username,
-        oldPassword: req.body.oldPassword,
-        password: req.body.password,
-        email: req.body.email,
-    });
-    const {email} = await userServiceRPC[userControllers.user](channel, 'getPersonalInfo', {username});
+    const answer = await userServiceRPC[userControllers.user](channel, 'updatePersonalInfo',
+        {username, oldPassword, password, email});
+
+    const {email: newEmail} = await userServiceRPC[userControllers.user](channel, 'getPersonalInfo', {username});
     res.render('profile.hbs', {
         layout: 'empty.hbs',
         isNotUpdated: !!answer.error,
         isUpdated: !!answer.result,
         isAuth: true,
         username,
-        email,
+        email: newEmail,
     });
 }));
 

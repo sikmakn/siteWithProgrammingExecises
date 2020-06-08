@@ -27,6 +27,7 @@ const exerciseScheme = new mongoose.Schema({
     },
     tests: {
         type: [exerciseTest.scheme],
+        required: true,
     }
 });
 exerciseScheme.plugin(autoIncrement.plugin, {
