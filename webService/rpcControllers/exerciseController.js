@@ -3,6 +3,7 @@ const exerciseMapper = require('../Mappers/exerciseMapper');
 const {pubExchanges, serviceName} = require('../options');
 const {publish, getChannel} = require('../amqpHandler');
 const {serializeError} = require('serialize-error');
+const {Types} = require('mongoose');
 
 module.exports = {
     name: 'exercise',
@@ -12,7 +13,12 @@ module.exports = {
             method: async (msg, res) => {
                 try {
                     const {id, sourceCode} = msg;
-                    res({result: await exerciseService.makeTests(id, sourceCode)});
+                    if (!Types.ObjectId.isValid(id))
+                        return res({error: serializeError(new Error('Not valid id'))});
+                    const exercise = await exerciseService.findById(id);
+                    if (!exercise) return res({error: new Error('not found exercise by this id')});
+                    const testResults = await exerciseService.makeTests(exercise.tests, exercise.language, sourceCode);
+                    res({result: testResults});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
                         {error: serializeError(error), date: Date.now(), serviceName});

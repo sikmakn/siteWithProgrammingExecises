@@ -8,34 +8,35 @@ const {adminValidate} = require('../helpers/auth');
 
 const router = express.Router();
 
-router.get('/:lang', asyncHandler(async (req, res) => {
+router.get('/:lang', asyncHandler(async (req, res, next) => {
     const channel = await getChannel();
     const {lang} = req.params;
     const {result: themesList} = await webServiceRPC[themeController](channel, 'getAllByLang', {lang});
-    const resObj = {
+    if (!themesList|| !themesList.length) return next();
+    res.render('themesList.hbs', {
         layout: 'themeSelectMain.hbs',
+        [`is${lang[0].toUpperCase() + lang.slice(1)}`]: true,
+        isAuth: !!req.token,
         themesList,
         lang,
-        isAuth: !!req.token,
-    };
-    const flagName = `is${lang[0].toUpperCase() + lang.slice(1)}`;
-    resObj[flagName] = true;
-    res.render('themesList.hbs', resObj);
+    });
 }));
 
 router.post('/', adminValidate, asyncHandler(async (req, res) => {
     const channel = await getChannel();
-    const {result: createdTheme} = await webServiceRPC[themeController](channel, 'create', req.body);
-    res.json(createdTheme);
+    const answer = await webServiceRPC[themeController](channel, 'create', req.body);
+    if (answer.error) res.status(500);
+    res.json(answer);
 }));
 
 router.patch('/:id', adminValidate, asyncHandler(async (req, res) => {
     const channel = await getChannel();
-    const {result: updatedTheme} = await webServiceRPC[themeController](channel, 'updateById', {
+    const answer = await webServiceRPC[themeController](channel, 'updateById', {
         id: req.params.id,
         theme: req.body,
     });
-    res.json(updatedTheme);
+    if (answer.error) res.status(500);
+    res.json(answer);
 }));
 
 module.exports = router;

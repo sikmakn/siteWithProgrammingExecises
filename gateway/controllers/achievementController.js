@@ -3,13 +3,37 @@ const asyncHandler = require('express-async-handler');
 const {rpcServices} = require('../options');
 const {rpcQueues, getChannel} = require('../amqpHandler');
 const progressServiceRPC = rpcQueues[rpcServices.PROGRESS_SERVICE.serviceName];
-const {achievement: achievementRPCController} = rpcServices.PROGRESS_SERVICE.controllers;
+const {achievement: achievementRPCController, userAchievement: userAchievementRPCController} = rpcServices.PROGRESS_SERVICE.controllers;
 const multer = require('multer');
 const upload = multer({storage: multer.memoryStorage()});
 const stream = require('stream');
 const {adminValidate} = require('../helpers/auth');
+const {decodeToken} = require('../helpers/auth');
 
 const router = express.Router();
+
+router.get('/', asyncHandler(async (req, res) => {
+    if (!req.token) {
+        res.redirect('/user/login');
+        return;
+    }
+    const channel = await getChannel();
+    const {userId: username} = await decodeToken(req.token);
+    let {result: achievements} = await progressServiceRPC[userAchievementRPCController](channel,
+        'getByUsername', {username});
+    if (!achievements) achievements = [];
+
+    let choosenAchievement = !req.query.achievementId ?
+        achievements[0] :
+        (await progressServiceRPC[achievementRPCController](channel,
+            'getAchievement', {id: req.query.achievementId})).result;
+    res.render('achievements.hbs', {
+        layout: 'empty.hbs',
+        isAuth: true,
+        achievements,
+        choosenAchievement,
+    });
+}));
 
 router.get('/many', adminValidate, asyncHandler(async (req, res) => {
     const sort = req.query.sortField

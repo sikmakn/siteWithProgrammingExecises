@@ -23,6 +23,7 @@
     text-transform: uppercase;
     width: 350px;
     height: 400px;
+    color: white;
     background: black;
     display: flex;
     flex-direction: column;

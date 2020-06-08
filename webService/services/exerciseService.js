@@ -4,8 +4,7 @@ const axios = require('axios');
 const {COMPILER_URI} = require('../config');
 const {langOptions, compilerOptions} = require('../options');
 
-async function makeTests(id, sourceCode) {
-    const {tests, language} = await exerciseRepository.findById(id);
+async function makeTests(tests, language, sourceCode){
     sourceCode = langOptions[language].readLine + sourceCode;
     const results = tests.map(test => makeTest(sourceCode, language, test));
     return Promise.all(results);
