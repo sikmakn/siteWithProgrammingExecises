@@ -24,9 +24,10 @@ router.get('/', asyncHandler(async (req, res) => {
     if (!achievements) achievements = [];
     let {result: newAchievementsIds} = await websocketNotificationService[notificationAchievementController](channel,
         'getNewUserAchievementsIdsByUserId', {userId});
-    achievements.forEach(ach => {
-        if (newAchievementsIds.some(id => id === ach._id)) ach.new = true;
-    });
+    if (newAchievementsIds)
+        achievements.forEach(ach => {
+            if (newAchievementsIds.some(id => id === ach._id)) ach.new = true;
+        });
     await websocketNotificationService[notificationAchievementController](channel,
         'readByUserId', {userId});
     res.render('achievements.hbs', {

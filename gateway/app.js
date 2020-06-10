@@ -49,14 +49,17 @@ app.use(authValidate, (req, res) => {
 
 const {serializeError} = require('serialize-error');
 app.use(async (error, req, res, next) => {
-    if (req.status === 401) return;
+    if (req.status === 401) return res.redirect('/user/login');
     await publish(await getChannel(), pubExchanges.error, {
         error: serializeError(error),
         date: Date.now(),
         serviceName,
     });
 
-    res.status(500).send('Internal Server Error');
+    res.status(500).render('500.hbs', {
+        layout: 'themeSelectMain.hbs',
+        isAuth: !!req.token,
+    })
 });
 
 app.listen(PORT);

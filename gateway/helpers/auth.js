@@ -49,9 +49,15 @@ async function authValidate(req, res, next) {
 }
 
 async function adminValidate(req, res, next) {
-    if (!req.token) return res.status(403).send();
+    if (!req.token) return res.status(403).render('403.hbs', {
+        layout: 'themeSelectMain.hbs',
+        isAuth: !!req.token,
+    });
     const {role} = jwt.decode(req.token);
-    if (role !== 'admin') return res.status(403).send();
+    if (role !== 'admin') return res.status(403).render('403.hbs', {
+        layout: 'themeSelectMain.hbs',
+        isAuth: !!req.token,
+    });
     next();
 }
 

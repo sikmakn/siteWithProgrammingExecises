@@ -18,10 +18,8 @@ router.post('/register', asyncHandler(async (req, res) => {
     const {username, password, email} = req.body;
     const channel = await getChannel();
     const createRes = await userServiceRPC[userControllers.user](channel, 'create', {username, password, email});
-
     if (!createRes.result)
         return res.render('register.hbs', {layout: 'empty.hbs', isUsernameExist: true});
-
     res.redirect('/user/login');
 }));
 
@@ -62,6 +60,8 @@ router.get('/profile', asyncHandler(async (req, res) => {
     const channel = await getChannel();
     const {userId: username} = await decodeToken(req.token);
     const {result} = await userServiceRPC[userControllers.user](channel, 'getPersonalInfo', {username});
+    if (!result)
+        return res.status(500).render('404.hbs', {layout: 'themeSelectMain.hbs', isAuth: !!req.token});
     res.render('profile.hbs', {layout: 'empty.hbs', email: result.email, username, isAuth: true});
 }));
 
