@@ -12,6 +12,7 @@ const pubExchanges = {error: 'error'};
 module.exports = {
     mongooseUpdateParams,
     mongoOptions,
+    rpcServiceName: 'websocketNotificationServiceQ',
     serviceName: 'websocketNotificationService',
     replyRPCQueueName: 'webSocketReply',
     pubExchanges,

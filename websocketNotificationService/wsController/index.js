@@ -22,14 +22,6 @@ wss.on('connection', async function connection(ws, req) {
         const count = await newUserAchievementsService.getCount({userId});
         if (count) ws.send(count);
 
-        ws.on('message', async () => {
-            try {
-                await newUserAchievementsService.readNotification({userId});
-            } catch (error) {
-                await publish(await getChannel(), pubExchanges.error,
-                    {error: serializeError(error), date: Date.now(), serviceName});
-            }
-        });
         ws.on('close', async () => {
             try {
                 deleteByElementId({userId, wsId});

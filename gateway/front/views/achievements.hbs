@@ -1,10 +1,13 @@
 <link rel="stylesheet" href="/styles/achievement.css">
 <div class="achievements">
+
     <div class="achievementsGrid">
         {{#each achievements}}
-            <img id="{{_id}}" src="/achievement/file/{{previewFileId}}" alt="ачивка">
+            <img id="{{_id}}" src="/achievement/file/{{previewFileId}}" alt="ачивка"
+                 {{#if new}}class="newAchievement"{{/if}}>
         {{/each}}
     </div>
+
     <div class="achievementFull" id="fullAchievement">
         {{#if choosenAchievement}}
             <h1>{{choosenAchievement.name}}</h1>

@@ -15,6 +15,10 @@ async function addAchievementsToManyUsers({usernames, achievementIds}) {
         {upsert: true, ...mongooseUpdateParams});
 }
 
+async function aggregate(aggregateConditions) {
+    return await userAchievements.aggregate(aggregateConditions);
+}
+
 async function deleteAchievements({username, achievementIds}) {
     return await userAchievements.findOneAndUpdate({username},
         {$pull: {'achievements': achievementIds}},
@@ -36,4 +40,5 @@ module.exports = {
     deleteAchievements,
     deleteAchievementFromAll,
     addAchievementsToManyUsers,
+    aggregate,
 };

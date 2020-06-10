@@ -3,6 +3,8 @@ const asyncHandler = require('express-async-handler');
 const {rpcServices} = require('../options');
 const {rpcQueues, getChannel} = require('../amqpHandler');
 const progressServiceRPC = rpcQueues[rpcServices.PROGRESS_SERVICE.serviceName];
+const websocketNotificationService = rpcQueues[rpcServices.WEBSOCKET_NOTIFICATION_SERVICE.serviceName];
+const {achievement: notificationAchievementController} = rpcServices.WEBSOCKET_NOTIFICATION_SERVICE.controllers;
 const {achievement: achievementRPCController, userAchievement: userAchievementRPCController} = rpcServices.PROGRESS_SERVICE.controllers;
 const multer = require('multer');
 const upload = multer({storage: multer.memoryStorage()});
@@ -13,25 +15,25 @@ const {decodeToken} = require('../helpers/auth');
 const router = express.Router();
 
 router.get('/', asyncHandler(async (req, res) => {
-    if (!req.token) {
-        res.redirect('/user/login');
-        return;
-    }
-    const channel = await getChannel();
-    const {userId: username} = await decodeToken(req.token);
-    let {result: achievements} = await progressServiceRPC[userAchievementRPCController](channel,
-        'getByUsername', {username});
-    if (!achievements) achievements = [];
+    if (!req.token) return res.redirect('/user/login');
 
-    let choosenAchievement = !req.query.achievementId ?
-        achievements[0] :
-        (await progressServiceRPC[achievementRPCController](channel,
-            'getAchievement', {id: req.query.achievementId})).result;
+    const channel = await getChannel();
+    const {userId} = await decodeToken(req.token);
+    let {result: achievements} = await progressServiceRPC[userAchievementRPCController](channel,
+        'getByUsername', {username: userId});
+    if (!achievements) achievements = [];
+    let {result: newAchievementsIds} = await websocketNotificationService[notificationAchievementController](channel,
+        'getNewUserAchievementsIdsByUserId', {userId});
+    achievements.forEach(ach => {
+        if (newAchievementsIds.some(id => id === ach._id)) ach.new = true;
+    });
+    await websocketNotificationService[notificationAchievementController](channel,
+        'readByUserId', {userId});
     res.render('achievements.hbs', {
         layout: 'empty.hbs',
         isAuth: true,
         achievements,
-        choosenAchievement,
+        choosenAchievement: achievements[0],
     });
 }));
 

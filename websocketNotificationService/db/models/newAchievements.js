@@ -6,11 +6,10 @@ const newAchievements = new mongoose.Schema({
         require: true,
         unique: true,
     },
-    count: {
-        type: mongoose.Number,
+    achievementIds: {
+        type: [mongoose.Types.ObjectId],
         require: true,
-        min: 1,
-    },
+    }
 });
 
 module.exports = {
