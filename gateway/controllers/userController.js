@@ -7,6 +7,7 @@ const userControllers = rpcServices.USER_SERVICE.controllers;
 const authServiceRPC = rpcQueues[rpcServices.AUTH_SERVICE.serviceName];
 const authController = rpcServices.AUTH_SERVICE.controllers.auth;
 const {setFingerprint, setToken} = require('../helpers/setToCookie');
+const {adminValidate} = require('../helpers/auth');
 const {decodeToken} = require('../helpers/auth');
 
 const router = express.Router();
@@ -83,6 +84,21 @@ router.post('/profile', asyncHandler(async (req, res) => {
         username,
         email: newEmail,
     });
+}));
+
+router.put('/', adminValidate, asyncHandler(async (req, res) => {
+    const {username, isBlocked, role, email} = req.body;
+    const answer = await userServiceRPC[userControllers.user](await getChannel(), 'update',
+        {username, isBlocked, role, email});
+    if (answer.error) res.status(500);
+    res.json(answer);
+}));
+
+router.delete('/:username', adminValidate, asyncHandler(async (req, res) => {
+    const answer = await userServiceRPC[userControllers.user](await getChannel(), 'delete',
+        {username: req.params.username});
+    if (answer.error) res.status(500);
+    res.json(answer);
 }));
 
 module.exports = router;

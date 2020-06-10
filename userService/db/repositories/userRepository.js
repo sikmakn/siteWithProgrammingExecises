@@ -20,20 +20,18 @@ async function findByIdentityData({username, email}) {
 
 async function updateUser({username, password, email, role, isBlocked, salt}) {
     return await user.findOneAndUpdate({username},
-        {
-            username,
-            password,
-            email,
-            role,
-            isBlocked,
-            salt,
-        },
+        {username, password, email, role, isBlocked, salt},
         mongooseUpdateParams);
+}
+
+async function removeUser({username}) {
+    return await user.findOneAndDelete({username});
 }
 
 module.exports = {
     create,
     findById,
+    removeUser,
     findByUsername,
     findByIdentityData,
     updateUser,

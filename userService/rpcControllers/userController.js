@@ -111,11 +111,38 @@ module.exports = {
             }
         },
         {
+            name: 'update',
+            method: async ({username, role, isBlocked, email}, res) => {
+                try {
+                    if (email) await emailSchema.validateAsync(email);
+                    if (role) await roleSchema.validateAsync(role);
+                    await userService.update({username, role, isBlocked, email});
+                    res({result: true});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
+                }
+            }
+        },
+        {
             name: 'updateBlock',
             method: async (msg, res) => {
                 try {
                     await userService.updateBlocking(msg);
                     res({result: true});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
+                }
+            }
+        },
+        {
+            name: 'delete',
+            method: async ({username}, res) => {
+                try {
+                    res({result: await userService.removeUser({username})});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
                         {error: serializeError(error), date: Date.now(), serviceName});

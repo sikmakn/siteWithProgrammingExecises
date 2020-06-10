@@ -51,6 +51,10 @@ async function updateRole({username, role = 'free'}) {
     return (await userRepository.updateUser({username, role}))?._doc;
 }
 
+async function update({username, role, isBlocked, email}) {
+    return (await userRepository.updateUser({username, role, isBlocked, email}))?._doc;
+}
+
 async function updatePersonalInfo({username, password, oldPassword, email}) {
     const updateObj = {username, email};
     if (password) {
@@ -67,10 +71,16 @@ async function updatePassword({username, password}) {
     return (await userRepository.updateUser({username, password: hashedPassword, salt}))?._doc;
 }
 
+async function removeUser({username}) {
+    return await userRepository.removeUser({username});
+}
+
 module.exports = {
     create,
+    update,
     validate,
     updateRole,
+    removeUser,
     updateBlocking,
     findByUsername,
     findByIdentityData,
