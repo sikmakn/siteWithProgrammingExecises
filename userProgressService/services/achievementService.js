@@ -8,8 +8,8 @@ async function findById(id) {
     return (await achievementRepository.findById(id))?._doc;
 }
 
-async function findFile(fileImg) {
-    return await achievementRepository.findFile(fileImg);
+async function findFile(fileId) {
+    return await achievementRepository.findFile(fileId);
 }
 
 async function findMany({achievementForFind, count, sort = {name: 1}, skip = 0}) {
@@ -29,6 +29,14 @@ async function updateFile({fileId, file}) {
     return await achievementRepository.updateFile({fileId, file});
 }
 
+async function deleteAchievementById(id) {
+    return await achievementRepository.deleteAchievementById(id);
+}
+
+async function deleteFileById(id) {
+    return await achievementRepository.deleteFileById(id);
+}
+
 module.exports = {
     create,
     findById,
@@ -37,4 +45,6 @@ module.exports = {
     findFile,
     updateFile,
     findManyByIds,
+    deleteFileById,
+    deleteAchievementById,
 };

@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const autoIncrement = require('mongoose-auto-increment');
 
 const themeScheme = new mongoose.Schema({
     language: {
@@ -17,13 +16,8 @@ const themeScheme = new mongoose.Schema({
     },
     theoryLink: {
         type: String,
+        required: true,
     }
-});
-themeScheme.plugin(autoIncrement.plugin, {
-    model: 'Theme',
-    field: 'number',
-    startAt: 1,
-    incrementBy: 1,
 });
 
 module.exports = {

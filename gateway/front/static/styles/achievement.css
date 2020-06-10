@@ -5,6 +5,17 @@
     align-items: flex-start;
 }
 
+.newAchievement {
+    border: 2px solid #e0b620;
+}
+
+.emptyAchievements h1{
+    font-size: 40px;
+}
+.emptyAchievements p{
+    margin-top: 20px;
+    font-size: 24px;
+}
 
 .achievementsGrid {
     width: 50%;

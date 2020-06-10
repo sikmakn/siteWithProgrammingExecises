@@ -2,15 +2,24 @@ const authDataRepository = require('../db/repositories/authDataRepository');
 const {CONCURRENT_AUTHORIZATION_LIMIT, EXPIRES_HOURS, JWT_SECRET} = require('../config');
 const jwt = require('jsonwebtoken');
 const {v4: uuidv4} = require('uuid');
-const {rpcQueues, getChannel} = require('../amqpHandler');
-const {rpcServices} = require('../options');
+const {rpcQueues, getChannel, publish} = require('../amqpHandler');
+const {rpcServices, pubExchanges, serviceName} = require('../options');
 const userServiceRPC = rpcQueues[rpcServices.USER_SERVICE.serviceName];
 const userControllers = rpcServices.USER_SERVICE.controllers.user;
 const schedule = require('node-schedule');
+const {serializeError} = require('serialize-error');
 
 function startRemoveExpiresSchedule() {
     schedule.scheduleJob({hour: 1}, async function () {
-        await authDataRepository.deleteExpired();
+        try {
+            await authDataRepository.deleteExpired();
+        } catch (error) {
+            await publish(await getChannel(), pubExchanges.error, {
+                error: serializeError(error),
+                date: Date.now(),
+                serviceName,
+            });
+        }
     })
 }
 
@@ -23,22 +32,26 @@ async function blockUser(userId) {
     return await userServiceRPC[userControllers](await getChannel(), 'updateBlock', {username: userId});
 }
 
-async function createToken({userId, fingerPrint}) {
-    const token = sign({userId, fingerPrint});
+async function createToken({userId, fingerPrint, role}) {
+    const token = sign({userId, fingerPrint, role});
     await authDataRepository.create({userId, fingerPrint, expiresIn: Date.now() + EXPIRES_HOURS * 60 * 60});
     return token;
 }
 
 async function isValidToken({token, fingerPrint}) {
-    const {fingerPrint: oldFingerPrint} = jwt.verify(token, JWT_SECRET);
-    return fingerPrint === oldFingerPrint;
+    try {
+        const {fingerPrint: oldFingerPrint} = jwt.verify(token, JWT_SECRET);
+        return fingerPrint === oldFingerPrint;
+    } catch (e) {
+        return false;
+    }
 }
 
 async function updateToken(token) {
-    const {userId, fingerPrint} = jwt.decode(token);
+    const {userId, fingerPrint, role} = jwt.decode(token);
 
     await authDataRepository.updateAuthData({userId, fingerPrint, expiresIn: Date.now() + EXPIRES_HOURS * 60 * 60});
-    return sign({userId, fingerPrint})
+    return sign({userId, fingerPrint, role})
 }
 
 async function deleteOneAuthData({userId, fingerPrint}) {
@@ -50,7 +63,13 @@ async function logOutUser(userId) {
 }
 
 async function logOutByToken(token) {
-    const {userId, fingerPrint} = jwt.verify(token, JWT_SECRET);
+    let userId, fingerPrint;
+    try {
+        ({userId, fingerPrint} = jwt.verify(token, JWT_SECRET));
+    } catch (e) {
+        if (e.name !== 'TokenExpiredError') return false;
+        ({userId, fingerPrint} = jwt.decode(token));
+    }
     const user = await authDataRepository.findOne({userId, fingerPrint});
     if (!user) return false;
     await authDataRepository.deleteOneAuthData({userId, fingerPrint});
@@ -69,8 +88,8 @@ module.exports = {
     startRemoveExpiresSchedule,
 };
 
-function sign({userId, fingerPrint}) {
-    return jwt.sign({userId, fingerPrint, id: uuidv4()},
+function sign({userId, fingerPrint, role}) {
+    return jwt.sign({userId, fingerPrint, role, id: uuidv4()},
         JWT_SECRET,
         {expiresIn: EXPIRES_HOURS + 'h'});
 }

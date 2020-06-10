@@ -2,6 +2,8 @@ const achievementService = require('../services/achievementService');
 const userAchievementService = require('../services/userAchievementService');
 const {pubExchanges, serviceName} = require('../options');
 const {publish, getChannel} = require('../amqpHandler');
+const {serializeError} = require('serialize-error');
+const {Types} = require('mongoose');
 
 module.exports = {
     name: 'achievement',
@@ -15,8 +17,8 @@ module.exports = {
                     res({result: achievement});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
-                        {error, date: Date.now(), serviceName});
-                    res({error});
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
                 }
             }
         },
@@ -25,12 +27,18 @@ module.exports = {
             method: async (msg, res) => {
                 try {
                     const {id} = msg;
-                    const {name, description, _id, fileId, previewFileId} = await achievementService.findById(id);
+                    if (!Types.ObjectId.isValid(id))
+                        return res({error: serializeError(new Error('Not valid ObjectId'))});
+
+                    const achievement = await achievementService.findById(id);
+                    if (!achievement) return res({result: achievement});
+
+                    const {name, description, _id, fileId, previewFileId} = achievement;
                     res({result: {name, description, _id, fileId, previewFileId}});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
-                        {error, date: Date.now(), serviceName});
-                    res({error});
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
                 }
             }
         },
@@ -39,11 +47,17 @@ module.exports = {
             method: async (msg, res) => {
                 try {
                     const {id} = msg;
-                    res({result: await achievementService.findFile(id)});
+                    if (!Types.ObjectId.isValid(id))
+                        return res({error: serializeError(new Error('Not valid ObjectId'))});
+
+                    const file = await achievementService.findFile(id);
+                    if (file) return res({result: file});
+
+                    res({error: serializeError(new Error('Not found file'))});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
-                        {error, date: Date.now(), serviceName});
-                    res({error});
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
                 }
             }
         },
@@ -62,8 +76,8 @@ module.exports = {
                     res({result: results});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
-                        {error, date: Date.now(), serviceName});
-                    res({error});
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
                 }
             }
         },
@@ -76,8 +90,8 @@ module.exports = {
                     res({result: updatedAchievement});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
-                        {error, date: Date.now(), serviceName});
-                    res({error});
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
                 }
             }
         },
@@ -85,11 +99,48 @@ module.exports = {
             name: 'updateAchievementFile',
             method: async (msg, res) => {
                 try {
+                    const {fileId} = msg;
+                    if (!Types.ObjectId.isValid(fileId))
+                        return res({error: serializeError(new Error('Not valid fileId'))});
                     res({result: await achievementService.updateFile(msg)});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
-                        {error, date: Date.now(), serviceName});
-                    res({error});
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
+                }
+            }
+        },
+        {
+            name: 'deleteAchievementById',
+            method: async (msg, res) => {
+                try {
+                    const {id} = msg;
+                    if (!Types.ObjectId.isValid(id))
+                        return res({error: serializeError(new Error('Not valid id'))});
+                    const result = await Promise.all([
+                        achievementService.deleteAchievementById(id),
+                        userAchievementService.deleteAchievementFromAll(id),
+                    ]);
+                    res({result});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
+                }
+            }
+        },
+        {
+            name: 'deleteFileById',
+            method: async (msg, res) => {
+                try {
+                    const {id} = msg;
+                    if (!Types.ObjectId.isValid(id))
+                        return res({error: serializeError(new Error('Not valid id'))});
+                    res({result: await achievementService.deleteFileById(id)});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
                 }
             }
         }

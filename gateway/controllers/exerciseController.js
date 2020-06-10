@@ -4,19 +4,22 @@ const {rpcServices, pubExchanges} = require('../options');
 const {rpcQueues, publish, getChannel} = require('../amqpHandler');
 const webServiceRPC = rpcQueues[rpcServices.WEB_SERVICE.serviceName];
 const progressServiceRPC = rpcQueues[rpcServices.PROGRESS_SERVICE.serviceName];
-const webServiceControllers = rpcServices.WEB_SERVICE.controllers;
+const {theme: webThemeController, exercise: webExerciseController} = rpcServices.WEB_SERVICE.controllers;
 const progressServiceControllers = rpcServices.PROGRESS_SERVICE.controllers;
-const {decodeToken} = require('../helpers/auth');
+const {decodeToken, adminValidate} = require('../helpers/auth');
 
 const router = express.Router();
 
 router.post('/:exerciseId/test', asyncHandler(async (req, res) => {
     const channel = await getChannel();
     const {sourceCode, themeId, difficulty} = req.body;
-    const {result: results} = await webServiceRPC[webServiceControllers.exercise](channel, 'testById', {
+    const {result: results, error} = await webServiceRPC[webExerciseController](channel, 'testById', {
         sourceCode,
         id: req.params.exerciseId,
     });
+
+    if (error) return res.status(500).send('Internal server error');
+
     if (req.token) {
         const {userId} = await decodeToken(req.token);
         await publish(channel, pubExchanges.exerciseTests, {
@@ -31,36 +34,39 @@ router.post('/:exerciseId/test', asyncHandler(async (req, res) => {
     res.json(results);
 }));
 
-router.patch('/:id', asyncHandler(async (req, res) => {
+router.patch('/:id', adminValidate, asyncHandler(async (req, res) => {
     const channel = await getChannel();
-    const {result: updatedExercise} = await webServiceRPC[webServiceControllers.exercise](channel, 'updateById', {
+    const answer = await webServiceRPC[webExerciseController](channel, 'updateById', {
         id: req.params.id,
         exercise: req.body,
     });
-    res.json(updatedExercise);
+    if (answer.error) res.status(500);
+    res.json(answer);
 }));
 
-router.post('/', asyncHandler(async (req, res) => {
+router.post('/', adminValidate, asyncHandler(async (req, res) => {
     const channel = await getChannel();
-    const {result: exercise} = await webServiceRPC[webServiceControllers.theme](channel, 'create', req.body);
-    res.json(exercise);
+    const newExercise = {...req.body};
+    newExercise.tests = JSON.parse(newExercise.tests);
+    const answer = await webServiceRPC[webExerciseController](channel, 'create', newExercise);
+    if (answer.error) res.status(500);
+    res.json(answer);
 }));
 
-router.get('/:themeId/:difficulty', asyncHandler(async (req, res) => {
+router.get('/:themeId/:difficulty', asyncHandler(async (req, res, next) => {
     const channel = await getChannel();
     const {themeId, difficulty} = req.params;
-    const {result: theme} = await webServiceRPC[webServiceControllers.theme](channel, 'getById', {id: themeId});
-    const {result: exercises} = await webServiceRPC[webServiceControllers.exercise](channel, 'getByThemeId', {
-        themeId,
-        difficulty
-    });
+    const {result: theme} = await webServiceRPC[webThemeController](channel, 'getById', {id: themeId});
+    if (!theme) return next();
+
+    const {result: exercises, error: exercisesError} = await webServiceRPC[webExerciseController](channel, 'getByThemeId',
+        {themeId, difficulty});
+    if (exercisesError) return next();
+
     if (req.token) {
         const {userId} = await decodeToken(req.token);
-        const {result: results} = await progressServiceRPC[progressServiceControllers.exerciseResult](channel, 'get', {
-            username: userId,
-            themeId,
-            difficulty,
-        });
+        const {result: results} = await progressServiceRPC[progressServiceControllers.exerciseResult](channel, 'get',
+            {username: userId, themeId, difficulty});
         exercises.forEach(ex => {
             const oldResult = ({result, sourceCode}) => {
                 const exerciseResult = {sourceCode};
@@ -92,9 +98,11 @@ router.get('/:themeId/:difficulty/next', asyncHandler(async (req, res, next) => 
             break;
         case 'hard':
             const channel = await getChannel();
-            const {result: {number, language}} = await webServiceRPC[webServiceControllers.theme](channel, 'getById', {id: themeId});
-            const {result: theme} = await webServiceRPC[webServiceControllers.theme](channel, 'getByNumber', {number: number + 1});
-            const path = theme ? `/exercises/${theme._id}/easy` : `/theme/${language}`;
+            const {result: thisTheme} = await webServiceRPC[webThemeController](channel, 'getById', {id: themeId});
+            if (!thisTheme) return next();
+            const {result: theme} = await webServiceRPC[webThemeController](channel, 'getByNumber',
+                {number: thisTheme.number + 1});
+            const path = theme ? `/exercises/${theme._id}/easy` : `/theme/${thisTheme.language}`;
             res.redirect(path);
             break;
         default:
@@ -108,9 +116,10 @@ router.get('/:themeId/:difficulty/prev', asyncHandler(async (req, res, next) => 
     switch (req.params.difficulty) {
         case 'easy':
             const channel = await getChannel();
-            const {result: {number, language}} = await webServiceRPC[webServiceControllers.theme](channel, 'getById', {id: themeId});
-            const theme = await webServiceRPC[webServiceControllers.theme](channel, 'getByNumber', {number: number - 1});
-            const path = theme ? `/exercises/${theme._id}/easy` : `/theme/${language}`;
+            const {result: thisTheme} = await webServiceRPC[webThemeController](channel, 'getById', {id: themeId});
+            if (!thisTheme) return next();
+            const {result: theme} = await webServiceRPC[webThemeController](channel, 'getByNumber', {number: thisTheme.number - 1});
+            const path = theme ? `/exercises/${theme._id}/easy` : `/theme/${thisTheme.language}`;
             res.redirect(path);
             break;
         case 'hard':
@@ -123,6 +132,13 @@ router.get('/:themeId/:difficulty/prev', asyncHandler(async (req, res, next) => 
             next();
             break;
     }
+}));
+
+router.delete('/:id', adminValidate, asyncHandler(async (req, res) => {
+    const channel = await getChannel();
+    const answer = await webServiceRPC[webExerciseController](channel, 'deleteById', {id: req.params.id});
+    if (answer.error) req.status(500);
+    res.json(answer);
 }));
 
 module.exports = router;

@@ -9,9 +9,10 @@
   "author": "sikmakn",
   "license": "ISC",
   "dependencies": {
-    "uuid": "^8.1.0",
     "amqplib": "^0.5.5",
     "mongodb": "^3.5.5",
-    "mongoose": "^5.9.5"
+    "mongoose": "^5.9.5",
+    "serialize-error": "^7.0.1",
+    "uuid": "^8.1.0"
   }
 }

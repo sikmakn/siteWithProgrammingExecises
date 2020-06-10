@@ -6,6 +6,12 @@ const rpcServices = {
             exercise: 'exercise',
         },
     },
+    WEBSOCKET_NOTIFICATION_SERVICE:{
+        serviceName: 'websocketNotificationServiceQ',
+        controllers:{
+            achievement:'achievement',
+        }
+    },
     PROGRESS_SERVICE: {
         serviceName: 'userProgressServiceQ',
         controllers: {
@@ -36,9 +42,11 @@ const rpcServices = {
 
 const pubExchanges = {
     exerciseTests: 'exerciseTests',
+    error: 'error',
 };
 
 module.exports = {
+    serviceName: 'gateway',
     rpcServices,
     pubExchanges,
     replyRPCQueueName: 'gatewayReply',

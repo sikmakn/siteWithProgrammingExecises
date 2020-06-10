@@ -1,8 +1,8 @@
 const {user} = require('../models/user');
 const {mongooseUpdateParams} = require('../../options');
 
-async function create({username, password, email, status, isBlocked, salt}) {
-    const newUser = new user({username, password, salt, email, status, isBlocked});
+async function create({username, password, email, role, isBlocked, salt}) {
+    const newUser = new user({username, password, salt, email, role, isBlocked});
     return await newUser.save();
 }
 
@@ -18,22 +18,20 @@ async function findByIdentityData({username, email}) {
     return await user.findOne({$or: [{username}, {email}]});
 }
 
-async function updateUser({username, password, email, status, isBlocked, salt}) {
+async function updateUser({username, password, email, role, isBlocked, salt}) {
     return await user.findOneAndUpdate({username},
-        {
-            username,
-            password,
-            email,
-            status,
-            isBlocked,
-            salt,
-        },
+        {username, password, email, role, isBlocked, salt},
         mongooseUpdateParams);
+}
+
+async function removeUser({username}) {
+    return await user.findOneAndDelete({username});
 }
 
 module.exports = {
     create,
     findById,
+    removeUser,
     findByUsername,
     findByIdentityData,
     updateUser,

@@ -9,7 +9,7 @@
     color: white;
 }
 
-.selectContainer > a, .selectContainer > div {
+.selectContainer > a {
     text-decoration: none;
     width: 210px;
     height: 60px;
@@ -20,34 +20,18 @@
     color: #a6a6a6;
 }
 
-.selectContainer > div.isJs {
+.selectContainer > .isJs, .selectContainer > .isPython, .selectContainer > .isNet {
     background: black;
     color: white;
 }
 
-.selectContainer > div.isJs img {
+.selectContainer > .isJs img {
     margin-right: 5px;
     width: 30px;
     height: 30px;
 }
 
-.selectContainer > div.isPython {
-    background: black;
-    color: white;
-}
-
-.selectContainer > div.isPython img {
-    margin-right: 15px;
-    width: 40px;
-    height: 40px;
-}
-
-.selectContainer > div.isNet {
-    background: black;
-    color: white;
-}
-
-.selectContainer > div.isNet img {
+.selectContainer > .isNet img, .selectContainer > .isNet img {
     margin-right: 15px;
     width: 40px;
     height: 40px;

@@ -5,7 +5,6 @@ const authControllers = rpcServices.AUTH_SERVICE.controllers;
 const {setToken} = require('./setToCookie');
 const jwt = require('jsonwebtoken');
 
-
 async function isAuth(req, res, next) {
     const token = getTokenFromCookie(req);
     if (!token) {
@@ -49,6 +48,19 @@ async function authValidate(req, res, next) {
     next();
 }
 
+async function adminValidate(req, res, next) {
+    if (!req.token) return res.status(403).render('403.hbs', {
+        layout: 'themeSelectMain.hbs',
+        isAuth: !!req.token,
+    });
+    const {role} = jwt.decode(req.token);
+    if (role !== 'admin') return res.status(403).render('403.hbs', {
+        layout: 'themeSelectMain.hbs',
+        isAuth: !!req.token,
+    });
+    next();
+}
+
 async function decodeToken(token) {
     return jwt.decode(token);
 }
@@ -57,6 +69,7 @@ module.exports = {
     isAuth,
     authValidate,
     decodeToken,
+    adminValidate,
 };
 
 function getTokenFromCookie(req) {

@@ -1,7 +1,10 @@
 const exerciseService = require('../services/exerciseService');
+const themeService = require('../services/themeService');
 const exerciseMapper = require('../Mappers/exerciseMapper');
 const {pubExchanges, serviceName} = require('../options');
 const {publish, getChannel} = require('../amqpHandler');
+const {serializeError} = require('serialize-error');
+const {Types} = require('mongoose');
 
 module.exports = {
     name: 'exercise',
@@ -11,11 +14,16 @@ module.exports = {
             method: async (msg, res) => {
                 try {
                     const {id, sourceCode} = msg;
-                    res({result: await exerciseService.makeTests(id, sourceCode)});
+                    if (!Types.ObjectId.isValid(id))
+                        return res({error: serializeError(new Error('Not valid id'))});
+                    const exercise = await exerciseService.findById(id);
+                    if (!exercise) return res({error: new Error('not found exercise by this id')});
+                    const testResults = await exerciseService.makeTests(exercise.tests, exercise.language, sourceCode);
+                    res({result: testResults});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
-                        {error, date: Date.now(), serviceName});
-                    res({error});
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
                 }
             }
         },
@@ -24,12 +32,15 @@ module.exports = {
             method: async (msg, res) => {
                 try {
                     const {themeId, difficulty} = msg;
+                    if (!Types.ObjectId.isValid(themeId))
+                        return res({error: serializeError(new Error('Not valid themeId'))});
+
                     const exercises = await exerciseService.findByThemeId(themeId, difficulty);
                     res({result: exercises.map(ex => exerciseMapper.fromExerciseToOutObj(ex))});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
-                        {error, date: Date.now(), serviceName});
-                    res({error});
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
                 }
             }
         },
@@ -37,12 +48,15 @@ module.exports = {
             name: 'create',
             method: async (msg, res) => {
                 try {
-                    let newExercise = exerciseMapper.fromObjToExerciseObj(msg);
+                    const newExercise = exerciseMapper.fromObjToExerciseObj(msg);
+                    const theme = await themeService.findById(newExercise.themeId);
+                    if (!theme) return res({error: new Error('Theme is not exist')});
+                    newExercise.language = theme.language;
                     res({result: await exerciseService.create(newExercise)});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
-                        {error, date: Date.now(), serviceName});
-                    res({error});
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
                 }
             }
         },
@@ -51,12 +65,29 @@ module.exports = {
             method: async (msg, res) => {
                 try {
                     const {id, exercise} = msg;
+                    if (!Types.ObjectId.isValid(id))
+                        return res({error: serializeError(new Error('Not valid id'))});
+
                     const exerciseObj = exerciseMapper.fromObjToExerciseObj(exercise);
                     res({result: await exerciseService.findByIdAndUpdate(id, exerciseObj)});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
-                        {error, date: Date.now(), serviceName});
-                    res({error});
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
+                }
+            }
+        },
+        {
+            name: 'deleteById',
+            method: async ({id}, res) => {
+                try {
+                    if (!Types.ObjectId.isValid(id))
+                        return res({error: serializeError(new Error('Not valid id'))});
+                    res({result: await exerciseService.deleteById(id)});
+                } catch (error) {
+                    await publish(await getChannel(), pubExchanges.error,
+                        {error: serializeError(error), date: Date.now(), serviceName});
+                    res({error: serializeError(error)});
                 }
             }
         },

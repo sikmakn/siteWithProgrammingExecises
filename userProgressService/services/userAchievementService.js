@@ -9,15 +9,13 @@ const {publish, getChannel} = require('../amqpHandler');
 const {pubExchanges} = require('../options');
 
 async function addAchievements({username, achievementIds}) {
-    const userAchievement = (await userAchievementRepository.addAchievements({username, achievementIds}))?._doc;
-    await publish(await getChannel(), pubExchanges.newUserAchievement, {userIds: [username], achievementIds});
-    return userAchievement;
+    await publishNewAchievements({usernames: [username], achievementIds});
+    return (await userAchievementRepository.addAchievements({username, achievementIds}))?._doc;
 }
 
 async function addAchievementsToManyUsers({usernames, achievementIds}) {
-    const usersAchievements = await userAchievementRepository.addAchievementsToManyUsers({usernames, achievementIds});
-    await publish(await getChannel(), pubExchanges.newUserAchievement, {userIds: usernames, achievementIds});
-    return usersAchievements;
+    await publishNewAchievements({usernames, achievementIds});
+    return await userAchievementRepository.addAchievementsToManyUsers({usernames, achievementIds});
 }
 
 async function deleteAchievements({username, achievementIds}) {
@@ -39,7 +37,6 @@ async function addByUsername(username) {
         const commonConditions = conditions.filter(c => !c.exerciseId);
         if (!commonConditions.length || checkCommonConditions({commonConditions, userResults}))
             achievementIds.push(_id);
-
     }
     if (achievementIds.length)
         return await addAchievements({username, achievementIds});
@@ -62,14 +59,30 @@ async function addByConditions(conditions, achievementId) {
         return await addAchievementsToManyUsers({usernames, achievementIds: [achievementId]});
 }
 
+async function deleteAchievementFromAll(achievementId) {
+    return await userAchievementRepository.deleteAchievementFromAll(achievementId);
+}
+
 module.exports = {
     addByUsername,
     findByUsername,
     addByConditions,
     addAchievements,
     deleteAchievements,
+    deleteAchievementFromAll,
     addAchievementsToManyUsers,
 };
+
+async function publishNewAchievements({usernames, achievementIds}) {
+    const aggregateConditions = {};
+    aggregateConditions.$or = usernames.map(username => ({username}));
+    aggregateConditions.$nor = [{achievements: achievementIds}];
+
+    const aggregatedAchievements = await userAchievementRepository.aggregate([{$match: aggregateConditions}]);
+    const mappedAchievements = aggregatedAchievements.map(({username, achievements}) =>
+        ({username, achievementIds: achievements}));
+    await publish(await getChannel(), pubExchanges.newUserAchievement, {userAchievements: mappedAchievements});
+}
 
 function findUserResults({themeId, difficulty, result, userResults}) {
     return userResults.filter(r => {

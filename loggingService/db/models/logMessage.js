@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const logMessageScheme = new mongoose.Schema({
     message: {
-        type: String,
+        type: Object,
         required: true,
     },
     serviceName: {

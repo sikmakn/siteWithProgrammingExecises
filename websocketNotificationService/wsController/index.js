@@ -7,42 +7,33 @@ const {getToken} = require('../helpers/getToken');
 const newUserAchievementsService = require('../services/newUserAchievementsService');
 const {pubExchanges, serviceName} = require('../options');
 const {publish, getChannel} = require('../amqpHandler');
+const {serializeError} = require('serialize-error');
 
 const wss = new WebSocket.Server({port: PORT});
 
 wss.on('connection', async function connection(ws, req) {
     try {
         let wsId = uuid();
-
         const token = getToken(req.headers.cookie);
         if (!token) return;
-
         const {userId} = jwt.decode(token);
         addToGroup({userId, wsId, ws});
 
         const count = await newUserAchievementsService.getCount({userId});
         if (count) ws.send(count);
 
-        ws.on('message', async () => {
-            try {
-                await newUserAchievementsService.readNotification({userId});
-            } catch (error) {
-                await publish(await getChannel(), pubExchanges.error,
-                    {error, date: Date.now(), serviceName});
-            }
-        });
         ws.on('close', async () => {
             try {
                 deleteByElementId({userId, wsId});
             } catch (error) {
                 await publish(await getChannel(), pubExchanges.error,
-                    {error, date: Date.now(), serviceName});
+                    {error: serializeError(error), date: Date.now(), serviceName});
             }
         });
 
     } catch (error) {
         await publish(await getChannel(), pubExchanges.error,
-            {error, date: Date.now(), serviceName});
+            {error: serializeError(error), date: Date.now(), serviceName});
     }
 });
 
