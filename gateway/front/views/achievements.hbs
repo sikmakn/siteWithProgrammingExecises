@@ -1,19 +1,24 @@
 <link rel="stylesheet" href="/styles/achievement.css">
 <div class="achievements">
-
-    <div class="achievementsGrid">
-        {{#each achievements}}
-            <img id="{{_id}}" src="/achievement/file/{{previewFileId}}" alt="ачивка"
-                 {{#if new}}class="newAchievement"{{/if}}>
-        {{/each}}
-    </div>
-
-    <div class="achievementFull" id="fullAchievement">
-        {{#if choosenAchievement}}
-            <h1>{{choosenAchievement.name}}</h1>
-            <img src="/achievement/file/{{choosenAchievement.fileId}}" alt="изображение ачивки">
-            <p>{{choosenAchievement.description}}</p>
-        {{/if}}
-    </div>
+    {{#if achievements}}
+        <div class="achievementsGrid">
+            {{#each achievements}}
+                <img id="{{_id}}" src="/achievement/file/{{previewFileId}}" alt="ачивка"
+                     {{#if new}}class="newAchievement"{{/if}}>
+            {{/each}}
+        </div>
+        <div class="achievementFull" id="fullAchievement">
+            {{#if choosenAchievement}}
+                <h1>{{choosenAchievement.name}}</h1>
+                <img src="/achievement/file/{{choosenAchievement.fileId}}" alt="изображение ачивки">
+                <p>{{choosenAchievement.description}}</p>
+            {{/if}}
+        </div>
+    {{else}}
+        <div class="emptyAchievements">
+            <h1>У вас пока нет достижений</h1>
+            <p>Попробуйте успешно выполнить несколько заданий и скорее всего тут появятся ваши награды :)</p>
+        </div>
+    {{/if}}
 </div>
 <script src="/scripts/src/achievements.js"></script>
