@@ -1,5 +1,3 @@
-import {Validator} from './validate/validator.js';
-
 validate(['username', 'password', 'repeatPassword', 'email']);
 
 function validate(fields) {

@@ -1,5 +1,3 @@
-import {Validator} from "./validate/validator.js";
-
 const {input: email, validator: emailValidator} = Validator.getValidator('email');
 emailValidator.registerListeners();
 const {input: oldPassword, validator: oldPasswordValidator} = Validator.getValidator('oldPassword');

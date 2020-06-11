@@ -1,0 +1,9 @@
+{{#unless isAuth}}
+    <link rel="stylesheet" href="/styles/cookieInformation.css">
+    <div id="cookieInfo">
+    <span>На нашем сайте используются <a href="https://ru.wikipedia.org/wiki/Cookie">cookie-файлы</a>. Если, прочитав это сообщение,
+        Вы остаетесь на нашем сайте, это означает,что вы не возражаете против этих тенологий.</span>
+        <button id="cookieCloseInfo"><img src="/styles/src/close-icon.svg" alt="Закрыть"></button>
+    </div>
+    <script src="/scripts/dist/cookieInfo.js"></script>
+{{/unless}}

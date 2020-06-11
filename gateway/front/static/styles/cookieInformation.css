@@ -1,0 +1,22 @@
+#cookieInfo{
+    font-family: Roboto;
+    position: absolute;
+    margin: auto;
+    bottom: 0;
+    border: 1px solid #E7E7E9;
+    display: none;
+    background: #191919;
+    color: #FFFFFF;
+    text-align: center;
+    height: 40px;
+}
+#cookieInfo a {
+    color: #FFFFFF;
+}
+#cookieInfo button{
+    background: none;
+    border: none;
+    color:#FFFFFF;
+    margin-right: 10px;
+    padding: 5px;
+}
