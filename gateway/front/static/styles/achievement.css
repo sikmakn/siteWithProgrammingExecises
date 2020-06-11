@@ -40,7 +40,7 @@
 }
 
 .achievementFull h1 {
-    font-family: Roboto, sans-serif;
+    font-family: Roboto;
     font-style: normal;
     font-weight: 500;
     font-size: 24px;
@@ -50,7 +50,7 @@
 }
 
 .achievementFull p {
-    font-family: Roboto, sans-serif;
+    font-family: Roboto;
     font-style: normal;
     font-weight: 500;
     font-size: 16px;

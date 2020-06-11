@@ -1,4 +1,5 @@
 const userService = require('../services/userService');
+const usersForVerifyService = require('../services/usersForVerifyService');
 const {userSchema, roleSchema, passwordSchema, emailSchema} = require('../validationSchemas/userSchema');
 const {pubExchanges, serviceName} = require('../options');
 const {publish, getChannel} = require('../amqpHandler');
@@ -15,7 +16,8 @@ module.exports = {
                     if (await userService.findByIdentityData({username: userData.username, email: userData.email}))
                         return res({error: serializeError(new Error('user exist'))});
                     await userService.create(userData);
-                    res({result: true});
+                    const {_id} = await usersForVerifyService.create({username: userData.username});
+                    res({result: _id});
                 } catch (error) {
                     await publish(await getChannel(), pubExchanges.error,
                         {error: serializeError(error), date: Date.now(), serviceName});

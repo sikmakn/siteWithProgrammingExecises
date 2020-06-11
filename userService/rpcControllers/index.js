@@ -1,3 +1,4 @@
 const user = require('./userController');
+const usersForVerify = require('./usersForVerifyController');
 
-module.exports = [user];
+module.exports = [user, usersForVerify];

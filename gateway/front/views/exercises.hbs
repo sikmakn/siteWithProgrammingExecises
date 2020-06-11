@@ -24,13 +24,13 @@
                     <span>{{number}}. {{task}}</span>
                     <span id="resultIcon{{_id}}">
                         {{#if oldResult.correct}}
-                            <i class="fas fa-check successTest"></i>
+                            <i class="fas fa-check successTest" title="Успешно прошел тесты"></i>
                         {{/if}}
                         {{#if oldResult.incorrect}}
-                            <i class="fas fa-times wrongTest"></i>
+                            <i class="fas fa-times wrongTest" title="Неправильный ответ"></i>
                         {{/if}}
                         {{#if oldResult.error}}
-                            <i class="fas fa-question errorTest"></i>
+                            <i class="fas fa-question errorTest" title="Ошибка в коде"></i>
                         {{/if}}
                     </span>
                 </button>

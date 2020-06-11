@@ -11,6 +11,7 @@ async function start() {
             password: ADMIN_PASSWORD,
             role: 'admin',
             email: ADMIN_MAIL,
+            isBlocked: false,
         });
     const {reconnect} = require('./amqpHandler');
     await reconnect();

@@ -6,6 +6,8 @@ const userServiceRPC = rpcQueues[rpcServices.USER_SERVICE.serviceName];
 const userControllers = rpcServices.USER_SERVICE.controllers;
 const authServiceRPC = rpcQueues[rpcServices.AUTH_SERVICE.serviceName];
 const authController = rpcServices.AUTH_SERVICE.controllers.auth;
+const emailServiceRPC = rpcQueues[rpcServices.EMAIL_SERVICE.serviceName];
+const emailController = rpcServices.EMAIL_SERVICE.controllers.email;
 const {setFingerprint, setToken} = require('../helpers/setToCookie');
 const {adminValidate} = require('../helpers/auth');
 const {decodeToken} = require('../helpers/auth');
@@ -21,7 +23,27 @@ router.post('/register', asyncHandler(async (req, res) => {
     const createRes = await userServiceRPC[userControllers.user](channel, 'create', {username, password, email});
     if (!createRes.result)
         return res.render('register.hbs', {layout: 'empty.hbs', isUsernameExist: true});
-    res.redirect('/user/login');
+    await emailServiceRPC[emailController](channel, 'sendVerify', {
+        email,
+        username,
+        verifyLink: `/user/verify/${createRes.result}`,
+        deleteLink: `/user/delete/verify/${createRes.result}`,
+    });
+    res.render('registredInfo.hbs', {layout: 'themeSelectMain.hbs'});
+}));
+
+router.get('/verify/:id', asyncHandler(async (req, res, next) => {
+    const {error} = await userServiceRPC[userControllers.usersForVerify](await getChannel(), 'verify',
+        {id: req.params.id});
+    if (error) return next();
+    res.render('verifiedAccountInfo.hbs', {layout: 'themeSelectMain.hbs'});
+}));
+
+router.get('/delete/verify/:id', asyncHandler(async (req, res, next) => {
+    const {error} = await userServiceRPC[userControllers.usersForVerify](await getChannel(), 'delete',
+        {id: req.params.id});
+    if (error) return next();
+    res.render('deletedAccountInfo.hbs', {layout: 'themeSelectMain.hbs'});
 }));
 
 router.get('/login', (req, res) =>

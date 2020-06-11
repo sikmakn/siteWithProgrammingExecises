@@ -7,7 +7,7 @@ main {
 
 
 .selectContainer {
-    font-family: Oswald, sans-serif;
+    font-family: Oswald;
     height: 400px;
     width: 200px;
     display: flex;

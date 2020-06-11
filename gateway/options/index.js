@@ -6,10 +6,10 @@ const rpcServices = {
             exercise: 'exercise',
         },
     },
-    WEBSOCKET_NOTIFICATION_SERVICE:{
+    WEBSOCKET_NOTIFICATION_SERVICE: {
         serviceName: 'websocketNotificationServiceQ',
-        controllers:{
-            achievement:'achievement',
+        controllers: {
+            achievement: 'achievement',
         }
     },
     PROGRESS_SERVICE: {
@@ -24,12 +24,19 @@ const rpcServices = {
         serviceName: 'userServiceQ',
         controllers: {
             user: 'user',
+            usersForVerify: 'usersForVerify',
         }
     },
     AUTH_SERVICE: {
         serviceName: 'authServiceQ',
         controllers: {
             auth: 'auth',
+        }
+    },
+    EMAIL_SERVICE: {
+        serviceName: 'emailNotificationServiceQ',
+        controllers: {
+            email: 'email',
         }
     },
     LOG_SERVICE: {
