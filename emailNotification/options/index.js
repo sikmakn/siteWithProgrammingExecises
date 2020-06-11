@@ -10,7 +10,7 @@ const emailTemplates = {
 const pubExchanges = {error: 'error'};
 
 module.exports = {
-    rpcServiceName: 'emailNotificationService',
+    rpcServiceName: 'emailNotificationServiceQ',
     serviceName: 'emailNotification',
     pubExchanges,
     subExchanges,

@@ -34,7 +34,6 @@
     width: 20%;
     min-width: 50px;
     height: 100%;
-    /*border: 1px solid #000000;*/
 }
 
 .textTestResult {
@@ -43,7 +42,6 @@
     align-items: center;
     width: 80%;
     height: 100%;
-    /*border: 1px solid #000000;*/
 }
 
 .inputTestResult {

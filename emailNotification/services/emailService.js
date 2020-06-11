@@ -26,11 +26,7 @@ async function sendBlockMail({email, username}) {
     const html = data.toString()
         .replace(/{{username}}/g, username)
         .replace(/{{domain}}/g, DOMAIN);
-    return await transporter.sendMail({
-        to: email,
-        subject: template.subject,
-        html,
-    })
+    return await transporter.sendMail({to: email, subject: template.subject, html});
 }
 
 async function sendUnblockMail({email, username}) {
@@ -48,20 +44,17 @@ async function sendUnblockMail({email, username}) {
     })
 }
 
-async function sendVerifyMail({email, username, verifyLink}) {
-    const template = emailTemplates.unblockUserObj;
+async function sendVerifyMail({email, username, verifyLink, deleteLink}) {
+    const template = emailTemplates.verifyUserObj;
     const data = await new Promise((res, rej) =>
         fs.readFile('./templates/verifyUser.html',
             (err, data) => err ? rej(err) : res(data)));
     const html = data.toString()
         .replace(/{{verifyLink}}/g, verifyLink)
+        .replace(/{{deleteLink}}/g, deleteLink)
         .replace(/{{username}}/g, username)
         .replace(/{{domain}}/g, DOMAIN);
-    return await transporter.sendMail({
-        to: email,
-        subject: template.subject,
-        html,
-    })
+    return await transporter.sendMail({to: email, subject: template.subject, html});
 }
 
 module.exports = {

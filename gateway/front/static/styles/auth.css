@@ -14,7 +14,7 @@
     display: flex;
     width: 300px;
     justify-content: center;
-    font-family: Roboto, sans-serif;
+    font-family: Roboto;
     font-style: normal;
     font-weight: 500;
     font-size: 24px;
@@ -37,7 +37,7 @@
 }
 
 .form li {
-    font-family: 'Roboto', sans-serif;
+    font-family: Roboto;
     font-style: normal;
     font-weight: normal;
     font-size: 9px;
@@ -46,7 +46,7 @@
 }
 
 .form input {
-    font-family: 'Roboto', sans-serif;
+    font-family: Roboto;
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -65,7 +65,7 @@
 .form input[type="submit"] {
     margin: 30px 0 0;
     background: #191919;
-    font-family: 'Roboto', sans-serif;
+    font-family: Roboto;
     font-style: normal;
     font-weight: 500;
     font-size: 16px;

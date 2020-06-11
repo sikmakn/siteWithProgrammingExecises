@@ -10,6 +10,10 @@ const langOptions = {
                 })();`,
         languageId: 63,
     },
+    'net': {
+        readLine: '',
+        languageId: 51,
+    }
 };
 
 const mongoOptions = {

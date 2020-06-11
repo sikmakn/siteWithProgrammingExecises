@@ -1,0 +1,14 @@
+@font-face {
+    font-family: Roboto;
+    src: url("./src/fonts/Roboto.ttf");
+}
+
+@font-face {
+    font-family: Oswald;
+    src: url("./src/fonts/Oswald.ttf");
+}
+
+@font-face {
+    font-family: Francois One;
+    src: url("./src/fonts/FrancoisOne.ttf");
+}

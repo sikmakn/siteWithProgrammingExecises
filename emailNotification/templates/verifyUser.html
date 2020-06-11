@@ -4,7 +4,11 @@
 <main>
     <p>Здравствуйте <span style="font-style: italic;font-weight:bold;">{{username}}</span>,
         вы зарегестрировались на сайте <span style="font-weight:bold;">{{domain}}</span>.</p>
-    <p>Для подтверждения аккаунта перейдите по ссылке <a href="{{verifyLink}}">{{verifyLink}}</a>.</p>
-    <p>Если вы не регистрировались на нашем сайте, можете ничего не делать.</p>
+    <p>Для подтверждения аккаунта перейдите по ссылке
+        <a href="{{domain}}{{verifyLink}}">{{domain}}{{verifyLink}}</a>.
+    </p>
+    <p>Если вы не регистрировались на нашем сайте нажмите на эту ссылку
+        <a href="{{domain}}{{deleteLink}}">{{domain}}{{deleteLink}}</a>.
+    </p>
     <p>С уважением, <a href="{{domain}}">{{domain}}</a>.</p>
 </main>

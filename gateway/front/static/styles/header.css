@@ -2,7 +2,7 @@ header {
     height: 50px;
     display: flex;
     justify-content: space-between;
-    font-family: Oswald, sans-serif;
+    font-family: Oswald;
     font-style: normal;
     font-weight: normal;
     font-size: 24px;
@@ -78,7 +78,7 @@ header a:hover {
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    font-family: Oswald, sans-serif;
+    font-family: Oswald;
     font-style: normal;
     font-weight: normal;
     font-size: 16px;
