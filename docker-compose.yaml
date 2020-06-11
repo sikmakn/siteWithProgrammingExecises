@@ -8,8 +8,6 @@ volumes:
 services:
   web_service:
     build: ./webService
-    volumes:
-      - ./webService/log:/usr/src/web_site/log
     restart: always
     ports:
       - "3000:3000"

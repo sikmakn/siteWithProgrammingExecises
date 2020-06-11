@@ -1,14 +1,14 @@
 <div class="selectContainer" id="languageSelectContainer">
     {{#if isNet}}
-        <a class="isNet" id=".net"><img src="/styles/src/net-button-logo.svg">C# .NET</a>
+        <div title="Материалы находятся в разработке" class="isNet" id=".net"><img src="/styles/src/net-button-logo.svg">C# .NET</div>
     {{else}}
-        <a href="/theme/net">C# .NET</a>
+        <div title="Материалы находятся в разработке">C# .NET</div>
     {{/if}}
 
     {{#if isPython}}
-        <div class="isPython"><img src="/styles/src/python-button-logo.svg">PYTHON</div>
+        <div class="isPython" title="Материалы находятся в разработке"><img src="/styles/src/python-button-logo.svg">PYTHON</div>
     {{else}}
-        <a href="/theme/python">PYTHON</a>
+        <div title="Материалы находятся в разработке">PYTHON</div>
     {{/if}}
 
     {{#if isJs}}

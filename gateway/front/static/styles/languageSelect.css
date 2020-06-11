@@ -15,7 +15,7 @@ main {
     font-size: 32px;
 }
 
-.selectContainer > a {
+.selectContainer > a, .selectContainer > div {
     text-decoration: none;
     display: flex;
     align-items: center;
@@ -28,11 +28,13 @@ main {
 
 #net:hover {
     transition: 1s;
-    background: #ea80fc;
+    /*background: #ea80fc;*/
+    background: #a6a6a6;
 }
 
 #python:hover {
-    background: #29b6f6;
+    /*background: #29b6f6;*/
+    background: #a6a6a6;
     transition: 1s;
 }
 

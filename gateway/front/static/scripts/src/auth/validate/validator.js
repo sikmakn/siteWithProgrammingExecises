@@ -1,6 +1,4 @@
-import {validityObjs} from "./validationRequirements.js";
-
-export class Validator {
+class Validator {
     constructor(input, validityArr) {
         this.input = input;
         this.validityArr = validityArr;

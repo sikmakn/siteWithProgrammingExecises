@@ -9,7 +9,7 @@
     color: white;
 }
 
-.selectContainer > a {
+.selectContainer > a, .selectContainer > div {
     text-decoration: none;
     width: 210px;
     height: 60px;
