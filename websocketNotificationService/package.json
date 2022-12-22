@@ -11,7 +11,7 @@
   "dependencies": {
     "amqplib": "^0.5.6",
     "cookieparser": "^0.1.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^5.9.16",
     "serialize-error": "^7.0.1",
     "uuid": "^8.1.0",
